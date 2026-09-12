@@ -37,6 +37,7 @@ targets:
       - path: OnboardingView.swift
       - path: SettingsView.swift
       - path: TodayView.swift
+      - path: Assets.xcassets
     dependencies:
       - target: CreatineWidgetExtension
         embed: true
@@ -63,7 +64,6 @@ targets:
       - path: Persistence.swift
       - path: Stats.swift
       - path: Theme.swift
-      - path: Assets.xcassets
       # Sadece widget
       - path: CreatineWidget.swift
     settings:
