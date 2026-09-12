@@ -52,9 +52,7 @@ workflows:
         script: xcode-project use-profiles
 
       - name: Build numarasını artır
-        script: |
-          LATEST=$(app-store-connect get-latest-testflight-build-number "$BUNDLE_ID" 2>/dev/null || echo "0")
-          agvtool new-version -all $(($LATEST + 1))
+        script: agvtool new-version -all $(($BUILD_NUMBER + $PROJECT_BUILD_NUMBER))
 
       - name: IPA oluştur
         script: |
