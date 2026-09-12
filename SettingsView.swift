@@ -95,7 +95,7 @@ struct SettingsView: View {
 
                 // MARK: Widget
                 Section("Widget") {
-                    Label("Long-press your home screen, tap Edit, then Add Widget and pick Creatine Tracker. You can log the dose straight from the widget.", systemImage: "square.grid.2x2")
+                    Label("Long-press your home screen, tap Edit, then Add Widget and pick OneScoop. You can log the dose straight from the widget.", systemImage: "square.grid.2x2")
                         .font(.footnote)
                         .foregroundStyle(CT.inkSoft)
                 }
