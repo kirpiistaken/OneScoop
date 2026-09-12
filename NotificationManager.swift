@@ -53,7 +53,7 @@ enum NotificationManager {
 
             let content = UNMutableNotificationContent()
             content.title = "Creatine"
-            content.body = "You haven't logged today's \(settings.dose(on: day).gramString) g yet."
+            content.body = "It's time to take your daily creatine!"
             content.sound = .default
             content.interruptionLevel = .active
 
