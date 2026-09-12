@@ -52,7 +52,7 @@ enum NotificationManager {
             guard let fireDate = DayKey.calendar.date(from: comps), fireDate > now else { continue }
 
             let content = UNMutableNotificationContent()
-            content.title = "Creatine"
+            content.title = "Daily Creatine"
             content.body = "It's time to take your daily creatine!"
             content.sound = .default
             content.interruptionLevel = .active
