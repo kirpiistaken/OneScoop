@@ -10,6 +10,8 @@ workflows:
 
     environment:
       xcode: latest
+      groups:
+        - appstore
       vars:
         BUNDLE_ID: "com.atalay.creatinetracker"
         WIDGET_BUNDLE_ID: "com.atalay.creatinetracker.CreatineWidget"
