@@ -63,6 +63,7 @@ targets:
       - path: Persistence.swift
       - path: Stats.swift
       - path: Theme.swift
+      - path: Assets.xcassets
       # Sadece widget
       - path: CreatineWidget.swift
     settings:
