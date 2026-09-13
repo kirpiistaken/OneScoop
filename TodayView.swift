@@ -45,7 +45,7 @@ struct TodayView: View {
             }
             Spacer()
             if store.streak > 1 {
-                Text("\(store.streak) days")
+                Text("\(store.streak) day streak 🔥")
                     .font(.system(.caption, design: .rounded).weight(.bold))
                     .foregroundStyle(CT.accent)
                     .padding(.horizontal, 12)
