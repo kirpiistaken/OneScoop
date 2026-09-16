@@ -75,3 +75,61 @@ workflows:
         notify:
           success: true
           failure: true
+
+  ios-development:
+    name: OneScoop – Telefon testi
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+
+    integrations:
+      app_store_connect: CreatineTrackerKey
+
+    environment:
+      xcode: latest
+      groups:
+        - appstore
+      vars:
+        BUNDLE_ID: "com.atalay.creatinetracker"
+        WIDGET_BUNDLE_ID: "com.atalay.creatinetracker.CreatineWidget"
+        XCODE_SCHEME: "CreatineTracker"
+
+    scripts:
+      - name: XcodeGen kur
+        script: brew install xcodegen
+
+      - name: Xcode projesini üret
+        script: xcodegen generate --spec project.yml
+
+      - name: Keychain hazırla
+        script: keychain initialize
+
+      - name: Development imza dosyalarını oluştur / indir
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" \
+            --type IOS_APP_DEVELOPMENT \
+            --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
+            --create
+          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" \
+            --type IOS_APP_DEVELOPMENT \
+            --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
+            --create
+
+      - name: Sertifikayı keychain'e ekle
+        script: keychain add-certificates
+
+      - name: Profilleri projeye uygula
+        script: xcode-project use-profiles
+
+      - name: Build numarasını artır
+        script: agvtool new-version -all $(($BUILD_NUMBER + $PROJECT_BUILD_NUMBER))
+
+      - name: IPA oluştur
+        script: |
+          xcode-project build-ipa \
+            --project "CreatineTracker.xcodeproj" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
