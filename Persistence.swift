@@ -1,7 +1,8 @@
 import Foundation
 
-/// Tüm okuma/yazma buradan geçer. App ve Widget ayrı process'ler olduğu için
-/// her mutasyon "oku → değiştir → yaz" şeklinde, cache'e güvenmeden yapılır.
+/// Tüm okuma/yazma buradan geçer. App, widget ve bildirim uzantısı ayrı
+/// process'ler olduğu için her mutasyon "oku → değiştir → yaz" şeklinde,
+/// bellekteki kopyaya güvenmeden yapılır.
 enum Persistence {
     private static let settingsKey = "ct.settings.v1"
     private static let logKey = "ct.log.v1"
@@ -43,20 +44,48 @@ enum Persistence {
 
     @discardableResult
     static func markTaken(on date: Date = Date()) -> [String: DoseEntry] {
-        let settings = loadSettings()
+        var settings = loadSettings()
         var log = loadLog()
         let key = DayKey.key(for: date)
-        log[key] = DoseEntry(day: key, grams: settings.dose(on: date), takenAt: Date())
+
+        let alreadyLogged = log[key] != nil
+        let grams = settings.dose(on: date)
+        log[key] = DoseEntry(day: key, grams: grams, takenAt: Date())
         saveLog(log)
+
+        // Stoktan düş — aynı günü ikinci kez işaretlemek iki kez düşmesin.
+        if settings.trackSupply && !alreadyLogged {
+            settings.supplyRemaining = max(0, settings.supplyRemaining - grams)
+            saveSettings(settings)
+        }
         return log
     }
 
     @discardableResult
     static func undo(on date: Date = Date()) -> [String: DoseEntry] {
+        var settings = loadSettings()
         var log = loadLog()
-        log.removeValue(forKey: DayKey.key(for: date))
-        saveLog(log)
+        let key = DayKey.key(for: date)
+
+        if let removed = log.removeValue(forKey: key) {
+            saveLog(log)
+            // Stoğu geri ekle, kutu kapasitesini aşmasın.
+            if settings.trackSupply {
+                settings.supplyRemaining = min(
+                    settings.containerGrams,
+                    settings.supplyRemaining + removed.grams
+                )
+                saveSettings(settings)
+            }
+        }
         return log
+    }
+
+    /// Yeni kutu açıldı: kalanı kutu kapasitesine çıkar.
+    static func restock(to grams: Double? = nil) {
+        var settings = loadSettings()
+        settings.supplyRemaining = grams ?? settings.containerGrams
+        saveSettings(settings)
     }
 
     static func isTaken(on date: Date = Date()) -> Bool {
@@ -68,7 +97,7 @@ enum Persistence {
         AppGroup.defaults.removeObject(forKey: settingsKey)
     }
 
-    // MARK: - Widget'ın ihtiyacı olan tek çağrı
+    // MARK: - Widget
 
     static func currentStatus() -> DayStatus {
         let settings = loadSettings()
