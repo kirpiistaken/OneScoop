@@ -11,24 +11,28 @@ struct DoseSettings: Codable, Equatable {
     var reminderHour: Int = 18
     var reminderMinute: Int = 0
 
-    // YENİ: ilk bildirimden sonra tekrar hatırlatma
     var repeatEnabled: Bool = false
-    var repeatIntervalMinutes: Int = 60  // 15 / 30 / 60 / 120
-    var repeatCount: Int = 2             // ilk bildirimden sonra kaç kez daha
+    var repeatIntervalMinutes: Int = 60
+    var repeatCount: Int = 2
+
+    // YENİ: stok takibi
+    var trackSupply: Bool = false
+    var containerGrams: Double = 500     // kutunun tam dolu hali
+    var supplyRemaining: Double = 0      // elde kalan gram
 
     var hasCompletedOnboarding: Bool = false
 
     static let `default` = DoseSettings()
 
     // MARK: - Codable
-    // Her alanı decodeIfPresent ile okuyoruz. Böylece yeni bir alan eklendiğinde
-    // eski kullanıcının kayıtlı ayarları çözümlenmeye devam eder; aksi halde
-    // decode patlar ve kullanıcı kurulum ekranına geri döner.
+    // Her alan decodeIfPresent ile okunuyor: yeni alan eklendiğinde eski
+    // kullanıcının kayıtlı ayarları bozulmadan açılmaya devam ediyor.
 
     enum CodingKeys: String, CodingKey {
         case maintenanceDose, usesLoadingPhase, loadingDose, loadingDays, startDate
         case reminderEnabled, reminderHour, reminderMinute
         case repeatEnabled, repeatIntervalMinutes, repeatCount
+        case trackSupply, containerGrams, supplyRemaining
         case hasCompletedOnboarding
     }
 
@@ -48,10 +52,13 @@ struct DoseSettings: Codable, Equatable {
         repeatEnabled = try c.decodeIfPresent(Bool.self, forKey: .repeatEnabled) ?? d.repeatEnabled
         repeatIntervalMinutes = try c.decodeIfPresent(Int.self, forKey: .repeatIntervalMinutes) ?? d.repeatIntervalMinutes
         repeatCount = try c.decodeIfPresent(Int.self, forKey: .repeatCount) ?? d.repeatCount
+        trackSupply = try c.decodeIfPresent(Bool.self, forKey: .trackSupply) ?? d.trackSupply
+        containerGrams = try c.decodeIfPresent(Double.self, forKey: .containerGrams) ?? d.containerGrams
+        supplyRemaining = try c.decodeIfPresent(Double.self, forKey: .supplyRemaining) ?? d.supplyRemaining
         hasCompletedOnboarding = try c.decodeIfPresent(Bool.self, forKey: .hasCompletedOnboarding) ?? d.hasCompletedOnboarding
     }
 
-    // MARK: - Türetilmiş
+    // MARK: - Doz
 
     func isLoadingDay(_ date: Date) -> Bool {
         guard usesLoadingPhase else { return false }
@@ -61,11 +68,6 @@ struct DoseSettings: Codable, Equatable {
 
     func dose(on date: Date) -> Double {
         isLoadingDay(date) ? loadingDose : maintenanceDose
-    }
-
-    var loadingEndDate: Date? {
-        guard usesLoadingPhase else { return nil }
-        return DayKey.calendar.date(byAdding: .day, value: loadingDays, to: DayKey.startOfDay(startDate))
     }
 
     var loadingDaysRemaining: Int {
@@ -78,7 +80,6 @@ struct DoseSettings: Codable, Equatable {
         String(format: "%02d:%02d", reminderHour, reminderMinute)
     }
 
-    /// Bir gün içinde kurulacak bildirim sayısı (ilk + tekrarlar).
     var notificationsPerDay: Int {
         repeatEnabled ? 1 + max(0, repeatCount) : 1
     }
@@ -88,10 +89,39 @@ struct DoseSettings: Codable, Equatable {
             ? "\(repeatIntervalMinutes) min"
             : "\(repeatIntervalMinutes / 60) hr"
     }
+
+    // MARK: - Stok
+
+    /// Kalan gramla kaç gün daha idare edilir.
+    var supplyDaysLeft: Int {
+        let daily = dose(on: Date())
+        guard daily > 0 else { return 0 }
+        return Int((supplyRemaining / daily).rounded(.down))
+    }
+
+    /// Stokun biteceği tahmini gün.
+    var supplyRunOutDate: Date? {
+        guard supplyRemaining > 0 else { return nil }
+        return DayKey.calendar.date(byAdding: .day, value: supplyDaysLeft, to: DayKey.startOfDay(Date()))
+    }
+
+    /// 0...1 arası doluluk — ilerleme çubuğu için.
+    var supplyFraction: Double {
+        guard containerGrams > 0 else { return 0 }
+        return min(1, max(0, supplyRemaining / containerGrams))
+    }
+
+    var supplyIsLow: Bool {
+        trackSupply && supplyRemaining > 0 && supplyDaysLeft <= 7
+    }
+
+    var supplyIsEmpty: Bool {
+        trackSupply && supplyRemaining <= 0
+    }
 }
 
 struct DoseEntry: Codable, Equatable {
-    var day: String        // "yyyy-MM-dd"
+    var day: String
     var grams: Double
     var takenAt: Date
 }
@@ -103,3 +133,4 @@ struct DayStatus: Equatable {
     var isLoadingDay: Bool
     var streak: Int
 }
+
