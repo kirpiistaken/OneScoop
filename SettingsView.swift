@@ -7,6 +7,8 @@ struct SettingsView: View {
     @State private var showResetConfirm = false
     @State private var permissionDenied = false
 
+    private let intervalOptions = [15, 30, 60, 120]
+
     var body: some View {
         NavigationStack {
             Form {
@@ -87,9 +89,46 @@ struct SettingsView: View {
                     Text("Notifications")
                 } footer: {
                     if permissionDenied {
-                        Text("Notifications are turned off for Creatine Tracker in iOS Settings. Turn them on there to get reminders.")
+                        Text("Notifications are turned off for OneScoop in iOS Settings. Turn them on there to get reminders.")
                     } else {
                         Text("You'll only be notified on days you haven't logged a dose yet.")
+                    }
+                }
+
+                // MARK: Repeat reminders
+                if store.settings.reminderEnabled {
+                    Section {
+                        Toggle("Remind me again", isOn: Binding(
+                            get: { store.settings.repeatEnabled },
+                            set: { new in store.update { $0.repeatEnabled = new } }
+                        ))
+
+                        if store.settings.repeatEnabled {
+                            Picker("Every", selection: Binding(
+                                get: { store.settings.repeatIntervalMinutes },
+                                set: { new in store.update { $0.repeatIntervalMinutes = new } }
+                            )) {
+                                ForEach(intervalOptions, id: \.self) { minutes in
+                                    Text(minutes < 60 ? "\(minutes) min" : "\(minutes / 60) hr")
+                                        .tag(minutes)
+                                }
+                            }
+
+                            Stepper(value: Binding(
+                                get: { store.settings.repeatCount },
+                                set: { new in store.update { $0.repeatCount = new } }
+                            ), in: 1...4) {
+                                Text("Up to \(store.settings.repeatCount) more time(s)")
+                            }
+                        }
+                    } header: {
+                        Text("Repeat")
+                    } footer: {
+                        if store.settings.repeatEnabled {
+                            Text("After \(store.settings.reminderTimeString), you'll be nudged every \(store.settings.repeatIntervalString) until you log the dose, up to \(store.settings.repeatCount) more time(s). Repeats stop at midnight, and all of them are cancelled the moment you tap Yes.")
+                        } else {
+                            Text("Get another nudge if you still haven't logged your dose after the first reminder.")
+                        }
                     }
                 }
 
