@@ -13,13 +13,12 @@ final class CreatineStore: ObservableObject {
         log = Persistence.loadLog()
     }
 
-    // Widget'tan yapılan değişiklikleri yakalamak için (scenePhase .active).
     func reload() {
         settings = Persistence.loadSettings()
         log = Persistence.loadLog()
     }
 
-    // MARK: - Derived
+    // MARK: - Türetilmiş
 
     var todayDose: Double { settings.dose(on: Date()) }
     var isTodayTaken: Bool { log[DayKey.today] != nil }
@@ -28,15 +27,17 @@ final class CreatineStore: ObservableObject {
 
     func entry(for date: Date) -> DoseEntry? { log[DayKey.key(for: date)] }
 
-    // MARK: - Actions
+    // MARK: - Eylemler
 
     func markTaken(on date: Date = Date()) {
         log = Persistence.markTaken(on: date)
+        settings = Persistence.loadSettings()   // stok düşmüş olabilir
         syncSideEffects()
     }
 
     func undo(on date: Date = Date()) {
         log = Persistence.undo(on: date)
+        settings = Persistence.loadSettings()   // stok geri eklenmiş olabilir
         syncSideEffects()
     }
 
@@ -46,6 +47,12 @@ final class CreatineStore: ObservableObject {
         settings = copy
         Persistence.saveSettings(copy)
         syncSideEffects()
+    }
+
+    func restock(to grams: Double? = nil) {
+        Persistence.restock(to: grams)
+        settings = Persistence.loadSettings()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     func completeOnboarding() {
