@@ -6,10 +6,12 @@ import WidgetKit
 struct CreatineTrackerApp: App {
     @StateObject private var store = CreatineStore.shared
     @Environment(\.scenePhase) private var scenePhase
-    private let delegate = NotificationDelegate()
 
     init() {
-        UNUserNotificationCenter.current().delegate = delegate
+        // UNUserNotificationCenter.delegate ZAYIF bir referans tutar.
+        // Delegate'i statik bir singleton'da saklamazsak nesne bellekten
+        // silinir ve bildirime dokunulduğunda uygulama çöker.
+        UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
         NotificationManager.registerCategories()
     }
 
@@ -21,7 +23,6 @@ struct CreatineTrackerApp: App {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
-                // Widget'tan veya bildirimden yapılmış değişiklikleri al.
                 store.reload()
                 Task { await NotificationManager.reschedule() }
             }
@@ -29,8 +30,12 @@ struct CreatineTrackerApp: App {
     }
 }
 
-/// Bildirimdeki "Log it" butonunu işler. Uygulama açılmadan çalışır.
+/// Bildirimdeki "Log it" butonunu işler.
+/// `shared` sayesinde uygulama ömrü boyunca hayatta kalır.
 final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+
+    static let shared = NotificationDelegate()
+    private override init() { super.init() }
 
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
@@ -43,12 +48,22 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
-        guard response.actionIdentifier == NotificationManager.logActionID else { return }
+        switch response.actionIdentifier {
 
-        Persistence.markTaken()
-        await NotificationManager.reschedule()
-        WidgetCenter.shared.reloadAllTimelines()
-        await MainActor.run { CreatineStore.shared.reload() }
+        case NotificationManager.logActionID:
+            Persistence.markTaken()
+            await NotificationManager.reschedule()
+            WidgetCenter.shared.reloadAllTimelines()
+            await MainActor.run { CreatineStore.shared.reload() }
+
+        case UNNotificationDefaultActionIdentifier:
+            // Bildirime dokunuldu, uygulama açılıyor. Ekranın güncel açılması
+            // için veriyi tazeliyoruz; scenePhase da ayrıca tetikleniyor.
+            await MainActor.run { CreatineStore.shared.reload() }
+
+        default:
+            break
+        }
     }
 }
 
@@ -87,4 +102,3 @@ struct MainTabView: View {
         }
     }
 }
-
