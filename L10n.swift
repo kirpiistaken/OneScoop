@@ -28,6 +28,7 @@ enum L {
     static var onbReminderHint: String { String(localized: "onb.reminder_hint") }
     static var onbStart: String { String(localized: "onb.start") }
     static var onbTagline: String { String(localized: "onb.tagline") }
+    static var restoreChecking: String { String(localized: "restore.checking") }
     static var settingsAdjust: String { String(localized: "settings.adjust") }
     static var settingsAdjustLoading: String { String(localized: "settings.adjust_loading") }
     static var settingsDeleteAll: String { String(localized: "settings.delete_all") }

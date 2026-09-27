@@ -9,10 +9,32 @@ final class CreatineStore: ObservableObject {
     @Published private(set) var log: [String: DoseEntry]
     @Published private(set) var iCloudEnabled: Bool
 
+    /// Yeni kurulumda iCloud'dan eski veriler beklenirken `true`.
+    /// Bu sürede kurulum ekranı yerine "iCloud'da aranıyor" ekranı gösteriliyor;
+    /// böylece geri dönen kullanıcı kurulumu görmeden kaldığı yerden devam ediyor.
+    @Published private(set) var isRestoring: Bool
+
+    /// iCloud verisi yeni kurulumda genelde birkaç saniyede gelir. Bu süre
+    /// dolarsa (gerçekten yeni kullanıcıysa) kurulum ekranına geçilir.
+    private static let restoreTimeout: Duration = .seconds(6)
+
     private init() {
         settings = Persistence.loadSettings()
         log = Persistence.loadLog()
         iCloudEnabled = CloudSync.isEnabled
+
+        // Sadece: hiç ayar kaydı yok (yeni kurulum), iCloud açık ve iPhone'da
+        // iCloud hesabı var. Aksi halde beklemenin anlamı yok.
+        isRestoring = !Persistence.hasStoredSettings
+            && CloudSync.isEnabled
+            && FileManager.default.ubiquityIdentityToken != nil
+
+        if isRestoring {
+            Task { [weak self] in
+                try? await Task.sleep(for: Self.restoreTimeout)
+                self?.isRestoring = false
+            }
+        }
     }
 
     func reload() {
@@ -23,17 +45,35 @@ final class CreatineStore: ObservableObject {
     /// Uygulama öne geldiğinde: widget'tan/bildirimden/saatten gelenleri al,
     /// iCloud ile birleştir, her yeri güncelle.
     func becameActive() {
-        CloudSync.sync()
-        reload()
-        PhoneWatchBridge.shared.pushStatus()
+        if CloudSync.sync() {
+            applyRemoteChange()
+        } else {
+            reload()
+            PhoneWatchBridge.shared.pushStatus()
+        }
     }
 
     /// iCloud'dan başka bir cihazın değişikliği geldiğinde.
     func applyRemoteChange() {
+        let wasOnboarded = settings.hasCompletedOnboarding
         reload()
+        if settings.hasCompletedOnboarding { isRestoring = false }
+
         WidgetCenter.shared.reloadAllTimelines()
         PhoneWatchBridge.shared.pushStatus()
-        Task { await NotificationManager.reschedule() }
+
+        // iCloud'dan geri yüklenen kullanıcı kurulumu görmediği için bildirim
+        // iznini de hiç vermedi. Hatırlatma açıksa izni burada iste.
+        let needsPermission = !wasOnboarded
+            && settings.hasCompletedOnboarding
+            && settings.reminderEnabled
+        Task {
+            if needsPermission,
+               await NotificationManager.authorizationStatus() == .notDetermined {
+                _ = await NotificationManager.requestAuthorization()
+            }
+            await NotificationManager.reschedule()
+        }
     }
 
     // MARK: - Türetilmiş

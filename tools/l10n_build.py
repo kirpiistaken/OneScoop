@@ -407,6 +407,13 @@ add("settings.reset_icloud",
     "Rimuove i dati di OneScoop anche da iCloud e dagli altri dispositivi.",
     "Também apaga seus dados do OneScoop do iCloud e dos seus outros aparelhos.")
 
+# ── Geri yükleme ─────────────────────────────────────────
+add("restore.checking",
+    "Looking for your history in iCloud…", "Geçmişin iCloud'da aranıyor…",
+    "Buscando tu historial en iCloud…", "Dein Verlauf wird in iCloud gesucht …",
+    "Recherche de votre historique dans iCloud…", "Ricerca della cronologia in iCloud…",
+    "Procurando seu histórico no iCloud…")
+
 # ── Apple Watch ────────────────────────────────────────────
 add("watch.setup_first",
     "Set up OneScoop on your iPhone first.", "Önce OneScoop'u iPhone'unda kur.",

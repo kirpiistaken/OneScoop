@@ -83,11 +83,14 @@ struct RootView: View {
         Group {
             if store.settings.hasCompletedOnboarding {
                 MainTabView()
+            } else if store.isRestoring {
+                RestoringView()
             } else {
                 OnboardingView()
             }
         }
         .animation(.snappy, value: store.settings.hasCompletedOnboarding)
+        .animation(.snappy, value: store.isRestoring)
         .onChange(of: scenePhase, initial: true) { old, new in
             // Bir "açılış" = soğuk başlatma ya da arka plandan öne gelme.
             // İzin penceresi gibi sistem diyaloglarından dönüş (.inactive → .active)
@@ -112,6 +115,25 @@ struct RootView: View {
         Task {
             try? await Task.sleep(for: .seconds(1.5))
             requestReview()
+        }
+    }
+}
+
+/// Yeni kurulumda iCloud'dan eski veriler beklenirken gösterilen kısa ekran.
+struct RestoringView: View {
+    var body: some View {
+        ZStack {
+            CT.bg.ignoresSafeArea()
+            VStack(spacing: 16) {
+                ProgressView()
+                    .controlSize(.large)
+                    .tint(CT.accent)
+                Text(L.restoreChecking)
+                    .font(.system(.subheadline, design: .rounded).weight(.medium))
+                    .foregroundStyle(CT.inkSoft)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(32)
         }
     }
 }
