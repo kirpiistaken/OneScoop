@@ -35,6 +35,10 @@ enum L {
     static var settingsDose: String { String(localized: "settings.dose") }
     static var settingsEvery: String { String(localized: "settings.every") }
     static func settingsHours(_ a0: Int) -> String { String(localized: "settings.hours \(a0)") }
+    static var settingsIcloud: String { String(localized: "settings.icloud") }
+    static var settingsIcloudOff: String { String(localized: "settings.icloud_off") }
+    static var settingsIcloudOn: String { String(localized: "settings.icloud_on") }
+    static var settingsIcloudToggle: String { String(localized: "settings.icloud_toggle") }
     static func settingsLength(_ a0: Int) -> String { String(localized: "settings.length \(a0)") }
     static var settingsLoadingDose: String { String(localized: "settings.loading_dose") }
     static func settingsLoadingFooter(_ a0: Int) -> String { String(localized: "settings.loading_footer \(a0)") }
@@ -48,6 +52,7 @@ enum L {
     static var settingsRepeatFooterOff: String { String(localized: "settings.repeat_footer_off") }
     static func settingsRepeatFooterOn(_ a0: String, _ a1: String) -> String { String(localized: "settings.repeat_footer_on \(a0) \(a1)") }
     static var settingsReset: String { String(localized: "settings.reset") }
+    static var settingsResetIcloud: String { String(localized: "settings.reset_icloud") }
     static var settingsResetMsg: String { String(localized: "settings.reset_msg") }
     static var settingsResetTitle: String { String(localized: "settings.reset_title") }
     static var settingsStartedOn: String { String(localized: "settings.started_on") }
@@ -87,6 +92,7 @@ enum L {
     static var todayUndo: String { String(localized: "today.undo") }
     static var todayYes: String { String(localized: "today.yes") }
     static var todayYesA11y: String { String(localized: "today.yes_a11y") }
+    static var watchSetupFirst: String { String(localized: "watch.setup_first") }
     static var widgetDescription: String { String(localized: "widget.description") }
     static var widgetDoseLogged: String { String(localized: "widget.dose_logged") }
     static func widgetGramsToday(_ a0: String) -> String { String(localized: "widget.grams_today \(a0)") }

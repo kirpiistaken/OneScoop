@@ -141,11 +141,23 @@ struct SettingsView: View {
                         .foregroundStyle(CT.inkSoft)
                 }
 
+                // MARK: iCloud
+                Section {
+                    Toggle(L.settingsIcloudToggle, isOn: Binding(
+                        get: { store.iCloudEnabled },
+                        set: { store.setICloudEnabled($0) }
+                    ))
+                } header: {
+                    Text(L.settingsIcloud)
+                } footer: {
+                    Text(store.iCloudEnabled ? L.settingsIcloudOn : L.settingsIcloudOff)
+                }
+
                 // MARK: Data
                 Section {
                     Button(L.settingsReset, role: .destructive) { showResetConfirm = true }
                 } footer: {
-                    Text(L.settingsLocalOnly)
+                    Text(store.iCloudEnabled ? L.settingsResetIcloud : L.settingsLocalOnly)
                 }
             }
             .navigationTitle(L.tabSettings)

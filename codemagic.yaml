@@ -1,77 +1,110 @@
+# İki akış var:
+#   ios-testflight → main dalına push. Mağazaya çıkacak stabil sürüm.
+#   ios-dev        → dev dalına push. Yeni özellikler burada denenir.
+# İkisi de TestFlight'a yükler; hangi sürümün hangisi olduğunu sürüm
+# numarasından ayırt edersin (main 1.2, dev 1.3 gibi).
+#
+# Ortak adımlar aşağıda bir kez tanımlanıp iki akışta da kullanılıyor (&/*).
+
+definitions:
+  environment: &environment
+    xcode: latest
+    groups:
+      - appstore
+    vars:
+      BUNDLE_ID: "com.atalay.creatinetracker"
+      WIDGET_BUNDLE_ID: "com.atalay.creatinetracker.CreatineWidget"
+      WATCH_BUNDLE_ID: "com.atalay.creatinetracker.watchkitapp"
+      XCODE_SCHEME: "CreatineTracker"
+
+  scripts: &scripts
+    - name: XcodeGen kur
+      script: brew install xcodegen
+
+    - name: Xcode projesini üret
+      script: xcodegen generate --spec project.yml
+
+    - name: Keychain hazırla
+      script: keychain initialize
+
+    - name: İmzalama dosyalarını oluştur / indir
+      script: |
+        for ID in "$BUNDLE_ID" "$WIDGET_BUNDLE_ID" "$WATCH_BUNDLE_ID"; do
+          app-store-connect fetch-signing-files "$ID" \
+            --type IOS_APP_STORE \
+            --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
+            --create
+        done
+
+    - name: Sertifikayı keychain'e ekle
+      script: keychain add-certificates
+
+    - name: Profilleri projeye uygula
+      script: xcode-project use-profiles
+
+    - name: Build numarasını artır
+      script: agvtool new-version -all $(($BUILD_NUMBER + $PROJECT_BUILD_NUMBER))
+
+    - name: IPA oluştur
+      script: |
+        xcode-project build-ipa \
+          --project "CreatineTracker.xcodeproj" \
+          --scheme "$XCODE_SCHEME"
+
+  artifacts: &artifacts
+    - build/ios/ipa/*.ipa
+    - /tmp/xcodebuild_logs/*.log
+
+  email: &email
+    recipients:
+      - aybatalay@gmail.com
+    notify:
+      success: true
+      failure: true
+
 workflows:
 
   ios-testflight:
     name: OneScoop – TestFlight
     instance_type: mac_mini_m2
     max_build_duration: 45
-
     integrations:
       app_store_connect: CreatineTrackerKey
-
-    environment:
-      xcode: latest
-      groups:
-        - appstore
-      vars:
-        BUNDLE_ID: "com.atalay.creatinetracker"
-        WIDGET_BUNDLE_ID: "com.atalay.creatinetracker.CreatineWidget"
-        XCODE_SCHEME: "CreatineTracker"
-
+    environment: *environment
     triggering:
       events:
         - push
       branch_patterns:
         - pattern: main
           include: true
-
-    scripts:
-      - name: XcodeGen kur
-        script: brew install xcodegen
-
-      - name: Xcode projesini üret
-        script: xcodegen generate --spec project.yml
-
-      - name: Keychain hazırla
-        script: keychain initialize
-
-      - name: İmzalama dosyalarını oluştur / indir
-        script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
-            --create
-          app-store-connect fetch-signing-files "$WIDGET_BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
-            --create
-
-      - name: Sertifikayı keychain'e ekle
-        script: keychain add-certificates
-
-      - name: Profilleri projeye uygula
-        script: xcode-project use-profiles
-
-      - name: Build numarasını artır
-        script: agvtool new-version -all $(($BUILD_NUMBER + $PROJECT_BUILD_NUMBER))
-
-      - name: IPA oluştur
-        script: |
-          xcode-project build-ipa \
-            --project "CreatineTracker.xcodeproj" \
-            --scheme "$XCODE_SCHEME"
-
-    artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-
+    scripts: *scripts
+    artifacts: *artifacts
     publishing:
       app_store_connect:
         auth: integration
         submit_to_testflight: true
         submit_to_app_store: false
-      email:
-        recipients:
-          - aybatalay@gmail.com
-        notify:
-          success: true
-          failure: true
+      email: *email
+
+  ios-dev:
+    name: OneScoop – Dev (TestFlight internal)
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    integrations:
+      app_store_connect: CreatineTrackerKey
+    environment: *environment
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: dev
+          include: true
+    scripts: *scripts
+    artifacts: *artifacts
+    publishing:
+      app_store_connect:
+        auth: integration
+        # Sadece dahili test (sen). Harici beta incelemesine gönderme.
+        submit_to_testflight: false
+        submit_to_app_store: false
+      email: *email

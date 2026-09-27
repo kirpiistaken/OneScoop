@@ -4,27 +4,38 @@ title: Privacy Policy
 
 # Privacy Policy — OneScoop
 
-Last updated: 12 September 2026
+Last updated: 27 September 2026
 
 ## Short version
 
-OneScoop does not collect anything. There is no server, no account, and no analytics. Everything you enter stays on your iPhone.
+OneScoop does not collect anything. There is no server run by the developer, no account, and no analytics. Your data stays on your devices and, if you leave iCloud backup on, in your own iCloud account. The developer never sees it.
 
 ## What the app stores
 
-OneScoop saves the following on your device only:
+OneScoop saves the following:
 
 - Your daily creatine dose, and your loading phase settings if you use one
 - The dates on which you logged a dose, and the amount for each
 - Your reminder time and whether reminders are on
+- Your supply amount, if you use supply tracking
 
-This data is kept in a shared container on your device so that the app and its widget can both read it. It is never transmitted anywhere.
+On your iPhone, this data is kept in a shared container so that the app and its widget can both read it.
+
+## iCloud backup
+
+If iCloud backup is on (Settings, then iCloud), OneScoop also keeps a copy of this data in your own iCloud account using Apple's iCloud key-value storage. This lets your history come back if you reinstall the app or set up a new device with the same Apple Account.
+
+This copy is stored by Apple under your Apple Account. The developer has no access to it. You can turn iCloud backup off at any time; the data then stays on your device only.
+
+## Apple Watch
+
+If you use the OneScoop Apple Watch app, your iPhone and Apple Watch exchange today's status and your streak directly with each other using Apple's Watch Connectivity. This data does not go through any server.
 
 ## What the app does not do
 
 - No user accounts, no sign-in
 - No analytics, crash reporting, tracking, or advertising SDKs
-- No network requests of any kind
+- No servers operated by the developer
 - No access to contacts, location, photos, health data, or any other personal information
 - Nothing is shared with the developer or with third parties
 
@@ -34,7 +45,9 @@ If you turn on the daily reminder, OneScoop schedules local notifications on you
 
 ## Deleting your data
 
-Deleting the app removes everything it stored. You can also clear everything from within the app: Settings, then Reset all data.
+Settings, then Reset all data, removes everything the app stored, including the iCloud copy and the copies on your other devices when iCloud backup is on.
+
+Deleting the app removes the data on that device. If iCloud backup is on, the copy in your iCloud account remains until you reset it from within the app, or remove it in your iPhone's Settings under your Apple Account, iCloud, Manage Storage.
 
 ## Children
 

@@ -7,15 +7,33 @@ final class CreatineStore: ObservableObject {
 
     @Published private(set) var settings: DoseSettings
     @Published private(set) var log: [String: DoseEntry]
+    @Published private(set) var iCloudEnabled: Bool
 
     private init() {
         settings = Persistence.loadSettings()
         log = Persistence.loadLog()
+        iCloudEnabled = CloudSync.isEnabled
     }
 
     func reload() {
         settings = Persistence.loadSettings()
         log = Persistence.loadLog()
+    }
+
+    /// Uygulama öne geldiğinde: widget'tan/bildirimden/saatten gelenleri al,
+    /// iCloud ile birleştir, her yeri güncelle.
+    func becameActive() {
+        CloudSync.sync()
+        reload()
+        PhoneWatchBridge.shared.pushStatus()
+    }
+
+    /// iCloud'dan başka bir cihazın değişikliği geldiğinde.
+    func applyRemoteChange() {
+        reload()
+        WidgetCenter.shared.reloadAllTimelines()
+        PhoneWatchBridge.shared.pushStatus()
+        Task { await NotificationManager.reschedule() }
     }
 
     // MARK: - Türetilmiş
@@ -52,7 +70,15 @@ final class CreatineStore: ObservableObject {
     func restock(to grams: Double? = nil) {
         Persistence.restock(to: grams)
         settings = Persistence.loadSettings()
-        WidgetCenter.shared.reloadAllTimelines()
+        syncSideEffects()
+    }
+
+    func setICloudEnabled(_ enabled: Bool) {
+        CloudSync.isEnabled = enabled
+        iCloudEnabled = enabled
+        if enabled, CloudSync.sync() {
+            applyRemoteChange()
+        }
     }
 
     func completeOnboarding() {
@@ -68,14 +94,17 @@ final class CreatineStore: ObservableObject {
 
     func resetEverything() {
         Persistence.resetAll()
-        settings = .default
-        log = [:]
+        CloudSync.sync()          // silmeyi iCloud'a ve diğer cihazlara da taşı
+        reload()
         Task { await NotificationManager.cancelAll() }
         WidgetCenter.shared.reloadAllTimelines()
+        PhoneWatchBridge.shared.pushStatus()
     }
 
     private func syncSideEffects() {
+        if CloudSync.sync() { reload() }
         WidgetCenter.shared.reloadAllTimelines()
+        PhoneWatchBridge.shared.pushStatus()
         Task { await NotificationManager.reschedule() }
     }
 }

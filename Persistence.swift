@@ -3,9 +3,17 @@ import Foundation
 /// Tüm okuma/yazma buradan geçer. App, widget ve bildirim uzantısı ayrı
 /// process'ler olduğu için her mutasyon "oku → değiştir → yaz" şeklinde,
 /// bellekteki kopyaya güvenmeden yapılır.
+///
+/// iCloud senkronu için iki ek kayıt tutuluyor:
+/// - tombstones: geri alınan günler ve ne zaman geri alındıkları. Başka bir
+///   cihazdaki eski kaydın silinen günü geri getirmesini engeller.
+/// - settings.updatedAt: ayarların en son ne zaman değiştiği. İki cihaz
+///   arasında hangi ayarların geçerli olduğuna bununla karar veriliyor.
 enum Persistence {
     private static let settingsKey = "ct.settings.v1"
+    private static let settingsAtKey = "ct.settings.updatedAt"
     private static let logKey = "ct.log.v1"
+    private static let tombKey = "ct.tombstones.v1"
 
     private static let encoder = JSONEncoder()
     private static let decoder = JSONDecoder()
@@ -20,9 +28,18 @@ enum Persistence {
         return decoded
     }
 
-    static func saveSettings(_ settings: DoseSettings) {
+    static var hasStoredSettings: Bool {
+        AppGroup.defaults.data(forKey: settingsKey) != nil
+    }
+
+    static func saveSettings(_ settings: DoseSettings, updatedAt: Date = Date()) {
         guard let data = try? encoder.encode(settings) else { return }
         AppGroup.defaults.set(data, forKey: settingsKey)
+        AppGroup.defaults.set(updatedAt, forKey: settingsAtKey)
+    }
+
+    static var settingsUpdatedAt: Date? {
+        AppGroup.defaults.object(forKey: settingsAtKey) as? Date
     }
 
     // MARK: - Log
@@ -40,6 +57,21 @@ enum Persistence {
         AppGroup.defaults.set(data, forKey: logKey)
     }
 
+    // MARK: - Tombstones
+
+    static func loadTombstones() -> [String: Date] {
+        guard let data = AppGroup.defaults.data(forKey: tombKey),
+              let decoded = try? decoder.decode([String: Date].self, from: data) else {
+            return [:]
+        }
+        return decoded
+    }
+
+    static func saveTombstones(_ tombstones: [String: Date]) {
+        guard let data = try? encoder.encode(tombstones) else { return }
+        AppGroup.defaults.set(data, forKey: tombKey)
+    }
+
     // MARK: - Mutations
 
     @discardableResult
@@ -52,6 +84,11 @@ enum Persistence {
         let grams = settings.dose(on: date)
         log[key] = DoseEntry(day: key, grams: grams, takenAt: Date())
         saveLog(log)
+
+        var tombstones = loadTombstones()
+        if tombstones.removeValue(forKey: key) != nil {
+            saveTombstones(tombstones)
+        }
 
         // Stoktan düş — aynı günü ikinci kez işaretlemek iki kez düşmesin.
         if settings.trackSupply && !alreadyLogged {
@@ -69,6 +106,11 @@ enum Persistence {
 
         if let removed = log.removeValue(forKey: key) {
             saveLog(log)
+
+            var tombstones = loadTombstones()
+            tombstones[key] = Date()
+            saveTombstones(tombstones)
+
             // Stoğu geri ekle, kutu kapasitesini aşmasın.
             if settings.trackSupply {
                 settings.supplyRemaining = min(
@@ -92,9 +134,17 @@ enum Persistence {
         loadLog()[DayKey.key(for: date)] != nil
     }
 
+    /// Her şeyi siler. Silinen her gün için tombstone bırakır ki iCloud
+    /// açıkken diğer cihazlardaki kopyalar veriyi geri getirmesin.
     static func resetAll() {
-        AppGroup.defaults.removeObject(forKey: logKey)
-        AppGroup.defaults.removeObject(forKey: settingsKey)
+        let now = Date()
+        var tombstones = loadTombstones()
+        for key in loadLog().keys {
+            tombstones[key] = now
+        }
+        saveTombstones(tombstones)
+        saveLog([:])
+        saveSettings(.default, updatedAt: now)
     }
 
     // MARK: - Widget

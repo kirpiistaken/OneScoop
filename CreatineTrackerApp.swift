@@ -12,6 +12,14 @@ struct CreatineTrackerApp: App {
         // delegate ZAYIF referans — singleton'da tutmazsak bildirime dokununca çöker.
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
         NotificationManager.registerCategories()
+
+        // Saat komutları uygulama kapalıyken de gelebilir; en başta dinlemeye başla.
+        PhoneWatchBridge.shared.activate()
+
+        // iCloud'dan başka bir cihazın değişikliği gelince ekranı yenile.
+        CloudSync.start {
+            Task { @MainActor in CreatineStore.shared.applyRemoteChange() }
+        }
     }
 
     var body: some Scene {
@@ -22,7 +30,7 @@ struct CreatineTrackerApp: App {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
-                store.reload()
+                store.becameActive()
                 // Dil değiştiyse bildirim butonu ve metinleri de yenilensin.
                 NotificationManager.registerCategories()
                 Task { await NotificationManager.reschedule() }
@@ -52,7 +60,11 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
             Persistence.markTaken()
             await NotificationManager.reschedule()
             WidgetCenter.shared.reloadAllTimelines()
-            await MainActor.run { CreatineStore.shared.reload() }
+            await MainActor.run {
+                CloudSync.sync()
+                CreatineStore.shared.reload()
+                PhoneWatchBridge.shared.pushStatus()
+            }
         case UNNotificationDefaultActionIdentifier:
             await MainActor.run { CreatineStore.shared.reload() }
         default:

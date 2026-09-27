@@ -1849,6 +1849,194 @@
         }
       }
     },
+    "settings.icloud": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        }
+      }
+    },
+    "settings.icloud_off": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Daten bleiben nur auf diesem iPhone. Wenn du die App löschst, sind sie auch weg."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your data stays on this iPhone only. Deleting the app deletes it too."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tus datos se quedan solo en este iPhone. Si borras la app, también se borran."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos données restent uniquement sur cet iPhone. Supprimer l’app les supprime aussi."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "I tuoi dati restano solo su questo iPhone. Se elimini l’app, vengono eliminati anche loro."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seus dados ficam só neste iPhone. Se você apagar o app, eles também são apagados."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verilerin yalnızca bu iPhone'da kalır. Uygulamayı silersen onlar da silinir."
+          }
+        }
+      }
+    },
+    "settings.icloud_on": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dein Verlauf und deine Einstellungen liegen in deinem eigenen iCloud-Konto und sind wieder da, wenn du OneScoop neu installierst oder ein neues iPhone nutzt."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your history and settings are kept in your own iCloud account, so they come back if you reinstall OneScoop or move to a new iPhone."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tu historial y tus ajustes se guardan en tu propia cuenta de iCloud, así que vuelven si reinstalas OneScoop o cambias de iPhone."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre historique et vos réglages sont conservés dans votre propre compte iCloud : ils reviennent si vous réinstallez OneScoop ou changez d’iPhone."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cronologia e impostazioni restano nel tuo account iCloud, così tornano se reinstalli OneScoop o passi a un nuovo iPhone."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seu histórico e seus ajustes ficam na sua própria conta do iCloud e voltam se você reinstalar o OneScoop ou trocar de iPhone."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geçmişin ve ayarların kendi iCloud hesabında tutulur; OneScoop'u yeniden yüklediğinde ya da yeni bir iPhone'a geçtiğinde geri gelir."
+          }
+        }
+      }
+    },
+    "settings.icloud_toggle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In iCloud sichern"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Back up to iCloud"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia en iCloud"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sauvegarder dans iCloud"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup su iCloud"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Backup no iCloud"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud'a yedekle"
+          }
+        }
+      }
+    },
     "settings.length %lld": {
       "extractionState": "manual",
       "localizations": {
@@ -2600,6 +2788,53 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tüm verileri sıfırla"
+          }
+        }
+      }
+    },
+    "settings.reset_icloud": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entfernt deine OneScoop-Daten auch aus iCloud und von deinen anderen Geräten."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This also removes your OneScoop data from iCloud and your other devices."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "También borra tus datos de OneScoop de iCloud y de tus otros dispositivos."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprime aussi vos données OneScoop d’iCloud et de vos autres appareils."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuove i dati di OneScoop anche da iCloud e dagli altri dispositivi."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Também apaga seus dados do OneScoop do iCloud e dos seus outros aparelhos."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop verilerini iCloud'dan ve diğer cihazlarından da siler."
           }
         }
       }
@@ -4815,6 +5050,53 @@
           "stringUnit": {
             "state": "translated",
             "value": "Evet, bugünkü kreatinimi aldım"
+          }
+        }
+      }
+    },
+    "watch.setup_first": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Richte OneScoop zuerst auf deinem iPhone ein."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up OneScoop on your iPhone first."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Primero configura OneScoop en tu iPhone."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configurez d’abord OneScoop sur votre iPhone."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configura prima OneScoop sul tuo iPhone."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Configure o OneScoop no iPhone primeiro."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Önce OneScoop'u iPhone'unda kur."
           }
         }
       }

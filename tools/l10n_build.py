@@ -377,6 +377,43 @@ add("widget.description",
     "Notez la créatine du jour sans ouvrir l’app.", "Registra la creatina di oggi senza aprire l’app.",
     "Registre a creatina de hoje sem abrir o app.")
 
+# ── iCloud ────────────────────────────────────────────────
+add("settings.icloud", "iCloud", "iCloud", "iCloud", "iCloud", "iCloud", "iCloud", "iCloud")
+add("settings.icloud_toggle",
+    "Back up to iCloud", "iCloud'a yedekle", "Copia en iCloud", "In iCloud sichern",
+    "Sauvegarder dans iCloud", "Backup su iCloud", "Backup no iCloud")
+add("settings.icloud_on",
+    "Your history and settings are kept in your own iCloud account, so they come back if you reinstall OneScoop or move to a new iPhone.",
+    "Geçmişin ve ayarların kendi iCloud hesabında tutulur; OneScoop'u yeniden yüklediğinde ya da yeni bir iPhone'a geçtiğinde geri gelir.",
+    "Tu historial y tus ajustes se guardan en tu propia cuenta de iCloud, así que vuelven si reinstalas OneScoop o cambias de iPhone.",
+    "Dein Verlauf und deine Einstellungen liegen in deinem eigenen iCloud-Konto und sind wieder da, wenn du OneScoop neu installierst oder ein neues iPhone nutzt.",
+    "Votre historique et vos réglages sont conservés dans votre propre compte iCloud : ils reviennent si vous réinstallez OneScoop ou changez d’iPhone.",
+    "Cronologia e impostazioni restano nel tuo account iCloud, così tornano se reinstalli OneScoop o passi a un nuovo iPhone.",
+    "Seu histórico e seus ajustes ficam na sua própria conta do iCloud e voltam se você reinstalar o OneScoop ou trocar de iPhone.")
+add("settings.icloud_off",
+    "Your data stays on this iPhone only. Deleting the app deletes it too.",
+    "Verilerin yalnızca bu iPhone'da kalır. Uygulamayı silersen onlar da silinir.",
+    "Tus datos se quedan solo en este iPhone. Si borras la app, también se borran.",
+    "Deine Daten bleiben nur auf diesem iPhone. Wenn du die App löschst, sind sie auch weg.",
+    "Vos données restent uniquement sur cet iPhone. Supprimer l’app les supprime aussi.",
+    "I tuoi dati restano solo su questo iPhone. Se elimini l’app, vengono eliminati anche loro.",
+    "Seus dados ficam só neste iPhone. Se você apagar o app, eles também são apagados.")
+add("settings.reset_icloud",
+    "This also removes your OneScoop data from iCloud and your other devices.",
+    "OneScoop verilerini iCloud'dan ve diğer cihazlarından da siler.",
+    "También borra tus datos de OneScoop de iCloud y de tus otros dispositivos.",
+    "Entfernt deine OneScoop-Daten auch aus iCloud und von deinen anderen Geräten.",
+    "Supprime aussi vos données OneScoop d’iCloud et de vos autres appareils.",
+    "Rimuove i dati di OneScoop anche da iCloud e dagli altri dispositivi.",
+    "Também apaga seus dados do OneScoop do iCloud e dos seus outros aparelhos.")
+
+# ── Apple Watch ────────────────────────────────────────────
+add("watch.setup_first",
+    "Set up OneScoop on your iPhone first.", "Önce OneScoop'u iPhone'unda kur.",
+    "Primero configura OneScoop en tu iPhone.", "Richte OneScoop zuerst auf deinem iPhone ein.",
+    "Configurez d’abord OneScoop sur votre iPhone.", "Configura prima OneScoop sul tuo iPhone.",
+    "Configure o OneScoop no iPhone primeiro.")
+
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
