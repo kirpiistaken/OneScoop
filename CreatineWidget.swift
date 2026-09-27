@@ -23,7 +23,6 @@ struct CreatineProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<CreatineEntry>) -> Void) {
         let entry = CreatineEntry(date: Date(), status: Persistence.currentStatus())
-        // Gece yarısı yeni gün başlar, widget kendini sıfırlar.
         completion(Timeline(entries: [entry], policy: .after(DayKey.nextMidnight)))
     }
 }
@@ -52,29 +51,32 @@ struct CreatineWidgetView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 34, weight: .bold))
                     .foregroundStyle(accent)
-                Text("Dose logged")
+                Text(L.widgetDoseLogged)
                     .font(CT.display(17, .bold))
                     .foregroundStyle(CT.ink)
-                Text("\(entry.status.grams.gramString) g today")
+                    .minimumScaleFactor(0.8)
+                Text(L.widgetGramsToday(entry.status.grams.gramString))
                     .font(.system(size: 12, weight: .medium, design: .rounded))
                     .foregroundStyle(CT.inkSoft)
                 Spacer(minLength: 0)
                 Button(intent: UndoTakenIntent()) {
-                    Label("Undo", systemImage: "arrow.uturn.backward")
+                    Label(L.todayUndo, systemImage: "arrow.uturn.backward")
                         .font(.system(size: 11, weight: .semibold, design: .rounded))
                         .foregroundStyle(CT.inkSoft)
                 }
                 .buttonStyle(.plain)
             } else {
-                Text("Did you take creatine today?")
+                Text(L.todayQuestion)
                     .font(CT.display(17, .bold))
                     .foregroundStyle(CT.ink)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.7)
                 Spacer(minLength: 0)
                 Button(intent: MarkTakenIntent()) {
-                    Text("Yes")
+                    Text(L.todayYes)
                         .font(CT.display(18, .heavy))
                         .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(accent, in: RoundedRectangle(cornerRadius: 13, style: .continuous))
@@ -90,20 +92,22 @@ struct CreatineWidgetView: View {
     private var medium: some View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(entry.status.isTaken ? "You took your daily dose of creatine" : "Did you take creatine today?")
+                Text(entry.status.isTaken ? L.todayDoneTitle : L.todayQuestion)
                     .font(CT.display(20, .bold))
                     .foregroundStyle(CT.ink)
-                    .minimumScaleFactor(0.75)
+                    .minimumScaleFactor(0.7)
                     .fixedSize(horizontal: false, vertical: true)
 
                 HStack(spacing: 8) {
-                    Text("\(entry.status.grams.gramString) g")
+                    Text(verbatim: "\(entry.status.grams.gramString) g")
                         .font(.system(size: 13, weight: .semibold, design: .rounded))
                         .foregroundStyle(CT.inkSoft)
                     if entry.status.streak > 1 {
-                        Text("· \(entry.status.streak) day streak")
+                        Text(L.widgetStreak(entry.status.streak))
                             .font(.system(size: 13, weight: .medium, design: .rounded))
                             .foregroundStyle(CT.inkSoft)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                     }
                 }
                 Spacer(minLength: 0)
@@ -115,18 +119,23 @@ struct CreatineWidgetView: View {
                         .font(.system(size: 52, weight: .bold))
                         .foregroundStyle(accent)
                     Button(intent: UndoTakenIntent()) {
-                        Text("Undo")
+                        Text(L.todayUndo)
                             .font(.system(size: 12, weight: .semibold, design: .rounded))
                             .foregroundStyle(CT.inkSoft)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                     }
                     .buttonStyle(.plain)
                 }
                 .frame(width: 96)
             } else {
                 Button(intent: MarkTakenIntent()) {
-                    Text("Yes")
+                    Text(L.todayYes)
                         .font(CT.display(26, .heavy))
                         .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                        .padding(.horizontal, 8)
                         .frame(width: 96, height: 96)
                         .background(accent, in: Circle())
                 }
@@ -139,7 +148,6 @@ struct CreatineWidgetView: View {
 
     @ViewBuilder
     private var circular: some View {
-        // İki farklı AppIntent tipi olduğu için ternary yerine if/else şart.
         if entry.status.isTaken {
             Button(intent: UndoTakenIntent()) { circularFace }
                 .buttonStyle(.plain)
@@ -168,8 +176,8 @@ struct CreatineWidget: Widget {
                     entry.status.isTaken ? CT.accentSoft : CT.bg
                 }
         }
-        .configurationDisplayName("Creatine")
-        .description("Log today's creatine without opening the app.")
+        .configurationDisplayName(Text(verbatim: "OneScoop"))
+        .description(Text(L.widgetDescription))
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular])
     }
 }

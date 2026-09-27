@@ -1,10 +1,12 @@
 import AppIntents
 import WidgetKit
 
-/// Widget üzerindeki "Yes" butonu. Uygulama açılmadan çalışır (iOS 17+).
+// Başlık ve açıklamalar Localizable.xcstrings'teki anahtarlardan okunuyor.
+// App Intents bunları derleme zamanında çıkardığı için literal kalmak zorunda.
+
 struct MarkTakenIntent: AppIntent {
-    static var title: LocalizedStringResource = "Log today's creatine"
-    static var description = IntentDescription("Marks today's creatine dose as taken.")
+    static var title: LocalizedStringResource = "intent.log.title"
+    static var description = IntentDescription("intent.log.desc")
     static var openAppWhenRun: Bool = false
 
     func perform() async throws -> some IntentResult {
@@ -15,10 +17,9 @@ struct MarkTakenIntent: AppIntent {
     }
 }
 
-/// Yanlışlıkla basıldıysa geri alma.
 struct UndoTakenIntent: AppIntent {
-    static var title: LocalizedStringResource = "Undo today's creatine"
-    static var description = IntentDescription("Removes today's creatine entry.")
+    static var title: LocalizedStringResource = "intent.undo.title"
+    static var description = IntentDescription("intent.undo.desc")
     static var openAppWhenRun: Bool = false
 
     func perform() async throws -> some IntentResult {

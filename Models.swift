@@ -20,6 +20,7 @@ struct DoseSettings: Codable, Equatable {
     var containerGrams: Double = 500     // kutunun tam dolu hali
     var supplyRemaining: Double = 0      // elde kalan gram
 
+    var hasAskedForReview: Bool = false
     var hasCompletedOnboarding: Bool = false
 
     static let `default` = DoseSettings()
@@ -33,7 +34,7 @@ struct DoseSettings: Codable, Equatable {
         case reminderEnabled, reminderHour, reminderMinute
         case repeatEnabled, repeatIntervalMinutes, repeatCount
         case trackSupply, containerGrams, supplyRemaining
-        case hasCompletedOnboarding
+        case hasAskedForReview, hasCompletedOnboarding
     }
 
     init() {}
@@ -55,6 +56,7 @@ struct DoseSettings: Codable, Equatable {
         trackSupply = try c.decodeIfPresent(Bool.self, forKey: .trackSupply) ?? d.trackSupply
         containerGrams = try c.decodeIfPresent(Double.self, forKey: .containerGrams) ?? d.containerGrams
         supplyRemaining = try c.decodeIfPresent(Double.self, forKey: .supplyRemaining) ?? d.supplyRemaining
+        hasAskedForReview = try c.decodeIfPresent(Bool.self, forKey: .hasAskedForReview) ?? d.hasAskedForReview
         hasCompletedOnboarding = try c.decodeIfPresent(Bool.self, forKey: .hasCompletedOnboarding) ?? d.hasCompletedOnboarding
     }
 

@@ -9,18 +9,22 @@ struct SettingsView: View {
 
     private let intervalOptions = [15, 30, 60, 120]
 
+    private func intervalLabel(_ minutes: Int) -> String {
+        minutes < 60 ? L.settingsMinutes(minutes) : L.settingsHours(minutes / 60)
+    }
+
     var body: some View {
         NavigationStack {
             Form {
                 // MARK: Dose
-                Section("Dose") {
+                Section(L.settingsDose) {
                     HStack {
-                        Text("Daily dose")
+                        Text(L.onbDailyDose)
                         Spacer()
-                        Text("\(store.settings.maintenanceDose.gramString) g")
+                        Text(verbatim: "\(store.settings.maintenanceDose.gramString) g")
                             .foregroundStyle(CT.inkSoft)
                     }
-                    Stepper("Adjust", value: Binding(
+                    Stepper(L.settingsAdjust, value: Binding(
                         get: { store.settings.maintenanceDose },
                         set: { new in store.update { $0.maintenanceDose = new } }
                     ), in: 1...15, step: 0.5)
@@ -29,19 +33,19 @@ struct SettingsView: View {
 
                 // MARK: Loading
                 Section {
-                    Toggle("Loading phase", isOn: Binding(
+                    Toggle(L.settingsLoadingPhase, isOn: Binding(
                         get: { store.settings.usesLoadingPhase },
                         set: { new in store.update { $0.usesLoadingPhase = new } }
                     ))
 
                     if store.settings.usesLoadingPhase {
                         HStack {
-                            Text("Loading dose")
+                            Text(L.settingsLoadingDose)
                             Spacer()
-                            Text("\(store.settings.loadingDose.gramString) g")
+                            Text(verbatim: "\(store.settings.loadingDose.gramString) g")
                                 .foregroundStyle(CT.inkSoft)
                         }
-                        Stepper("Adjust loading dose", value: Binding(
+                        Stepper(L.settingsAdjustLoading, value: Binding(
                             get: { store.settings.loadingDose },
                             set: { new in store.update { $0.loadingDose = new } }
                         ), in: 5...30, step: 1)
@@ -51,23 +55,23 @@ struct SettingsView: View {
                             get: { store.settings.loadingDays },
                             set: { new in store.update { $0.loadingDays = new } }
                         ), in: 3...14) {
-                            Text("Length: \(store.settings.loadingDays) days")
+                            Text(L.settingsLength(store.settings.loadingDays))
                         }
 
-                        DatePicker("Started on", selection: Binding(
+                        DatePicker(L.settingsStartedOn, selection: Binding(
                             get: { store.settings.startDate },
                             set: { new in store.update { $0.startDate = DayKey.startOfDay(new) } }
                         ), displayedComponents: .date)
                     }
                 } footer: {
                     if store.settings.usesLoadingPhase {
-                        Text("\(store.settings.loadingDaysRemaining) day(s) of loading left. A dose this size is usually split into several servings across the day.")
+                        Text(L.settingsLoadingFooter(store.settings.loadingDaysRemaining))
                     }
                 }
 
                 // MARK: Reminder
                 Section {
-                    Toggle("Daily reminder", isOn: Binding(
+                    Toggle(L.onbReminder, isOn: Binding(
                         get: { store.settings.reminderEnabled },
                         set: { new in
                             store.update { $0.reminderEnabled = new }
@@ -76,7 +80,7 @@ struct SettingsView: View {
                     ))
 
                     if store.settings.reminderEnabled {
-                        DatePicker("Time", selection: $reminderTime, displayedComponents: .hourAndMinute)
+                        DatePicker(L.settingsTime, selection: $reminderTime, displayedComponents: .hourAndMinute)
                             .onChange(of: reminderTime) { _, new in
                                 let comps = Calendar.current.dateComponents([.hour, .minute], from: new)
                                 store.update {
@@ -86,31 +90,26 @@ struct SettingsView: View {
                             }
                     }
                 } header: {
-                    Text("Notifications")
+                    Text(L.settingsNotifications)
                 } footer: {
-                    if permissionDenied {
-                        Text("Notifications are turned off for OneScoop in iOS Settings. Turn them on there to get reminders.")
-                    } else {
-                        Text("You'll only be notified on days you haven't logged a dose yet.")
-                    }
+                    Text(permissionDenied ? L.settingsDenied : L.settingsOnlyUnlogged)
                 }
 
-                // MARK: Repeat reminders
+                // MARK: Repeat
                 if store.settings.reminderEnabled {
                     Section {
-                        Toggle("Remind me again", isOn: Binding(
+                        Toggle(L.settingsRemindAgain, isOn: Binding(
                             get: { store.settings.repeatEnabled },
                             set: { new in store.update { $0.repeatEnabled = new } }
                         ))
 
                         if store.settings.repeatEnabled {
-                            Picker("Every", selection: Binding(
+                            Picker(L.settingsEvery, selection: Binding(
                                 get: { store.settings.repeatIntervalMinutes },
                                 set: { new in store.update { $0.repeatIntervalMinutes = new } }
                             )) {
                                 ForEach(intervalOptions, id: \.self) { minutes in
-                                    Text(minutes < 60 ? "\(minutes) min" : "\(minutes / 60) hr")
-                                        .tag(minutes)
+                                    Text(intervalLabel(minutes)).tag(minutes)
                                 }
                             }
 
@@ -118,35 +117,38 @@ struct SettingsView: View {
                                 get: { store.settings.repeatCount },
                                 set: { new in store.update { $0.repeatCount = new } }
                             ), in: 1...4) {
-                                Text("Up to \(store.settings.repeatCount) more time(s)")
+                                Text(L.settingsUpTo(store.settings.repeatCount))
                             }
                         }
                     } header: {
-                        Text("Repeat")
+                        Text(L.settingsRepeat)
                     } footer: {
                         if store.settings.repeatEnabled {
-                            Text("After \(store.settings.reminderTimeString), you'll be nudged every \(store.settings.repeatIntervalString) until you log the dose, up to \(store.settings.repeatCount) more time(s). Repeats stop at midnight, and all of them are cancelled the moment you tap Yes.")
+                            Text(L.settingsRepeatFooterOn(
+                                store.settings.reminderTimeLocalized,
+                                intervalLabel(store.settings.repeatIntervalMinutes)
+                            ))
                         } else {
-                            Text("Get another nudge if you still haven't logged your dose after the first reminder.")
+                            Text(L.settingsRepeatFooterOff)
                         }
                     }
                 }
 
                 // MARK: Widget
-                Section("Widget") {
-                    Label("Long-press your home screen, tap Edit, then Add Widget and pick OneScoop. You can log the dose straight from the widget.", systemImage: "square.grid.2x2")
+                Section(L.settingsWidget) {
+                    Label(L.settingsWidgetHelp, systemImage: "square.grid.2x2")
                         .font(.footnote)
                         .foregroundStyle(CT.inkSoft)
                 }
 
                 // MARK: Data
                 Section {
-                    Button("Reset all data", role: .destructive) { showResetConfirm = true }
+                    Button(L.settingsReset, role: .destructive) { showResetConfirm = true }
                 } footer: {
-                    Text("Everything is stored on this device only. Nothing is uploaded anywhere.")
+                    Text(L.settingsLocalOnly)
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle(L.tabSettings)
             .scrollContentBackground(.hidden)
             .background(CT.bg)
         }
@@ -157,11 +159,11 @@ struct SettingsView: View {
             let status = await NotificationManager.authorizationStatus()
             permissionDenied = (status == .denied)
         }
-        .confirmationDialog("Reset all data?", isPresented: $showResetConfirm, titleVisibility: .visible) {
-            Button("Delete everything", role: .destructive) { store.resetEverything() }
-            Button("Cancel", role: .cancel) {}
+        .confirmationDialog(L.settingsResetTitle, isPresented: $showResetConfirm, titleVisibility: .visible) {
+            Button(L.settingsDeleteAll, role: .destructive) { store.resetEverything() }
+            Button(L.commonCancel, role: .cancel) {}
         } message: {
-            Text("This clears your history and settings, and takes you back to setup.")
+            Text(L.settingsResetMsg)
         }
     }
 

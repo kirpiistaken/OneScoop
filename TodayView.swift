@@ -1,8 +1,10 @@
-import UIKit
 import SwiftUI
+import StoreKit
+import UIKit
 
 struct TodayView: View {
     @EnvironmentObject private var store: CreatineStore
+    @Environment(\.requestReview) private var requestReview
     @State private var checkScale: CGFloat = 0.6
 
     var body: some View {
@@ -38,16 +40,18 @@ struct TodayView: View {
                     .font(.system(.subheadline, design: .rounded).weight(.medium))
                     .foregroundStyle(CT.inkSoft)
                 if store.settings.isLoadingDay(Date()) {
-                    Text("Loading phase · \(store.settings.loadingDaysRemaining) day(s) left")
+                    Text(L.todayLoadingLeft(store.settings.loadingDaysRemaining))
                         .font(.system(.caption, design: .rounded).weight(.semibold))
                         .foregroundStyle(CT.loading)
                 }
             }
             Spacer()
             if store.streak > 1 {
-                Text("\(store.streak) day streak 🔥")
+                Text(L.todayStreak(store.streak))
                     .font(.system(.caption, design: .rounded).weight(.bold))
                     .foregroundStyle(CT.accent)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 7)
                     .background(CT.accent.opacity(0.12), in: Capsule())
@@ -60,14 +64,14 @@ struct TodayView: View {
     private var askState: some View {
         VStack(spacing: 36) {
             VStack(spacing: 14) {
-                Text("Did you take creatine today?")
+                Text(L.todayQuestion)
                     .font(CT.display(40, .heavy))
                     .foregroundStyle(CT.ink)
                     .multilineTextAlignment(.center)
                     .lineSpacing(-2)
                     .minimumScaleFactor(0.7)
 
-                Text("Today's dose: \(store.todayDose.gramString) g")
+                Text(L.todayDose(store.todayDose.gramString))
                     .font(.system(.title3, design: .rounded).weight(.medium))
                     .foregroundStyle(CT.inkSoft)
             }
@@ -81,16 +85,20 @@ struct TodayView: View {
                 withAnimation(.spring(response: 0.45, dampingFraction: 0.55).delay(0.05)) {
                     checkScale = 1
                 }
+                maybeAskForReview()
             } label: {
-                Text("Yes")
+                Text(L.todayYes)
                     .font(CT.display(38, .heavy))
                     .foregroundStyle(.white)
+                    .minimumScaleFactor(0.6)
+                    .lineLimit(1)
+                    .padding(.horizontal, 20)
                     .frame(width: 200, height: 200)
                     .background(CT.accent, in: Circle())
                     .shadow(color: CT.accent.opacity(0.35), radius: 24, y: 10)
             }
             .buttonStyle(PressableStyle())
-            .accessibilityLabel("Yes, I took today's creatine")
+            .accessibilityLabel(L.todayYesA11y)
         }
     }
 
@@ -103,16 +111,19 @@ struct TodayView: View {
                 .onAppear { checkScale = 1 }
 
             VStack(spacing: 10) {
-                Text("You took your daily dose of creatine")
+                Text(L.todayDoneTitle)
                     .font(CT.display(30, .bold))
                     .foregroundStyle(CT.ink)
                     .multilineTextAlignment(.center)
                     .minimumScaleFactor(0.75)
 
                 if let entry = store.todayEntry {
-                    Text("\(entry.grams.gramString) g · logged at \(entry.takenAt, format: .dateTime.hour().minute())")
-                        .font(.system(.callout, design: .rounded).weight(.medium))
-                        .foregroundStyle(CT.inkSoft)
+                    Text(L.todayLoggedAt(
+                        entry.grams.gramString,
+                        entry.takenAt.formatted(date: .omitted, time: .shortened)
+                    ))
+                    .font(.system(.callout, design: .rounded).weight(.medium))
+                    .foregroundStyle(CT.inkSoft)
                 }
             }
 
@@ -120,7 +131,7 @@ struct TodayView: View {
                 withAnimation(.snappy) { store.undo() }
                 UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
             } label: {
-                Label("Undo", systemImage: "arrow.uturn.backward")
+                Label(L.todayUndo, systemImage: "arrow.uturn.backward")
                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                     .foregroundStyle(CT.inkSoft)
                     .padding(.horizontal, 18)
@@ -136,14 +147,26 @@ struct TodayView: View {
     private var footer: some View {
         Group {
             if store.settings.reminderEnabled && !store.isTodayTaken {
-                Text("Reminder set for \(store.settings.reminderTimeString)")
+                Text(L.todayReminderSet(store.settings.reminderTimeLocalized))
                     .font(.footnote.weight(.medium))
                     .foregroundStyle(CT.inkSoft)
             } else if store.isTodayTaken {
-                Text("See you tomorrow.")
+                Text(L.todaySeeYou)
                     .font(.footnote.weight(.medium))
                     .foregroundStyle(CT.inkSoft)
             }
+        }
+    }
+
+    // MARK: - Review
+
+    /// Ömürde bir kez, 7 günlük seriye ulaşınca sorar.
+    private func maybeAskForReview() {
+        guard !store.settings.hasAskedForReview, store.streak >= 7 else { return }
+        store.update { $0.hasAskedForReview = true }
+        Task {
+            try? await Task.sleep(for: .seconds(1.5))
+            requestReview()
         }
     }
 }

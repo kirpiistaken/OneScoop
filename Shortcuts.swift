@@ -1,9 +1,9 @@
 import AppIntents
 
-/// Siri ve Kısayollar. MarkTakenIntent / UndoTakenIntent zaten widget için
-/// yazılmıştı; burada sadece sesli komut cümlelerini tanımlıyoruz.
+/// Siri ve Kısayollar. Bu dosya SADECE uygulama target'ında.
 ///
-/// Bu dosya SADECE uygulama target'ına eklenmeli, widget'a değil.
+/// Kısayol kutucuklarının başlıkları çevriliyor. Sesli komut cümleleri
+/// şimdilik İngilizce: onlar ayrı bir AppShortcuts.xcstrings dosyası istiyor.
 struct OneScoopShortcuts: AppShortcutsProvider {
 
     static var shortcutTileColor: ShortcutTileColor { .blue }
@@ -18,7 +18,7 @@ struct OneScoopShortcuts: AppShortcutsProvider {
                 "Mark creatine as taken in \(.applicationName)",
                 "\(.applicationName) creatine done"
             ],
-            shortTitle: "Log creatine",
+            shortTitle: "shortcut.log",
             systemImageName: "checkmark.circle.fill"
         )
 
@@ -28,7 +28,7 @@ struct OneScoopShortcuts: AppShortcutsProvider {
                 "Undo my creatine in \(.applicationName)",
                 "Remove today's creatine in \(.applicationName)"
             ],
-            shortTitle: "Undo today",
+            shortTitle: "shortcut.undo",
             systemImageName: "arrow.uturn.backward"
         )
     }

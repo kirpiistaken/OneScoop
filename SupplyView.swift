@@ -25,7 +25,7 @@ struct SupplyView: View {
                     emptyState
                 }
             }
-            .navigationTitle("Supply")
+            .navigationTitle(L.tabSupply)
         }
         .sheet(isPresented: $showRestockSheet) { restockSheet }
     }
@@ -39,10 +39,11 @@ struct SupplyView: View {
                 .foregroundStyle(CT.inkSoft)
 
             VStack(spacing: 8) {
-                Text("Know when you'll run out")
+                Text(L.supplyEmptyTitle)
                     .font(CT.display(22, .bold))
                     .foregroundStyle(CT.ink)
-                Text("Tell OneScoop how big your tub is. Every dose you log is subtracted, so you always know how many days you have left.")
+                    .multilineTextAlignment(.center)
+                Text(L.supplyEmptyBody)
                     .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(CT.inkSoft)
                     .multilineTextAlignment(.center)
@@ -52,7 +53,7 @@ struct SupplyView: View {
                 restockAmount = store.settings.containerGrams
                 showRestockSheet = true
             } label: {
-                Text("Set up supply")
+                Text(L.supplySetup)
                     .font(CT.display(17, .bold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, 28)
@@ -69,19 +70,18 @@ struct SupplyView: View {
     private var gauge: some View {
         VStack(spacing: 16) {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(store.settings.supplyRemaining.gramString)
+                Text(verbatim: store.settings.supplyRemaining.gramString)
                     .font(CT.display(56, .heavy))
                     .foregroundStyle(CT.ink)
                     .contentTransition(.numericText())
-                Text("g left")
+                Text(L.supplyGLeft)
                     .font(CT.display(20, .semibold))
                     .foregroundStyle(CT.inkSoft)
             }
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(CT.hairline)
+                    Capsule().fill(CT.hairline)
                     Capsule()
                         .fill(barColor)
                         .frame(width: max(6, geo.size.width * store.settings.supplyFraction))
@@ -90,7 +90,7 @@ struct SupplyView: View {
             .frame(height: 12)
             .animation(.snappy, value: store.settings.supplyRemaining)
 
-            Text("of \(store.settings.containerGrams.gramString) g container")
+            Text(L.supplyOfContainer(store.settings.containerGrams.gramString))
                 .font(.caption.weight(.medium))
                 .foregroundStyle(CT.inkSoft)
         }
@@ -101,28 +101,27 @@ struct SupplyView: View {
     }
 
     private var barColor: Color {
-        if store.settings.supplyIsEmpty { return CT.loading }
-        return store.settings.supplyIsLow ? CT.loading : CT.accent
+        (store.settings.supplyIsEmpty || store.settings.supplyIsLow) ? CT.loading : CT.accent
     }
 
     // MARK: - Sayılar
 
     private var stats: some View {
         HStack(spacing: 12) {
-            box(value: "\(store.settings.supplyDaysLeft)", label: "days left")
+            box(value: "\(store.settings.supplyDaysLeft)", label: L.supplyDaysLeft)
             box(
                 value: store.settings.supplyRunOutDate.map {
                     $0.formatted(.dateTime.day().month(.abbreviated))
                 } ?? "—",
-                label: "runs out"
+                label: L.supplyRunsOut
             )
-            box(value: "\(store.todayDose.gramString) g", label: "per day")
+            box(value: "\(store.todayDose.gramString) g", label: L.supplyPerDay)
         }
     }
 
     private func box(value: String, label: String) -> some View {
         VStack(spacing: 4) {
-            Text(value)
+            Text(verbatim: value)
                 .font(CT.display(20, .heavy))
                 .foregroundStyle(CT.ink)
                 .minimumScaleFactor(0.6)
@@ -130,6 +129,8 @@ struct SupplyView: View {
             Text(label)
                 .font(.caption2.weight(.medium))
                 .foregroundStyle(CT.inkSoft)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
@@ -141,16 +142,16 @@ struct SupplyView: View {
     private var actions: some View {
         VStack(spacing: 12) {
             if store.settings.supplyIsEmpty {
-                notice("You're out. Log a new container when it arrives.", color: CT.loading)
+                notice(L.supplyOut, color: CT.loading)
             } else if store.settings.supplyIsLow {
-                notice("Running low — about \(store.settings.supplyDaysLeft) day(s) left. Good time to reorder.", color: CT.loading)
+                notice(L.supplyLow(store.settings.supplyDaysLeft), color: CT.loading)
             }
 
             Button {
                 restockAmount = store.settings.containerGrams
                 showRestockSheet = true
             } label: {
-                Label("New container", systemImage: "plus.circle.fill")
+                Label(L.supplyNewContainer, systemImage: "plus.circle.fill")
                     .font(CT.display(17, .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
@@ -174,7 +175,7 @@ struct SupplyView: View {
 
     private var correction: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Correct the amount")
+            Text(L.supplyCorrect)
                 .font(CT.display(15, .semibold))
                 .foregroundStyle(CT.ink)
 
@@ -182,7 +183,7 @@ struct SupplyView: View {
                 get: { store.settings.supplyRemaining },
                 set: { new in store.update { $0.supplyRemaining = max(0, new) } }
             ), in: 0...store.settings.containerGrams, step: 5) {
-                Text("\(store.settings.supplyRemaining.gramString) g remaining")
+                Text(L.supplyRemaining(store.settings.supplyRemaining.gramString))
                     .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(CT.inkSoft)
             }
@@ -192,7 +193,7 @@ struct SupplyView: View {
             Button(role: .destructive) {
                 store.update { $0.trackSupply = false }
             } label: {
-                Text("Turn off supply tracking")
+                Text(L.supplyTurnOff)
                     .font(.system(.subheadline, design: .rounded).weight(.medium))
             }
             .buttonStyle(.plain)
@@ -210,7 +211,7 @@ struct SupplyView: View {
             ZStack {
                 CT.bg.ignoresSafeArea()
                 VStack(spacing: 28) {
-                    Text("How big is the container?")
+                    Text(L.supplySheetQ)
                         .font(CT.display(24, .bold))
                         .foregroundStyle(CT.ink)
                         .multilineTextAlignment(.center)
@@ -222,7 +223,7 @@ struct SupplyView: View {
                             Button {
                                 restockAmount = preset
                             } label: {
-                                Text("\(preset.gramString)g")
+                                Text(verbatim: "\(preset.gramString)g")
                                     .font(.system(.subheadline, design: .rounded).weight(.semibold))
                                     .foregroundStyle(restockAmount == preset ? .white : CT.ink)
                                     .frame(maxWidth: .infinity)
@@ -236,7 +237,7 @@ struct SupplyView: View {
                         }
                     }
 
-                    Text("Each logged dose is subtracted from this. You can correct the remaining amount any time.")
+                    Text(L.supplySheetHint)
                         .font(.footnote)
                         .foregroundStyle(CT.inkSoft)
                         .multilineTextAlignment(.center)
@@ -251,7 +252,7 @@ struct SupplyView: View {
                         store.restock(to: restockAmount)
                         showRestockSheet = false
                     } label: {
-                        Text("Start with a full container")
+                        Text(L.supplySheetStart)
                             .font(CT.display(17, .bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
@@ -262,11 +263,11 @@ struct SupplyView: View {
                 }
                 .padding(24)
             }
-            .navigationTitle("New container")
+            .navigationTitle(L.supplyNewContainer)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { showRestockSheet = false }
+                    Button(L.commonCancel) { showRestockSheet = false }
                 }
             }
         }

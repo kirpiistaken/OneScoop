@@ -8,9 +8,7 @@ struct CreatineTrackerApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
-        // UNUserNotificationCenter.delegate ZAYIF bir referans tutar.
-        // Delegate'i statik bir singleton'da saklamazsak nesne bellekten
-        // silinir ve bildirime dokunulduğunda uygulama çöker.
+        // delegate ZAYIF referans — singleton'da tutmazsak bildirime dokununca çöker.
         UNUserNotificationCenter.current().delegate = NotificationDelegate.shared
         NotificationManager.registerCategories()
     }
@@ -24,14 +22,14 @@ struct CreatineTrackerApp: App {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 store.reload()
+                // Dil değiştiyse bildirim butonu ve metinleri de yenilensin.
+                NotificationManager.registerCategories()
                 Task { await NotificationManager.reschedule() }
             }
         }
     }
 }
 
-/// Bildirimdeki "Log it" butonunu işler.
-/// `shared` sayesinde uygulama ömrü boyunca hayatta kalır.
 final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
 
     static let shared = NotificationDelegate()
@@ -49,18 +47,13 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse
     ) async {
         switch response.actionIdentifier {
-
         case NotificationManager.logActionID:
             Persistence.markTaken()
             await NotificationManager.reschedule()
             WidgetCenter.shared.reloadAllTimelines()
             await MainActor.run { CreatineStore.shared.reload() }
-
         case UNNotificationDefaultActionIdentifier:
-            // Bildirime dokunuldu, uygulama açılıyor. Ekranın güncel açılması
-            // için veriyi tazeliyoruz; scenePhase da ayrıca tetikleniyor.
             await MainActor.run { CreatineStore.shared.reload() }
-
         default:
             break
         }
@@ -88,17 +81,17 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             TodayView()
-                .tabItem { Label("Today", systemImage: "drop.fill") }
+                .tabItem { Label(L.tabToday, systemImage: "drop.fill") }
 
             HistoryView()
-                .tabItem { Label("History", systemImage: "calendar") }
+                .tabItem { Label(L.tabHistory, systemImage: "calendar") }
 
             SupplyView()
-                .tabItem { Label("Supply", systemImage: "shippingbox.fill") }
+                .tabItem { Label(L.tabSupply, systemImage: "shippingbox.fill") }
                 .badge(store.settings.supplyIsLow || store.settings.supplyIsEmpty ? "!" : nil)
 
             SettingsView()
-                .tabItem { Label("Settings", systemImage: "gearshape") }
+                .tabItem { Label(L.tabSettings, systemImage: "gearshape") }
         }
     }
 }

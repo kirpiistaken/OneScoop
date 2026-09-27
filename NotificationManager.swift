@@ -7,16 +7,14 @@ enum NotificationManager {
     static let maxPending = 60
     static let maxHorizonDays = 30
 
-    // Bildirim üzerinden işaretleme
     static let categoryID = "CT_REMINDER"
     static let logActionID = "CT_LOG"
 
-    /// Uygulama açılışında bir kez çağır.
     static func registerCategories() {
         let log = UNNotificationAction(
             identifier: logActionID,
-            title: "Log it",
-            options: []          // uygulamayı açmaz, arka planda çalışır
+            title: L.notifLogIt,
+            options: []
         )
         let category = UNNotificationCategory(
             identifier: categoryID,
@@ -40,7 +38,8 @@ enum NotificationManager {
         await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
     }
 
-    /// Her durum değişikliğinde çağır: açılış, Yes/Undo, ayar değişimi.
+    /// Metinler planlama anındaki cihaz diliyle yazılır. Kullanıcı dili
+    /// değiştirirse uygulamayı bir sonraki açışında hepsi yeniden kurulur.
     static func reschedule() async {
         let center = UNUserNotificationCenter.current()
         let pending = await center.pendingNotificationRequests()
@@ -57,8 +56,6 @@ enum NotificationManager {
         let log = Persistence.loadLog()
         let now = Date()
 
-        // iOS en fazla 64 bekleyen bildirim tutuyor; günlük sayıya göre
-        // kaç gün ileriye gideceğimizi kısıyoruz.
         let perDay = max(1, settings.notificationsPerDay)
         let horizon = max(1, min(maxHorizonDays, maxPending / perDay))
 
@@ -88,12 +85,10 @@ enum NotificationManager {
 
                 let content = UNMutableNotificationContent()
                 content.title = "OneScoop"
-                content.body = index == 0
-                    ? "It's time to take your daily creatine!"
-                    : "Still haven't logged today's creatine."
+                content.body = index == 0 ? L.notifFirst : L.notifRepeat
                 content.sound = .default
                 content.interruptionLevel = .active
-                content.categoryIdentifier = categoryID   // "Log it" butonu
+                content.categoryIdentifier = categoryID
 
                 let trigger = UNCalendarNotificationTrigger(
                     dateMatching: DayKey.calendar.dateComponents(

@@ -1,5 +1,5 @@
-import UIKit
 import SwiftUI
+import UIKit
 
 struct HistoryView: View {
     @EnvironmentObject private var store: CreatineStore
@@ -56,8 +56,8 @@ struct HistoryView: View {
 
     private var weekdayRow: some View {
         HStack(spacing: 6) {
-            ForEach(weekdaySymbols, id: \.self) { symbol in
-                Text(symbol)
+            ForEach(Array(weekdaySymbols.enumerated()), id: \.offset) { _, symbol in
+                Text(verbatim: symbol)
                     .font(.system(.caption2, design: .rounded).weight(.semibold))
                     .foregroundStyle(CT.inkSoft)
                     .frame(maxWidth: .infinity)
@@ -88,9 +88,9 @@ struct HistoryView: View {
 
     private var legend: some View {
         HStack(spacing: 18) {
-            legendItem(color: CT.accent, label: "Maintenance")
+            legendItem(color: CT.accent, label: L.historyMaintenance)
             if store.settings.usesLoadingPhase {
-                legendItem(color: CT.loading, label: "Loading")
+                legendItem(color: CT.loading, label: L.historyLoading)
             }
             Spacer()
         }
@@ -111,9 +111,9 @@ struct HistoryView: View {
         let entries = Stats.entries(in: month, log: store.log)
         return VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 12) {
-                statBox(value: "\(entries.count)", label: "days logged")
-                statBox(value: "\(Stats.totalGrams(entries).gramString) g", label: "this month")
-                statBox(value: "\(store.streak)", label: "day streak")
+                statBox(value: "\(entries.count)", label: L.historyDaysLogged)
+                statBox(value: "\(Stats.totalGrams(entries).gramString) g", label: L.historyThisMonth)
+                statBox(value: "\(store.streak)", label: L.historyDayStreak)
             }
 
             Text(Stats.insight(for: month, log: store.log, settings: store.settings))
@@ -124,7 +124,7 @@ struct HistoryView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(CT.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
 
-            Text("Tap any past day to add or remove an entry.")
+            Text(L.historyTapHint)
                 .font(.caption)
                 .foregroundStyle(CT.inkSoft.opacity(0.8))
         }
@@ -132,13 +132,15 @@ struct HistoryView: View {
 
     private func statBox(value: String, label: String) -> some View {
         VStack(spacing: 4) {
-            Text(value)
+            Text(verbatim: value)
                 .font(CT.display(22, .heavy))
                 .foregroundStyle(CT.ink)
             Text(label)
                 .font(.caption2.weight(.medium))
                 .foregroundStyle(CT.inkSoft)
                 .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 16)
@@ -168,13 +170,13 @@ struct HistoryView: View {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 
+    /// Hafta günü harfleri cihaz dilinde ve cihazın hafta başlangıcına göre.
     private var weekdaySymbols: [String] {
         let symbols = DayKey.calendar.veryShortStandaloneWeekdaySymbols
         let first = DayKey.calendar.firstWeekday - 1
         return Array(symbols[first...] + symbols[..<first])
     }
 
-    /// Ayın günleri + baştaki boşluklar.
     private var gridDays: [Date?] {
         guard let interval = DayKey.calendar.dateInterval(of: .month, for: month),
               let range = DayKey.calendar.range(of: .day, in: .month, for: month) else { return [] }
@@ -206,12 +208,12 @@ private struct DayCell: View {
 
     var body: some View {
         VStack(spacing: 3) {
-            Text("\(DayKey.calendar.component(.day, from: date))")
+            Text(verbatim: "\(DayKey.calendar.component(.day, from: date))")
                 .font(.system(size: 15, weight: entry != nil ? .bold : .medium, design: .rounded))
                 .foregroundStyle(entry != nil ? .white : (isFuture ? CT.inkSoft.opacity(0.4) : CT.ink))
 
             if let entry {
-                Text(entry.grams.gramString)
+                Text(verbatim: entry.grams.gramString)
                     .font(.system(size: 9, weight: .semibold, design: .rounded))
                     .foregroundStyle(.white.opacity(0.85))
             }

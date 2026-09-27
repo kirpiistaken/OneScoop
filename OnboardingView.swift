@@ -18,30 +18,30 @@ struct OnboardingView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Creatine Tracker")
+                        Text(verbatim: "OneScoop")
                             .font(CT.display(34, .heavy))
                             .foregroundStyle(CT.ink)
-                        Text("One tap a day. That's the whole app.")
+                        Text(L.onbTagline)
                             .font(.system(.body, design: .rounded))
                             .foregroundStyle(CT.inkSoft)
                     }
                     .padding(.top, 48)
 
                     card {
-                        Text("Daily dose")
+                        Text(L.onbDailyDose)
                             .font(CT.display(17, .semibold))
                             .foregroundStyle(CT.ink)
 
                         DoseStepper(value: $maintenance, range: 1...15, step: 0.5, tint: CT.accent)
 
-                        Text("Most people settle around 5 g per day.")
+                        Text(L.onbDoseHint)
                             .font(.footnote)
                             .foregroundStyle(CT.inkSoft)
                     }
 
                     card {
                         Toggle(isOn: $usesLoading.animation(.snappy)) {
-                            Text("Start with a loading phase")
+                            Text(L.onbLoadingToggle)
                                 .font(CT.display(17, .semibold))
                                 .foregroundStyle(CT.ink)
                         }
@@ -51,32 +51,35 @@ struct OnboardingView: View {
                             DoseStepper(value: $loadingDose, range: 5...30, step: 1, tint: CT.loading)
 
                             Stepper(value: $loadingDays, in: 3...14) {
-                                Text("for \(loadingDays) days")
+                                Text(L.onbLoadingForDays(loadingDays))
                                     .font(.system(.body, design: .rounded))
                                     .foregroundStyle(CT.ink)
                             }
 
-                            Text("\(loadingDose.gramString) g daily for \(loadingDays) days, then \(maintenance.gramString) g from day \(loadingDays + 1) on. A loading dose this size is usually split across the day.")
-                                .font(.footnote)
-                                .foregroundStyle(CT.inkSoft)
+                            Text(L.onbLoadingSummary(
+                                loadingDose.gramString, loadingDays,
+                                maintenance.gramString, loadingDays + 1
+                            ))
+                            .font(.footnote)
+                            .foregroundStyle(CT.inkSoft)
                         }
                     }
 
                     card {
-                        Text("Daily reminder")
+                        Text(L.onbReminder)
                             .font(CT.display(17, .semibold))
                             .foregroundStyle(CT.ink)
                         DatePicker("", selection: $reminderTime, displayedComponents: .hourAndMinute)
                             .datePickerStyle(.wheel)
                             .labelsHidden()
                             .frame(maxWidth: .infinity)
-                        Text("You'll only get a notification on days you haven't logged yet. Changeable later.")
+                        Text(L.onbReminderHint)
                             .font(.footnote)
                             .foregroundStyle(CT.inkSoft)
                     }
 
                     Button(action: start) {
-                        Text("Start tracking")
+                        Text(L.onbStart)
                             .font(CT.display(19, .bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
@@ -112,7 +115,7 @@ struct OnboardingView: View {
     }
 }
 
-/// Büyük, okunaklı doz seçici — asıl rakam ekranın kahramanı.
+/// Büyük, okunaklı doz seçici.
 struct DoseStepper: View {
     @Binding var value: Double
     let range: ClosedRange<Double>
@@ -124,11 +127,11 @@ struct DoseStepper: View {
             button("minus") { value = max(range.lowerBound, value - step) }
 
             HStack(alignment: .firstTextBaseline, spacing: 2) {
-                Text(value.gramString)
+                Text(verbatim: value.gramString)
                     .font(CT.display(46, .heavy))
                     .foregroundStyle(CT.ink)
                     .contentTransition(.numericText())
-                Text("g")
+                Text(verbatim: "g")
                     .font(CT.display(22, .semibold))
                     .foregroundStyle(CT.inkSoft)
             }
