@@ -1,10 +1,8 @@
 import SwiftUI
-import StoreKit
 import UIKit
 
 struct TodayView: View {
     @EnvironmentObject private var store: CreatineStore
-    @Environment(\.requestReview) private var requestReview
     @State private var checkScale: CGFloat = 0.6
 
     var body: some View {
@@ -85,7 +83,6 @@ struct TodayView: View {
                 withAnimation(.spring(response: 0.45, dampingFraction: 0.55).delay(0.05)) {
                     checkScale = 1
                 }
-                maybeAskForReview()
             } label: {
                 Text(L.todayYes)
                     .font(CT.display(38, .heavy))
@@ -155,18 +152,6 @@ struct TodayView: View {
                     .font(.footnote.weight(.medium))
                     .foregroundStyle(CT.inkSoft)
             }
-        }
-    }
-
-    // MARK: - Review
-
-    /// Ömürde bir kez, 7 günlük seriye ulaşınca sorar.
-    private func maybeAskForReview() {
-        guard !store.settings.hasAskedForReview, store.streak >= 7 else { return }
-        store.update { $0.hasAskedForReview = true }
-        Task {
-            try? await Task.sleep(for: .seconds(1.5))
-            requestReview()
         }
     }
 }
