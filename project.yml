@@ -132,7 +132,7 @@ targets:
     settings:
       base:
         PRODUCT_NAME: OneScoopComplication
-        PRODUCT_BUNDLE_IDENTIFIER: com.atalay.creatinetracker.watchkitapp.complication
+        PRODUCT_BUNDLE_IDENTIFIER: com.atalay.creatinetracker.watchkitapp.widgets
         INFOPLIST_FILE: WatchComplication/Complication-Info.plist
         CODE_SIGN_ENTITLEMENTS: WatchComplication/Complication.entitlements
         TARGETED_DEVICE_FAMILY: "4"

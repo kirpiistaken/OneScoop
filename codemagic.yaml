@@ -15,7 +15,7 @@ definitions:
       BUNDLE_ID: "com.atalay.creatinetracker"
       WIDGET_BUNDLE_ID: "com.atalay.creatinetracker.CreatineWidget"
       WATCH_BUNDLE_ID: "com.atalay.creatinetracker.watchkitapp"
-      COMPLICATION_BUNDLE_ID: "com.atalay.creatinetracker.watchkitapp.complication"
+      COMPLICATION_BUNDLE_ID: "com.atalay.creatinetracker.watchkitapp.widgets"
       XCODE_SCHEME: "CreatineTracker"
 
   scripts: &scripts
