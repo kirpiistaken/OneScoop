@@ -34,40 +34,68 @@ struct ComplicationProvider: TimelineProvider {
     }
 }
 
+/// Uygulama logosundaki kepçe. Alındıysa köşesinde küçük bir tik.
+/// Görsel "template" olarak işaretli: kadranın rengine göre boyanıyor.
+struct ScoopMark: View {
+    let taken: Bool
+    var size: CGFloat
+
+    var body: some View {
+        Image("Scoop")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+            .frame(width: size, height: size)
+            .overlay(alignment: .bottomTrailing) {
+                if taken {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: size * 0.5, weight: .bold))
+                        .background(Circle().fill(.black).padding(1))
+                        .offset(x: size * 0.12, y: size * 0.08)
+                }
+            }
+            .widgetAccentable()
+    }
+}
+
 struct ComplicationView: View {
     @Environment(\.widgetFamily) private var family
     let entry: ComplicationEntry
 
     private var s: WatchDayState { entry.state }
-    private var icon: String { s.isTaken ? "checkmark.circle.fill" : "drop.fill" }
     private var statusText: String { s.isTaken ? L.widgetDoseLogged : L.complicationNotYet }
 
     var body: some View {
         switch family {
         case .accessoryCorner:
-            Image(systemName: icon)
-                .font(.title2.weight(.bold))
-                .widgetAccentable()
+            ScoopMark(taken: s.isTaken, size: 22)
                 .widgetLabel {
                     Text(s.streak > 1 ? L.todayStreak(s.streak) : statusText)
                 }
 
         case .accessoryInline:
-            Label(s.streak > 1 && s.isTaken ? L.todayStreak(s.streak) : statusText,
-                  systemImage: icon)
+            // Satır içi göstergede sistem sadece metin + küçük simge gösteriyor.
+            Label {
+                Text(s.streak > 1 && s.isTaken ? L.todayStreak(s.streak) : statusText)
+            } icon: {
+                Image("ScoopInline").renderingMode(.template)
+            }
 
         case .accessoryRectangular:
-            VStack(alignment: .leading, spacing: 2) {
-                Label(statusText, systemImage: icon)
-                    .font(.headline)
-                    .widgetAccentable()
-                if s.streak > 1 {
-                    Text(L.todayStreak(s.streak))
-                        .font(.body)
+            HStack(spacing: 8) {
+                ScoopMark(taken: s.isTaken, size: 34)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(statusText)
+                        .font(.headline)
+                        .widgetAccentable()
+                    if s.streak > 1 {
+                        Text(L.todayStreak(s.streak))
+                            .font(.body)
+                    }
+                    Text(verbatim: "OneScoop")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
                 }
-                Text(verbatim: "OneScoop")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -75,9 +103,7 @@ struct ComplicationView: View {
             ZStack {
                 AccessoryWidgetBackground()
                 VStack(spacing: 0) {
-                    Image(systemName: icon)
-                        .font(.system(size: s.streak > 1 ? 18 : 22, weight: .bold))
-                        .widgetAccentable()
+                    ScoopMark(taken: s.isTaken, size: s.streak > 1 ? 20 : 26)
                     if s.streak > 1 {
                         Text(verbatim: "\(s.streak)")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
