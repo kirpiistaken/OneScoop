@@ -91,14 +91,26 @@ def path_d(polys):
         out.append("M" + " L".join(f"{x} {y}" for x, y in pts) + " Z")
     return " ".join(out)
 
-X0 = 1350.0
-TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
+# SF Symbols şablon v3: sistem Ultralight-S, Regular-S ve Black-S olmak üzere
+# üç ana çizim bekliyor, diğer 24 kalınlık/boyutu bunlardan türetiyor. Tek
+# çizim (sadece Regular-M) bırakınca şablon geçersiz sayılıp simge boş
+# görünüyor. Kepçenin kalınlığı değişmesin diye üçüne de aynı çizim konuyor.
+MASTERS = [("Ultralight-S", 560.0), ("Regular-S", 1390.0), ("Black-S", 2220.0)]
+BASE_S = 696
+
+TEMPLATE_HEAD = """<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!--glyph: "{name}", point size: 100.0, template author: OneScoop-->
+<!--glyph: "{name}", point size: 100.0, template writer version: "OneScoop"-->
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="3300" height="2200">
  <g id="Notes">
   <rect height="2200" id="artboard" style="fill:white;opacity:1" width="3300" x="0" y="0"/>
+  <line style="fill:none;stroke:black;opacity:1;stroke-width:0.5;" x1="263" x2="3036" y1="292" y2="292"/>
+  <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;font-weight:bold;" transform="matrix(1 0 0 1 263 322)">Weight/Scale Variations</text>
+  <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 559.711 322)" text-anchor="middle">Ultralight</text>
+  <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 1389.9 322)" text-anchor="middle">Regular</text>
+  <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 2220.1 322)" text-anchor="middle">Black</text>
   <text id="template-version" style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 3036 1933)" text-anchor="end">Template v.3.0</text>
+  <text style="stroke:none;fill:black;font-family:sans-serif;font-size:13;" transform="matrix(1 0 0 1 3036 1951)" text-anchor="end">Requires Xcode 13 or greater</text>
  </g>
  <g id="Guides">
   <line id="Baseline-S" style="fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.5;" x1="263" x2="3036" y1="696" y2="696"/>
@@ -107,22 +119,25 @@ TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
   <line id="Capline-M" style="fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.5;" x1="263" x2="3036" y1="1055.54" y2="1055.54"/>
   <line id="Baseline-L" style="fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.5;" x1="263" x2="3036" y1="1556" y2="1556"/>
   <line id="Capline-L" style="fill:none;stroke:#27AAE1;opacity:1;stroke-width:0.5;" x1="263" x2="3036" y1="1485.54" y2="1485.54"/>
-  <line id="left-margin-Regular-M" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="{lm}" x2="{lm}" y1="1030.79" y2="1150.12"/>
-  <line id="right-margin-Regular-M" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="{rm}" x2="{rm}" y1="1030.79" y2="1150.12"/>
- </g>
+{margins} </g>
  <g id="Symbols">
-  <g id="Regular-M" transform="matrix(1 0 0 1 {x0} 1126)">
-   <path d="{d}"/>
-  </g>
- </g>
+{symbols} </g>
 </svg>
 """
+
+MARGIN = '  <line id="{side}-margin-{m}" style="fill:none;stroke:#00AEEF;stroke-width:0.5;opacity:1.0;" x1="{x}" x2="{x}" y1="600.785" y2="720.121"/>\n'
+SYMBOL = '  <g id="{m}" transform="matrix(1 0 0 1 {x0} {base})">\n   <path d="{d}"/>\n  </g>\n'
 
 def write(name, with_check):
     d = os.path.join(OUT, f"{name}.symbolset")
     os.makedirs(d, exist_ok=True)
-    svg = TEMPLATE.format(name=name, lm=X0 - 3, rm=round(X0 + WIDTH + 3, 3),
-                          x0=X0, d=path_d(parts(with_check)))
+    path = path_d(parts(with_check))
+    margins = "".join(
+        MARGIN.format(side="left", m=m, x=round(x0 - 3, 3)) +
+        MARGIN.format(side="right", m=m, x=round(x0 + WIDTH + 3, 3))
+        for m, x0 in MASTERS)
+    symbols = "".join(SYMBOL.format(m=m, x0=x0, base=BASE_S, d=path) for m, x0 in MASTERS)
+    svg = TEMPLATE_HEAD.format(name=name, margins=margins, symbols=symbols)
     open(os.path.join(d, f"{name}.svg"), "w").write(svg)
     open(os.path.join(d, "Contents.json"), "w").write(
         '{\n  "info" : { "author" : "xcode", "version" : 1 },\n'
