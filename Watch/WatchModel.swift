@@ -1,6 +1,7 @@
 import Foundation
 import WatchConnectivity
 import WatchKit
+import WidgetKit
 
 /// Saat tarafının durumu. Telefonun ortak depolama alanına (App Group) erişemediği
 /// için son bilinen durumu kendi tutuyor ve telefonla WatchConnectivity üzerinden
@@ -10,12 +11,7 @@ import WatchKit
 /// Telefon o an ulaşılamıyorsa komut kuyruğa giriyor ve telefon açıldığında uygulanıyor.
 final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
 
-    struct Today {
-        var isTaken: Bool
-        var streak: Int
-        var grams: Double?
-        var onboarded: Bool
-    }
+    typealias Today = WatchDayState
 
     @Published private(set) var payload: WatchPayload?
 
@@ -23,15 +19,11 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
     /// gelirse (işlemden önce gönderilmiş) yok sayılıyor.
     private var lastLocalAction: Date = .distantPast
 
-    private let storeKey = "onescoop.watch.payload.v1"
     private let actionKey = "onescoop.watch.lastAction.v1"
 
     override init() {
         super.init()
-        if let data = UserDefaults.standard.data(forKey: storeKey),
-           let saved = try? JSONDecoder().decode(WatchPayload.self, from: data) {
-            payload = saved
-        }
+        payload = WatchPayload.loadStored()
         if let saved = UserDefaults.standard.object(forKey: actionKey) as? Date {
             lastLocalAction = saved
         }
@@ -43,24 +35,9 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
 
     // MARK: - Bugünün durumu
 
-    /// Son bilinen durumu bugüne uyarlar. Gece yarısı geçtiyse ve telefondan
-    /// henüz yeni durum gelmediyse de doğru görünür.
+    /// Son bilinen durumun bugüne uyarlanmış hali.
     var today: Today {
-        guard let p = payload else {
-            return Today(isTaken: false, streak: 0, grams: nil, onboarded: true)
-        }
-        let now = Date()
-        let todayKey = DayKey.key(for: now)
-        let yesterday = DayKey.calendar.date(byAdding: .day, value: -1, to: now).map(DayKey.key(for:))
-
-        if p.dateKey == todayKey {
-            return Today(isTaken: p.isTaken, streak: p.streak, grams: p.grams, onboarded: p.onboarded)
-        }
-        if p.dateKey == yesterday {
-            // Dün alındıysa seri devam ediyor; alınmadıysa bitti.
-            return Today(isTaken: false, streak: p.isTaken ? p.streak : 0, grams: p.grams, onboarded: p.onboarded)
-        }
-        return Today(isTaken: false, streak: 0, grams: p.grams, onboarded: p.onboarded)
+        WatchPayload.state(payload, on: Date())
     }
 
     // MARK: - Eylemler
@@ -138,9 +115,9 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
     private func save(_ p: WatchPayload) {
         let apply = {
             self.payload = p
-            if let data = try? JSONEncoder().encode(p) {
-                UserDefaults.standard.set(data, forKey: self.storeKey)
-            }
+            p.store()
+            // Saat kadranındaki göstergeyi de güncelle.
+            WidgetCenter.shared.reloadAllTimelines()
         }
         if Thread.isMainThread { apply() } else { DispatchQueue.main.async(execute: apply) }
     }

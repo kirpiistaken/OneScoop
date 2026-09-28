@@ -59,7 +59,7 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
         case NotificationManager.logActionID:
             Persistence.markTaken()
             await NotificationManager.reschedule()
-            WidgetCenter.shared.reloadAllTimelines()
+            IntentRefresh.all()
             await MainActor.run {
                 CloudSync.sync()
                 CreatineStore.shared.reload()

@@ -59,7 +59,7 @@ final class CreatineStore: ObservableObject {
         reload()
         if settings.hasCompletedOnboarding { isRestoring = false }
 
-        WidgetCenter.shared.reloadAllTimelines()
+        IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
 
         // iCloud'dan geri yüklenen kullanıcı kurulumu görmediği için bildirim
@@ -137,13 +137,13 @@ final class CreatineStore: ObservableObject {
         CloudSync.sync()          // silmeyi iCloud'a ve diğer cihazlara da taşı
         reload()
         Task { await NotificationManager.cancelAll() }
-        WidgetCenter.shared.reloadAllTimelines()
+        IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
     }
 
     private func syncSideEffects() {
         if CloudSync.sync() { reload() }
-        WidgetCenter.shared.reloadAllTimelines()
+        IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
         Task { await NotificationManager.reschedule() }
     }

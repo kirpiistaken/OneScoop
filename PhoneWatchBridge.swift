@@ -55,7 +55,7 @@ final class PhoneWatchBridge: NSObject, WCSessionDelegate {
             if Persistence.isTaken(on: date) { Persistence.undo(on: date) }
         }
 
-        WidgetCenter.shared.reloadAllTimelines()
+        IntentRefresh.all()
         Task { @MainActor in
             CloudSync.sync()
             CreatineStore.shared.reload()

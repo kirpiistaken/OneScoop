@@ -4,6 +4,9 @@ import Foundation
 
 enum L {
     static var commonCancel: String { String(localized: "common.cancel") }
+    static var complicationDescription: String { String(localized: "complication.description") }
+    static var complicationNotYet: String { String(localized: "complication.not_yet") }
+    static var controlDescription: String { String(localized: "control.description") }
     static var historyDayStreak: String { String(localized: "history.day_streak") }
     static var historyDaysLogged: String { String(localized: "history.days_logged") }
     static var historyLoading: String { String(localized: "history.loading") }
@@ -61,6 +64,7 @@ enum L {
     static func settingsUpTo(_ a0: Int) -> String { String(localized: "settings.up_to \(a0)") }
     static var settingsWidget: String { String(localized: "settings.widget") }
     static var settingsWidgetHelp: String { String(localized: "settings.widget_help") }
+    static var shortcutLog: String { String(localized: "shortcut.log") }
     static var supplyCorrect: String { String(localized: "supply.correct") }
     static var supplyDaysLeft: String { String(localized: "supply.days_left") }
     static var supplyEmptyBody: String { String(localized: "supply.empty_body") }

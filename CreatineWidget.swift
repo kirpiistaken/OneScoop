@@ -186,5 +186,8 @@ struct CreatineWidget: Widget {
 struct CreatineWidgetBundle: WidgetBundle {
     var body: some Widget {
         CreatineWidget()
+        if #available(iOS 18.0, *) {
+            LogCreatineControl()
+        }
     }
 }

@@ -421,10 +421,33 @@ add("watch.setup_first",
     "Configurez d’abord OneScoop sur votre iPhone.", "Configura prima OneScoop sul tuo iPhone.",
     "Configure o OneScoop no iPhone primeiro.")
 
+# ── Denetim Merkezi / Eylem düğmesi ───────────────────────
+add("control.description",
+    "Log today's creatine from Control Center or the Action button.",
+    "Bugünkü kreatini Denetim Merkezi'nden ya da Eylem düğmesinden kaydet.",
+    "Registra la creatina de hoy desde el Centro de control o el botón de acción.",
+    "Trage dein heutiges Kreatin im Kontrollzentrum oder mit der Aktionstaste ein.",
+    "Notez la créatine du jour depuis le centre de contrôle ou le bouton Action.",
+    "Registra la creatina di oggi dal Centro di Controllo o dal tasto Azione.",
+    "Registre a creatina de hoje pela Central de Controle ou pelo botão de Ação.")
+
+# ── Saat kadranı (complication) ────────────────────────────
+add("complication.not_yet",
+    "Not logged yet", "Henüz kaydedilmedi", "Aún sin registrar", "Noch nicht eingetragen",
+    "Pas encore noté", "Non ancora registrata", "Ainda não registrado")
+add("complication.description",
+    "See at a glance whether you've taken today's creatine.",
+    "Bugünkü kreatini alıp almadığını tek bakışta gör.",
+    "Mira de un vistazo si ya tomaste la creatina de hoy.",
+    "Sieh auf einen Blick, ob du dein Kreatin heute schon genommen hast.",
+    "Voyez d’un coup d’œil si vous avez pris votre créatine aujourd’hui.",
+    "Vedi a colpo d’occhio se hai già preso la creatina oggi.",
+    "Veja num relance se você já tomou a creatina de hoje.")
+
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
-               "intent.undo.desc", "shortcut.log", "shortcut.undo"}
+               "intent.undo.desc", "shortcut.undo"}
 
 # ═══════════════════════════════════════════════════════════
 # Doğrulama

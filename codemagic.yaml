@@ -15,6 +15,7 @@ definitions:
       BUNDLE_ID: "com.atalay.creatinetracker"
       WIDGET_BUNDLE_ID: "com.atalay.creatinetracker.CreatineWidget"
       WATCH_BUNDLE_ID: "com.atalay.creatinetracker.watchkitapp"
+      COMPLICATION_BUNDLE_ID: "com.atalay.creatinetracker.watchkitapp.complication"
       XCODE_SCHEME: "CreatineTracker"
 
   scripts: &scripts
@@ -29,7 +30,7 @@ definitions:
 
     - name: İmzalama dosyalarını oluştur / indir
       script: |
-        for ID in "$BUNDLE_ID" "$WIDGET_BUNDLE_ID" "$WATCH_BUNDLE_ID"; do
+        for ID in "$BUNDLE_ID" "$WIDGET_BUNDLE_ID" "$WATCH_BUNDLE_ID" "$COMPLICATION_BUNDLE_ID"; do
           app-store-connect fetch-signing-files "$ID" \
             --type IOS_APP_STORE \
             --certificate-key=@env:CERTIFICATE_PRIVATE_KEY \
