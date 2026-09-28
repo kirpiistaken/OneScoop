@@ -83,6 +83,7 @@ targets:
       - path: Theme.swift
       - path: CreatineWidget.swift
       - path: LogControl.swift
+      - path: WidgetSymbols.xcassets
     settings:
       base:
         PRODUCT_NAME: CreatineWidget

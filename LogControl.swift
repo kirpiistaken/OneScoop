@@ -16,9 +16,10 @@ struct LogCreatineControl: ControlWidget {
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: Self.kind, provider: TakenTodayProvider()) { isTaken in
             ControlWidgetButton(action: MarkTakenIntent()) {
+                // Özel SF Symbol'ler: WidgetSymbols.xcassets (tools/make_scoop_symbol.py)
                 Label(
                     isTaken ? L.widgetDoseLogged : L.shortcutLog,
-                    systemImage: isTaken ? "checkmark.circle.fill" : "drop.fill"
+                    image: isTaken ? "onescoop.scoop.check" : "onescoop.scoop"
                 )
             }
         }
