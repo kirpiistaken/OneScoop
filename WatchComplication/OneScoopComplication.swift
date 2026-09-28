@@ -34,17 +34,47 @@ struct ComplicationProvider: TimelineProvider {
     }
 }
 
-/// Uygulama logosundaki kepçe. Alındıysa köşesinde küçük bir tik.
-/// Görsel "template" olarak işaretli: kadranın rengine göre boyanıyor.
+/// Uygulama logosundaki kepçe, vektör olarak çizilmiş. Koordinatlar logonun
+/// 1254 piksellik orijinalinden alındı. Görsel dosyası yerine şekil
+/// kullanıyoruz: saat kadranları görsel yüklemede çok titiz, şekil ise her
+/// boyutta keskin ve kadranın rengine göre boyanıyor.
+struct ScoopShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        let s = min(rect.width, rect.height) / 870
+        func pt(_ x: CGFloat, _ y: CGFloat) -> CGPoint {
+            CGPoint(x: rect.midX + (x - 672) * s, y: rect.midY + (y - 635) * s)
+        }
+        func ellipse(_ cx: CGFloat, _ cy: CGFloat, _ rx: CGFloat, _ ry: CGFloat) -> Path {
+            let o = pt(cx - rx, cy - ry)
+            return Path(ellipseIn: CGRect(x: o.x, y: o.y, width: rx * 2 * s, height: ry * 2 * s))
+        }
+
+        let rim = ellipse(507, 540, 253, 100)                 // ağız dış halkası
+        let o = pt(256, 540)
+        let body = Path(CGRect(x: o.x, y: o.y, width: 501 * s, height: 260 * s))
+        let bottom = ellipse(506.5, 800, 250.5, 125)          // yuvarlak dip
+        let hole = ellipse(507, 538, 221, 69)                 // ağız iç boşluğu
+
+        let handle = Path { p in
+            p.move(to: pt(768, 518))
+            p.addLine(to: pt(1040, 395))
+        }
+        .strokedPath(StrokeStyle(lineWidth: 100 * s, lineCap: .round))
+
+        return rim.union(body).union(bottom)
+            .subtracting(hole)
+            .union(handle)
+    }
+}
+
+/// Kepçe; alındıysa köşesinde küçük bir tik.
 struct ScoopMark: View {
     let taken: Bool
     var size: CGFloat
 
     var body: some View {
-        Image("Scoop")
-            .renderingMode(.template)
-            .resizable()
-            .scaledToFit()
+        ScoopShape()
+            .fill(.primary)
             .frame(width: size, height: size)
             .overlay(alignment: .bottomTrailing) {
                 if taken {
@@ -74,12 +104,10 @@ struct ComplicationView: View {
                 }
 
         case .accessoryInline:
-            // Satır içi göstergede sistem sadece metin + küçük simge gösteriyor.
-            Label {
-                Text(s.streak > 1 && s.isTaken ? L.todayStreak(s.streak) : statusText)
-            } icon: {
-                Image("ScoopInline").renderingMode(.template)
-            }
+            // Satır içi gösterge sadece metin ve sistem simgesi alıyor, özel
+            // şekil çizilemiyor. Uygulamanın adıyla başlatıyoruz ki belli olsun.
+            Text(verbatim: "OneScoop · ")
+                + Text(s.streak > 1 && s.isTaken ? L.todayStreak(s.streak) : statusText)
 
         case .accessoryRectangular:
             HStack(spacing: 8) {

@@ -129,7 +129,6 @@ targets:
       - path: Localizable.xcstrings
       - path: WatchPayload.swift
       - path: WatchComplication/OneScoopComplication.swift
-      - path: WatchComplication/Assets.xcassets
     settings:
       base:
         PRODUCT_NAME: OneScoopComplication
