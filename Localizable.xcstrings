@@ -2266,43 +2266,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wasser mit einem Tipp über Widgets, Sperrbildschirm, Kontrollzentrum, Aktionstaste und Siri hinzufügen"
+            "value": "Wasser über Widgets, Kontrollzentrum und Siri"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add water with one tap from widgets, the Lock Screen, Control Center, the Action button and Siri"
+            "value": "Add water from widgets, Control Center and Siri"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Añade agua con un toque desde widgets, la pantalla bloqueada, el Centro de control, el botón de acción y Siri"
+            "value": "Añade agua desde widgets, Centro de control y Siri"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ajoutez de l’eau d’un geste depuis les widgets, l’écran verrouillé, le centre de contrôle, le bouton Action et Siri"
+            "value": "Ajoutez de l’eau via widgets, centre de contrôle et Siri"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aggiungi acqua con un tocco da widget, schermata di blocco, Centro di Controllo, tasto Azione e Siri"
+            "value": "Aggiungi acqua da widget, Centro di Controllo e Siri"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Adicione água com um toque pelos widgets, Tela Bloqueada, Central de Controle, botão de Ação e Siri"
+            "value": "Adicione água por widgets, Central de Controle e Siri"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Widget'tan, kilit ekranından, Denetim Merkezi'nden, Eylem düğmesinden ve Siri'den tek dokunuşla su ekle"
+            "value": "Widget, Denetim Merkezi ve Siri'den su ekle"
           }
         }
       }
@@ -2313,43 +2313,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Drei Gefäße — Glas, Shaker und Flasche — jedes in seiner echten Größe"
+            "value": "Glas, Shaker und Flasche"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Three cups — glass, shaker and bottle — each set to its real size"
+            "value": "Glass, shaker and bottle"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tres recipientes — vaso, shaker y botella — cada uno con su tamaño real"
+            "value": "Vaso, shaker y botella"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Trois contenants — verre, shaker et gourde — chacun à sa vraie taille"
+            "value": "Verre, shaker et gourde"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tre contenitori — bicchiere, shaker e borraccia — ognuno della sua vera capienza"
+            "value": "Bicchiere, shaker e borraccia"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Três recipientes — copo, coqueteleira e garrafa — cada um no tamanho real"
+            "value": "Copo, coqueteleira e garrafa"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Üç kap — bardak, shaker ve şişe — her biri kendi gerçek boyutunda"
+            "value": "Bardak, shaker ve şişe"
           }
         }
       }
@@ -2360,43 +2360,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple-Health-Abgleich: dein Wasser wird dort gespeichert, Wasser aus anderen Apps zählt hier"
+            "value": "Abgleich mit Apple Health"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Health sync: your water is saved there, and water from other apps counts here"
+            "value": "Apple Health sync"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sincronización con Salud: tu agua se guarda allí y el agua de otras apps cuenta aquí"
+            "value": "Sincronización con Salud"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Synchronisation avec Santé : votre eau y est enregistrée et l’eau des autres apps compte ici"
+            "value": "Synchronisation avec Santé"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sincronizzazione con Salute: la tua acqua viene salvata lì e quella di altre app conta qui"
+            "value": "Sincronizzazione con Salute"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sincronização com o Saúde: sua água é salva lá e a água de outros apps conta aqui"
+            "value": "Sincronização com o Saúde"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Sağlık eşitlemesi: suyun oraya kaydedilir, diğer uygulamalardaki su da burada sayılır"
+            "value": "Apple Sağlık eşitlemesi"
           }
         }
       }
@@ -2407,43 +2407,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smarte Erinnerungen, die lernen, wann du trinkst, und sich nur melden, wenn du zurückliegst"
+            "value": "Erinnerungen, die deine Routine lernen"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart reminders that learn when you usually drink and only nudge you when you fall behind"
+            "value": "Smart reminders that learn your routine"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Recordatorios inteligentes que aprenden cuándo sueles beber y solo avisan si te quedas atrás"
+            "value": "Recordatorios que aprenden tu rutina"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Des rappels intelligents qui apprennent quand vous buvez et ne se manifestent que si vous êtes en retard"
+            "value": "Des rappels qui apprennent votre rythme"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Promemoria intelligenti che imparano quando bevi e ti avvisano solo se resti indietro"
+            "value": "Promemoria che imparano la tua routine"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lembretes inteligentes que aprendem quando você bebe e só avisam quando você fica para trás"
+            "value": "Lembretes que aprendem sua rotina"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ne zaman su içtiğini öğrenen, sadece geride kaldığında hatırlatan akıllı hatırlatmalar"
+            "value": "Seni tanıyan akıllı hatırlatmalar"
           }
         }
       }
