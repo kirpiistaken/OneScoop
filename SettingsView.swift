@@ -365,7 +365,8 @@ struct WaterSettingsView: View {
                     )) {
                         Text(L.settingsWaterRemindOff).tag(WaterReminderMode.off)
                         Text(L.settingsWaterRemindSimple).tag(WaterReminderMode.simple)
-                        Label(L.settingsWaterRemindSmart, systemImage: "crown.fill")
+                        // Taç yazının sağında (OneScoop+).
+                        Text("\(L.settingsWaterRemindSmart) \(Image(systemName: "crown.fill"))")
                             .tag(WaterReminderMode.smart)
                     }
 

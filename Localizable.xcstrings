@@ -6796,43 +6796,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart (OneScoop+)"
+            "value": "Smart"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart (OneScoop+)"
+            "value": "Smart"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inteligentes (OneScoop+)"
+            "value": "Inteligentes"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Intelligents (OneScoop+)"
+            "value": "Intelligents"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Intelligenti (OneScoop+)"
+            "value": "Intelligenti"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Inteligentes (OneScoop+)"
+            "value": "Inteligentes"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Akıllı (OneScoop+)"
+            "value": "Akıllı"
           }
         }
       }

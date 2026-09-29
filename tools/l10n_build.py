@@ -613,8 +613,8 @@ add("settings.water_reminders", "Water reminders", "Su hatırlatmaları", "Recor
     "Wasser-Erinnerungen", "Rappels d’eau", "Promemoria acqua", "Lembretes de água")
 add("settings.water_remind_off", "Off", "Kapalı", "Desactivados", "Aus", "Désactivés", "Disattivati", "Desativados")
 add("settings.water_remind_simple", "Simple", "Basit", "Simples", "Einfach", "Simples", "Semplici", "Simples")
-add("settings.water_remind_smart", "Smart (OneScoop+)", "Akıllı (OneScoop+)", "Inteligentes (OneScoop+)",
-    "Smart (OneScoop+)", "Intelligents (OneScoop+)", "Intelligenti (OneScoop+)", "Inteligentes (OneScoop+)")
+add("settings.water_remind_smart", "Smart", "Akıllı", "Inteligentes", "Smart", "Intelligents",
+    "Intelligenti", "Inteligentes")
 add("settings.water_every %lld",
     P("Every %lld hour", "Every %lld hours"),
     "%lld saatte bir",
