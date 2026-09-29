@@ -33,6 +33,30 @@ struct UndoTakenIntent: AppIntent {
     }
 }
 
+/// 2.0 — Su ekle. `ml` 0 ise kullanıcının varsayılan kabı kullanılır.
+/// Widget, Denetim Merkezi ve Siri buradan geçiyor.
+struct AddWaterIntent: AppIntent {
+    static var title: LocalizedStringResource = "intent.water.title"
+    static var description = IntentDescription("intent.water.desc")
+    static var openAppWhenRun: Bool = false
+
+    @Parameter(title: "intent.water.amount", default: 0)
+    var ml: Int
+
+    init() {}
+    init(ml: Int) { self.ml = ml }
+
+    func perform() async throws -> some IntentResult {
+        let settings = WaterData.loadSettings()
+        // Su kapalıysa ya da Plus yoksa uygulama dışından ekleme yapılmıyor;
+        // widget bu durumda zaten butonu göstermiyor.
+        guard settings.enabled, PlusAccess.isUnlocked else { return .result() }
+        WaterData.add(ml: ml > 0 ? ml : settings.defaultCup.ml)
+        IntentRefresh.all()
+        return .result()
+    }
+}
+
 /// Widget'ları ve Denetim Merkezi düğmesini yenile.
 enum IntentRefresh {
     static func all() {

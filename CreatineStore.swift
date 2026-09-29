@@ -9,6 +9,10 @@ final class CreatineStore: ObservableObject {
     @Published private(set) var log: [String: DoseEntry]
     @Published private(set) var iCloudEnabled: Bool
 
+    // 2.0 — Su
+    @Published private(set) var water: WaterSettings
+    @Published private(set) var waterToday: [WaterEntry]
+
     /// Yeni kurulumda iCloud'dan eski veriler beklenirken `true`.
     /// Bu sürede kurulum ekranı yerine "iCloud'da aranıyor" ekranı gösteriliyor;
     /// böylece geri dönen kullanıcı kurulumu görmeden kaldığı yerden devam ediyor.
@@ -22,6 +26,8 @@ final class CreatineStore: ObservableObject {
         settings = Persistence.loadSettings()
         log = Persistence.loadLog()
         iCloudEnabled = CloudSync.isEnabled
+        water = WaterData.loadSettings()
+        waterToday = WaterData.entries()
 
         // Sadece: hiç ayar kaydı yok (yeni kurulum), iCloud açık ve iPhone'da
         // iCloud hesabı var. Aksi halde beklemenin anlamı yok.
@@ -40,6 +46,8 @@ final class CreatineStore: ObservableObject {
     func reload() {
         settings = Persistence.loadSettings()
         log = Persistence.loadLog()
+        water = WaterData.loadSettings()
+        waterToday = WaterData.entries()
     }
 
     /// Uygulama öne geldiğinde: widget'tan/bildirimden/saatten gelenleri al,
@@ -137,11 +145,45 @@ final class CreatineStore: ObservableObject {
 
     func resetEverything() {
         Persistence.resetAll()
+        WaterData.resetAll()
         CloudSync.sync()          // silmeyi iCloud'a ve diğer cihazlara da taşı
         reload()
         Task { await NotificationManager.cancelAll() }
         IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
+    }
+
+    // MARK: - Su
+
+    var waterTotalToday: Int { waterToday.reduce(0) { $0 + $1.ml } }
+
+    /// Kreatin bugün alındıysa ve o andan sonra hiç su girilmediyse
+    /// "Yanında bir bardak su?" önerisi gösterilir.
+    var showsCreatineWaterBridge: Bool {
+        guard water.enabled, let taken = todayEntry?.takenAt else { return false }
+        return !waterToday.contains { $0.at >= taken.addingTimeInterval(-15 * 60) }
+    }
+
+    @discardableResult
+    func addWater(_ ml: Int) -> WaterEntry {
+        let entry = WaterData.add(ml: ml)
+        waterToday = WaterData.entries()
+        IntentRefresh.all()
+        return entry
+    }
+
+    func removeWater(_ id: UUID) {
+        WaterData.remove(id)
+        waterToday = WaterData.entries()
+        IntentRefresh.all()
+    }
+
+    func updateWater(_ transform: (inout WaterSettings) -> Void) {
+        var copy = water
+        transform(&copy)
+        water = copy
+        WaterData.saveSettings(copy)
+        IntentRefresh.all()
     }
 
     private func syncSideEffects() {

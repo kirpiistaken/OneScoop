@@ -11,7 +11,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "1.3"
+    MARKETING_VERSION: "2.0"
     CURRENT_PROJECT_VERSION: "1"
     VERSIONING_SYSTEM: apple-generic
     CODE_SIGN_STYLE: Manual
@@ -47,6 +47,9 @@ targets:
       - path: CloudSync.swift
       - path: PhoneWatchBridge.swift
       - path: WatchPayload.swift
+      - path: Water.swift
+      - path: WaterViews.swift
+      - path: Plus.swift
       - path: Assets.xcassets
     dependencies:
       - target: CreatineWidgetExtension
@@ -84,6 +87,8 @@ targets:
       - path: CreatineWidget.swift
       - path: LogControl.swift
       - path: ScoopShape.swift
+      - path: Water.swift
+      - path: WaterWidget.swift
       - path: WidgetSymbols.xcassets
     settings:
       base:

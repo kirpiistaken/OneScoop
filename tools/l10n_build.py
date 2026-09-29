@@ -444,10 +444,196 @@ add("complication.description",
     "Vedi a colpo d’occhio se hai già preso la creatina oggi.",
     "Veja num relance se você já tomou a creatina de hoje.")
 
+# ── 2.0: Su ───────────────────────────────────────────────
+add("common.done", "Done", "Bitti", "Listo", "Fertig", "OK", "Fine", "OK")
+add("water.title", "Water", "Su", "Agua", "Wasser", "Eau", "Acqua", "Água")
+add("water.added %@",
+    "+%@ ml · Undo", "+%@ ml · Geri al", "+%@ ml · Deshacer", "+%@ ml · Widerrufen",
+    "+%@ ml · Annuler", "+%@ ml · Annulla", "+%@ ml · Desfazer")
+add("water.goal_reached",
+    "Goal reached", "Hedefe ulaştın", "Objetivo cumplido", "Ziel erreicht",
+    "Objectif atteint", "Obiettivo raggiunto", "Meta atingida")
+add("water.pace_on",
+    "Right on pace", "Tempondasın", "Vas a buen ritmo", "Du liegst im Plan",
+    "Vous êtes dans le rythme", "Sei in linea", "No ritmo certo")
+add("water.pace_behind %@",
+    "%@ ml behind your pace", "Temponun %@ ml gerisindesin", "%@ ml por detrás de tu ritmo",
+    "%@ ml hinter deinem Plan", "%@ ml de retard sur votre rythme",
+    "%@ ml indietro rispetto al ritmo", "%@ ml atrás do seu ritmo")
+add("water.full", "Full", "Tamamı", "Entera", "Ganz", "En entier", "Intera", "Inteira")
+add("water.cup.glass", "Glass", "Bardak", "Vaso", "Glas", "Verre", "Bicchiere", "Copo")
+add("water.cup.shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Coqueteleira")
+add("water.cup.bottle", "Bottle", "Şişe", "Botella", "Flasche", "Gourde", "Borraccia", "Garrafa")
+add("water.bridge %@",
+    "Have a glass of water with it? +%@ ml", "Yanında bir bardak su? +%@ ml",
+    "¿Un vaso de agua con ella? +%@ ml", "Ein Glas Wasser dazu? +%@ ml",
+    "Un verre d’eau avec ? +%@ ml", "Un bicchiere d’acqua insieme? +%@ ml",
+    "Um copo de água junto? +%@ ml")
+add("water.today_entries",
+    "Today's water", "Bugünkü su", "Agua de hoy", "Heutiges Wasser",
+    "Eau du jour", "Acqua di oggi", "Água de hoje")
+add("water.no_entries",
+    "Nothing logged yet today.", "Bugün henüz su kaydı yok.", "Aún no hay nada registrado hoy.",
+    "Heute noch nichts eingetragen.", "Rien de noté pour l’instant aujourd’hui.",
+    "Oggi non hai ancora registrato nulla.", "Nada registrado hoje ainda.")
+add("water.delete", "Delete", "Sil", "Eliminar", "Löschen", "Supprimer", "Elimina", "Apagar")
+
+add("whatsnew.water_title",
+    "New: Water", "Yeni: Su", "Nuevo: Agua", "Neu: Wasser", "Nouveau : l’eau",
+    "Novità: acqua", "Novo: água")
+add("whatsnew.water_body",
+    "Track water the same way you track creatine: one tap, right next to your daily dose.",
+    "Suyu da kreatin gibi takip et: tek dokunuş, günlük dozunun hemen yanında.",
+    "Registra el agua igual que la creatina: un toque, justo al lado de tu dosis diaria.",
+    "Erfasse Wasser genau wie Kreatin: ein Tipp, direkt neben deiner Tagesdosis.",
+    "Suivez l’eau comme la créatine : un geste, juste à côté de votre dose du jour.",
+    "Registra l’acqua come la creatina: un tocco, proprio accanto alla dose giornaliera.",
+    "Registre a água do mesmo jeito que a creatina: um toque, ao lado da sua dose diária.")
+add("whatsnew.water_try",
+    "Turn on water tracking", "Su takibini aç", "Activar el registro de agua",
+    "Wasser-Tracking einschalten", "Activer le suivi de l’eau",
+    "Attiva il monitoraggio dell’acqua", "Ativar o registro de água")
+
+add("plus.not_now", "Not now", "Şimdi değil", "Ahora no", "Nicht jetzt", "Plus tard", "Non ora", "Agora não")
+add("plus.headline",
+    "Pay once, keep it forever.", "Bir kez öde, hep senin.", "Paga una vez y es tuyo para siempre.",
+    "Einmal zahlen, für immer behalten.", "Payez une fois, gardez-le pour toujours.",
+    "Paghi una volta, è tuo per sempre.", "Pague uma vez e é seu para sempre.")
+add("plus.bullet_anywhere",
+    "Log water with one tap from widgets, the Lock Screen, Control Center and the Action button",
+    "Widget'tan, kilit ekranından, Denetim Merkezi'nden ve Eylem düğmesinden tek dokunuşla su ekle",
+    "Registra agua con un toque desde widgets, la pantalla bloqueada, el Centro de control y el botón de acción",
+    "Wasser mit einem Tipp über Widgets, Sperrbildschirm, Kontrollzentrum und Aktionstaste eintragen",
+    "Notez l’eau d’un geste depuis les widgets, l’écran verrouillé, le centre de contrôle et le bouton Action",
+    "Registra l’acqua con un tocco da widget, schermata di blocco, Centro di Controllo e tasto Azione",
+    "Registre água com um toque pelos widgets, pela Tela Bloqueada, pela Central de Controle e pelo botão de Ação")
+add("plus.bullet_watch",
+    "Apple Watch, with the Digital Crown to set the amount",
+    "Apple Watch'ta Digital Crown ile miktar ayarı",
+    "Apple Watch, con la Digital Crown para ajustar la cantidad",
+    "Apple Watch, Menge per Digital Crown einstellen",
+    "Apple Watch, avec la Digital Crown pour régler la quantité",
+    "Apple Watch, con la Digital Crown per regolare la quantità",
+    "Apple Watch, com a Digital Crown para ajustar a quantidade")
+add("plus.bullet_health",
+    "Apple Health: your water is saved there too",
+    "Apple Sağlık: su kayıtların orada da tutulur",
+    "Salud de Apple: tu agua también se guarda allí",
+    "Apple Health: dein Wasser wird auch dort gespeichert",
+    "Santé d’Apple : votre eau y est aussi enregistrée",
+    "Salute di Apple: la tua acqua viene salvata anche lì",
+    "Saúde da Apple: sua água também fica registrada lá")
+add("plus.bullet_reminders",
+    "Smart reminders only when you fall behind",
+    "Sadece geride kaldığında gelen akıllı hatırlatmalar",
+    "Recordatorios inteligentes solo cuando te quedas atrás",
+    "Smarte Erinnerungen nur, wenn du zurückliegst",
+    "Rappels intelligents seulement quand vous êtes en retard",
+    "Promemoria intelligenti solo quando resti indietro",
+    "Lembretes inteligentes só quando você fica para trás")
+add("plus.bullet_cups",
+    "Your own cups and bottle portions",
+    "Kendi bardakların ve şişe payları",
+    "Tus propios vasos y porciones de botella",
+    "Eigene Gläser und Flaschenportionen",
+    "Vos propres verres et portions de gourde",
+    "I tuoi bicchieri e porzioni di borraccia",
+    "Seus próprios copos e porções de garrafa")
+add("plus.no_subscription",
+    "One-time purchase · no subscription", "Tek seferlik · abonelik yok",
+    "Pago único · sin suscripción", "Einmalkauf · kein Abo", "Achat unique · sans abonnement",
+    "Acquisto unico · nessun abbonamento", "Compra única · sem assinatura")
+add("plus.buy", "Unlock OneScoop+", "OneScoop+'ı aç", "Desbloquear OneScoop+", "OneScoop+ freischalten",
+    "Débloquer OneScoop+", "Sblocca OneScoop+", "Desbloquear OneScoop+")
+add("plus.unavailable",
+    "Purchases aren't available yet in this test build.",
+    "Bu test sürümünde satın alma henüz hazır değil.",
+    "Las compras aún no están disponibles en esta versión de prueba.",
+    "Käufe sind in diesem Test-Build noch nicht verfügbar.",
+    "Les achats ne sont pas encore disponibles dans cette version de test.",
+    "Gli acquisti non sono ancora disponibili in questa build di prova.",
+    "As compras ainda não estão disponíveis nesta versão de teste.")
+add("plus.restore", "Restore purchases", "Satın alımları geri yükle", "Restaurar compras",
+    "Käufe wiederherstellen", "Restaurer les achats", "Ripristina acquisti", "Restaurar compras")
+add("plus.family",
+    "Shared with your family through Family Sharing.",
+    "Aile Paylaşımı ile ailenle de paylaşılır.",
+    "Se comparte con tu familia mediante En familia.",
+    "Wird per Familienfreigabe mit deiner Familie geteilt.",
+    "Partagé avec votre famille via le partage familial.",
+    "Condiviso con la famiglia tramite In famiglia.",
+    "Compartilhado com sua família pelo Compartilhamento Familiar.")
+add("plus.unlocked",
+    "OneScoop+ is unlocked. Thank you!", "OneScoop+ açık. Teşekkürler!",
+    "OneScoop+ está desbloqueado. ¡Gracias!", "OneScoop+ ist freigeschaltet. Danke!",
+    "OneScoop+ est débloqué. Merci !", "OneScoop+ è sbloccato. Grazie!",
+    "OneScoop+ está desbloqueado. Obrigado!")
+
+add("settings.water", "Water", "Su", "Agua", "Wasser", "Eau", "Acqua", "Água")
+add("settings.water_toggle", "Track water", "Su takibi", "Registrar agua", "Wasser erfassen",
+    "Suivre l’eau", "Monitora l’acqua", "Registrar água")
+add("settings.water_goal", "Daily goal", "Günlük hedef", "Objetivo diario", "Tagesziel",
+    "Objectif quotidien", "Obiettivo giornaliero", "Meta diária")
+add("settings.water_default", "Default cup", "Varsayılan kap", "Vaso predeterminado",
+    "Standardgefäß", "Contenant par défaut", "Contenitore predefinito", "Copo padrão")
+add("settings.water_footer",
+    "The goal is an estimate, not medical advice.",
+    "Hedef bir tahmindir, tıbbi tavsiye değildir.",
+    "El objetivo es una estimación, no un consejo médico.",
+    "Das Ziel ist eine Schätzung, kein medizinischer Rat.",
+    "L’objectif est une estimation, pas un avis médical.",
+    "L’obiettivo è una stima, non un consiglio medico.",
+    "A meta é uma estimativa, não uma orientação médica.")
+add("settings.water_cups", "Your cups", "Kapların", "Tus vasos", "Deine Gefäße",
+    "Vos contenants", "I tuoi contenitori", "Seus copos")
+add("settings.water_cups_footer",
+    "Set each one to its real size. Cups of 500 ml or more let you log a portion.",
+    "Her birini gerçek hacmine ayarla. 500 ml ve üstü kaplarda bir kısmını da girebilirsin.",
+    "Ajusta cada uno a su tamaño real. En los de 500 ml o más puedes registrar una parte.",
+    "Stell jedes auf seine echte Größe ein. Ab 500 ml kannst du auch einen Teil eintragen.",
+    "Réglez chacun sur sa taille réelle. À partir de 500 ml, vous pouvez noter une partie.",
+    "Imposta ognuno sulla sua capienza reale. Da 500 ml in su puoi registrarne una parte.",
+    "Ajuste cada um ao tamanho real. Nos de 500 ml ou mais dá para registrar uma parte.")
+
+add("widget.water_name", "Water", "Su", "Agua", "Wasser", "Eau", "Acqua", "Água")
+add("widget.water_desc",
+    "Add water with one tap and see how far you are from your goal.",
+    "Tek dokunuşla su ekle, hedefine ne kadar kaldığını gör.",
+    "Añade agua con un toque y mira cuánto te falta para tu objetivo.",
+    "Füge Wasser mit einem Tipp hinzu und sieh, wie weit du von deinem Ziel entfernt bist.",
+    "Ajoutez de l’eau d’un geste et voyez où vous en êtes de votre objectif.",
+    "Aggiungi acqua con un tocco e guarda quanto manca al tuo obiettivo.",
+    "Adicione água com um toque e veja quanto falta para a sua meta.")
+add("widget.water_off",
+    "Turn on water tracking in OneScoop.", "Su takibini OneScoop'ta aç.",
+    "Activa el registro de agua en OneScoop.", "Schalte Wasser-Tracking in OneScoop ein.",
+    "Activez le suivi de l’eau dans OneScoop.", "Attiva il monitoraggio dell’acqua in OneScoop.",
+    "Ative o registro de água no OneScoop.")
+add("widget.water_plus",
+    "Log from here with OneScoop+.", "Buradan eklemek için OneScoop+.",
+    "Registra desde aquí con OneScoop+.", "Mit OneScoop+ direkt hier eintragen.",
+    "Notez d’ici avec OneScoop+.", "Registra da qui con OneScoop+.",
+    "Registre daqui com o OneScoop+.")
+add("control.water_desc",
+    "Add your default cup of water.", "Varsayılan kabın kadar su ekle.",
+    "Añade tu vaso de agua predeterminado.", "Füge dein Standardgefäß Wasser hinzu.",
+    "Ajoutez votre contenant d’eau par défaut.", "Aggiungi il tuo contenitore d’acqua predefinito.",
+    "Adicione seu copo de água padrão.")
+add("intent.water.title", "Add water", "Su ekle", "Añadir agua", "Wasser hinzufügen",
+    "Ajouter de l’eau", "Aggiungi acqua", "Adicionar água")
+add("intent.water.desc",
+    "Adds water to today's total in OneScoop.", "OneScoop'ta bugünkü toplama su ekler.",
+    "Añade agua al total de hoy en OneScoop.", "Fügt Wasser zur heutigen Menge in OneScoop hinzu.",
+    "Ajoute de l’eau au total du jour dans OneScoop.", "Aggiunge acqua al totale di oggi in OneScoop.",
+    "Adiciona água ao total de hoje no OneScoop.")
+add("intent.water.amount", "Amount (ml)", "Miktar (ml)", "Cantidad (ml)", "Menge (ml)",
+    "Quantité (ml)", "Quantità (ml)", "Quantidade (ml)")
+
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
-               "intent.undo.desc", "shortcut.undo"}
+               "intent.undo.desc", "shortcut.undo",
+               "intent.water.title", "intent.water.desc", "intent.water.amount"}
 
 # ═══════════════════════════════════════════════════════════
 # Doğrulama

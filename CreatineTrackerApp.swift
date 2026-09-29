@@ -27,7 +27,9 @@ struct CreatineTrackerApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(store)
+                .environmentObject(PlusStore.shared)
                 .tint(CT.accent)
+                .task { await PlusStore.shared.load() }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
@@ -177,6 +179,7 @@ enum OpenCounter {
 
 struct MainTabView: View {
     @EnvironmentObject private var store: CreatineStore
+    @State private var showWaterIntro = false
 
     var body: some View {
         TabView {
@@ -193,5 +196,13 @@ struct MainTabView: View {
             SettingsView()
                 .tabItem { Label(L.tabSettings, systemImage: "gearshape") }
         }
+        // 2.0 — "Yeni: Su" bir kez.
+        .task {
+            if !store.water.hasSeenIntro {
+                try? await Task.sleep(for: .seconds(0.8))
+                showWaterIntro = true
+            }
+        }
+        .sheet(isPresented: $showWaterIntro) { WaterIntroSheet() }
     }
 }

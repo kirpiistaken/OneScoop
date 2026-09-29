@@ -31,5 +31,17 @@ struct OneScoopShortcuts: AppShortcutsProvider {
             shortTitle: "shortcut.undo",
             systemImageName: "arrow.uturn.backward"
         )
+
+        AppShortcut(
+            intent: AddWaterIntent(),
+            phrases: [
+                "Log water in \(.applicationName)",
+                "Add water in \(.applicationName)",
+                "I drank water in \(.applicationName)",
+                "Add a glass of water in \(.applicationName)"
+            ],
+            shortTitle: "intent.water.title",
+            systemImageName: "waterbottle.fill"
+        )
     }
 }

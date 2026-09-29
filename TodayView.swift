@@ -22,7 +22,12 @@ struct TodayView: View {
                 }
 
                 Spacer(minLength: 12)
-                footer
+                if store.water.enabled {
+                    // 2.0 — Su kartı. Kreatin alanı biraz küçülüyor, ikisi aynı ekranda.
+                    WaterCard()
+                } else {
+                    footer
+                }
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 28)
@@ -59,11 +64,14 @@ struct TodayView: View {
 
     // MARK: - States
 
+    /// Su kartı varken kreatin butonu ve tik biraz küçülüyor.
+    private var compact: Bool { store.water.enabled }
+
     private var askState: some View {
-        VStack(spacing: 36) {
+        VStack(spacing: compact ? 26 : 36) {
             VStack(spacing: 14) {
                 Text(L.todayQuestion)
-                    .font(CT.display(40, .heavy))
+                    .font(CT.display(compact ? 34 : 40, .heavy))
                     .foregroundStyle(CT.ink)
                     .multilineTextAlignment(.center)
                     .lineSpacing(-2)
@@ -90,7 +98,7 @@ struct TodayView: View {
                     .minimumScaleFactor(0.6)
                     .lineLimit(1)
                     .padding(.horizontal, 20)
-                    .frame(width: 200, height: 200)
+                    .frame(width: compact ? 164 : 200, height: compact ? 164 : 200)
                     .background(CT.accent, in: Circle())
                     .shadow(color: CT.accent.opacity(0.35), radius: 24, y: 10)
             }
@@ -100,9 +108,9 @@ struct TodayView: View {
     }
 
     private var takenState: some View {
-        VStack(spacing: 26) {
+        VStack(spacing: compact ? 20 : 26) {
             Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 132, weight: .bold))
+                .font(.system(size: compact ? 100 : 132, weight: .bold))
                 .foregroundStyle(CT.accent)
                 .scaleEffect(checkScale)
                 .onAppear { checkScale = 1 }
@@ -122,6 +130,11 @@ struct TodayView: View {
                     .font(.system(.callout, design: .rounded).weight(.medium))
                     .foregroundStyle(CT.inkSoft)
                 }
+            }
+
+            if store.showsCreatineWaterBridge {
+                CreatineWaterBridge()
+                    .transition(.scale.combined(with: .opacity))
             }
 
             Button {

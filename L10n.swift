@@ -4,9 +4,11 @@ import Foundation
 
 enum L {
     static var commonCancel: String { String(localized: "common.cancel") }
+    static var commonDone: String { String(localized: "common.done") }
     static var complicationDescription: String { String(localized: "complication.description") }
     static var complicationNotYet: String { String(localized: "complication.not_yet") }
     static var controlDescription: String { String(localized: "control.description") }
+    static var controlWaterDesc: String { String(localized: "control.water_desc") }
     static var historyDayStreak: String { String(localized: "history.day_streak") }
     static var historyDaysLogged: String { String(localized: "history.days_logged") }
     static var historyLoading: String { String(localized: "history.loading") }
@@ -31,6 +33,19 @@ enum L {
     static var onbReminderHint: String { String(localized: "onb.reminder_hint") }
     static var onbStart: String { String(localized: "onb.start") }
     static var onbTagline: String { String(localized: "onb.tagline") }
+    static var plusBulletAnywhere: String { String(localized: "plus.bullet_anywhere") }
+    static var plusBulletCups: String { String(localized: "plus.bullet_cups") }
+    static var plusBulletHealth: String { String(localized: "plus.bullet_health") }
+    static var plusBulletReminders: String { String(localized: "plus.bullet_reminders") }
+    static var plusBulletWatch: String { String(localized: "plus.bullet_watch") }
+    static var plusBuy: String { String(localized: "plus.buy") }
+    static var plusFamily: String { String(localized: "plus.family") }
+    static var plusHeadline: String { String(localized: "plus.headline") }
+    static var plusNoSubscription: String { String(localized: "plus.no_subscription") }
+    static var plusNotNow: String { String(localized: "plus.not_now") }
+    static var plusRestore: String { String(localized: "plus.restore") }
+    static var plusUnavailable: String { String(localized: "plus.unavailable") }
+    static var plusUnlocked: String { String(localized: "plus.unlocked") }
     static var restoreChecking: String { String(localized: "restore.checking") }
     static var settingsAdjust: String { String(localized: "settings.adjust") }
     static var settingsAdjustLoading: String { String(localized: "settings.adjust_loading") }
@@ -62,6 +77,13 @@ enum L {
     static var settingsStartedOn: String { String(localized: "settings.started_on") }
     static var settingsTime: String { String(localized: "settings.time") }
     static func settingsUpTo(_ a0: Int) -> String { String(localized: "settings.up_to \(a0)") }
+    static var settingsWater: String { String(localized: "settings.water") }
+    static var settingsWaterCups: String { String(localized: "settings.water_cups") }
+    static var settingsWaterCupsFooter: String { String(localized: "settings.water_cups_footer") }
+    static var settingsWaterDefault: String { String(localized: "settings.water_default") }
+    static var settingsWaterFooter: String { String(localized: "settings.water_footer") }
+    static var settingsWaterGoal: String { String(localized: "settings.water_goal") }
+    static var settingsWaterToggle: String { String(localized: "settings.water_toggle") }
     static var settingsWidget: String { String(localized: "settings.widget") }
     static var settingsWidgetHelp: String { String(localized: "settings.widget_help") }
     static var shortcutLog: String { String(localized: "shortcut.log") }
@@ -98,8 +120,28 @@ enum L {
     static var todayYes: String { String(localized: "today.yes") }
     static var todayYesA11y: String { String(localized: "today.yes_a11y") }
     static var watchSetupFirst: String { String(localized: "watch.setup_first") }
+    static func waterAdded(_ a0: String) -> String { String(localized: "water.added \(a0)") }
+    static func waterBridge(_ a0: String) -> String { String(localized: "water.bridge \(a0)") }
+    static var waterCupBottle: String { String(localized: "water.cup.bottle") }
+    static var waterCupGlass: String { String(localized: "water.cup.glass") }
+    static var waterCupShaker: String { String(localized: "water.cup.shaker") }
+    static var waterDelete: String { String(localized: "water.delete") }
+    static var waterFull: String { String(localized: "water.full") }
+    static var waterGoalReached: String { String(localized: "water.goal_reached") }
+    static var waterNoEntries: String { String(localized: "water.no_entries") }
+    static func waterPaceBehind(_ a0: String) -> String { String(localized: "water.pace_behind \(a0)") }
+    static var waterPaceOn: String { String(localized: "water.pace_on") }
+    static var waterTitle: String { String(localized: "water.title") }
+    static var waterTodayEntries: String { String(localized: "water.today_entries") }
+    static var whatsnewWaterBody: String { String(localized: "whatsnew.water_body") }
+    static var whatsnewWaterTitle: String { String(localized: "whatsnew.water_title") }
+    static var whatsnewWaterTry: String { String(localized: "whatsnew.water_try") }
     static var widgetDescription: String { String(localized: "widget.description") }
     static var widgetDoseLogged: String { String(localized: "widget.dose_logged") }
     static func widgetGramsToday(_ a0: String) -> String { String(localized: "widget.grams_today \(a0)") }
     static func widgetStreak(_ a0: Int) -> String { String(localized: "widget.streak \(a0)") }
+    static var widgetWaterDesc: String { String(localized: "widget.water_desc") }
+    static var widgetWaterName: String { String(localized: "widget.water_name") }
+    static var widgetWaterOff: String { String(localized: "widget.water_off") }
+    static var widgetWaterPlus: String { String(localized: "widget.water_plus") }
 }

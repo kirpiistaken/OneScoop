@@ -29,7 +29,7 @@ struct CreatineProvider: TimelineProvider {
         // kendiliğinden yenilenmiyor ve dünkü "alındı" durumunda kalıyordu.
         // Widget her gece yarısı yenilendiğinde düğmeyi de yeniliyoruz.
         if #available(iOS 18.0, *) {
-            ControlCenter.shared.reloadControls(ofKind: LogCreatineControl.kind)
+            ControlCenter.shared.reloadAllControls()
         }
     }
 }
@@ -196,8 +196,10 @@ struct CreatineWidget: Widget {
 struct CreatineWidgetBundle: WidgetBundle {
     var body: some Widget {
         CreatineWidget()
+        WaterWidget()
         if #available(iOS 18.0, *) {
             LogCreatineControl()
+            AddWaterControl()
         }
     }
 }

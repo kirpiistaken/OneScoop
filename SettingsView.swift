@@ -3,6 +3,8 @@ import UserNotifications
 
 struct SettingsView: View {
     @EnvironmentObject private var store: CreatineStore
+    @EnvironmentObject private var plus: PlusStore
+    @State private var showPaywall = false
     @State private var reminderTime = Date()
     @State private var showResetConfirm = false
     @State private var permissionDenied = false
@@ -134,6 +136,83 @@ struct SettingsView: View {
                     }
                 }
 
+                // MARK: Su (2.0)
+                Section {
+                    Toggle(L.settingsWaterToggle, isOn: Binding(
+                        get: { store.water.enabled },
+                        set: { new in store.updateWater { $0.enabled = new } }
+                    ))
+
+                    if store.water.enabled {
+                        Stepper(value: Binding(
+                            get: { store.water.goalMl },
+                            set: { new in store.updateWater { $0.goalMl = new } }
+                        ), in: 1000...5000, step: 250) {
+                            HStack {
+                                Text(L.settingsWaterGoal)
+                                Spacer()
+                                Text(verbatim: "\(store.water.goalMl.litersString) L")
+                                    .foregroundStyle(CT.inkSoft)
+                            }
+                        }
+
+                        Picker(L.settingsWaterDefault, selection: Binding(
+                            get: { store.water.defaultCup.id },
+                            set: { new in store.updateWater { $0.defaultCupID = new } }
+                        )) {
+                            ForEach(store.water.cups) { cup in
+                                Text(verbatim: "\(cup.kind.title) · \(cup.ml) ml").tag(cup.id)
+                            }
+                        }
+                    }
+                } header: {
+                    Text(L.settingsWater)
+                } footer: {
+                    if store.water.enabled { Text(L.settingsWaterFooter) }
+                }
+
+                if store.water.enabled {
+                    Section {
+                        ForEach(Array(store.water.cups.enumerated()), id: \.element.id) { index, cup in
+                            Stepper(value: Binding(
+                                get: { cup.ml },
+                                set: { new in store.updateWater { $0.cups[index].ml = new } }
+                            ), in: 100...1500, step: 50) {
+                                HStack {
+                                    Label(cup.kind.title, systemImage: cup.kind.symbol)
+                                    Spacer()
+                                    Text(verbatim: "\(cup.ml) ml")
+                                        .foregroundStyle(CT.inkSoft)
+                                }
+                            }
+                            .disabled(!plus.isUnlocked)
+                        }
+                    } header: {
+                        Text(L.settingsWaterCups)
+                    } footer: {
+                        Text(L.settingsWaterCupsFooter)
+                    }
+                }
+
+                // MARK: OneScoop+
+                Section {
+                    Button { showPaywall = true } label: {
+                        HStack {
+                            Label {
+                                Text(verbatim: "OneScoop+").foregroundStyle(CT.ink)
+                            } icon: {
+                                Image(systemName: "plus.circle.fill").foregroundStyle(CT.accent)
+                            }
+                            Spacer()
+                            if plus.purchased {
+                                Image(systemName: "checkmark").foregroundStyle(CT.accent)
+                            } else if let price = plus.product?.displayPrice {
+                                Text(verbatim: price).foregroundStyle(CT.inkSoft)
+                            }
+                        }
+                    }
+                }
+
                 // MARK: Widget
                 Section(L.settingsWidget) {
                     Label(L.settingsWidgetHelp, systemImage: "square.grid.2x2")
@@ -171,6 +250,7 @@ struct SettingsView: View {
             let status = await NotificationManager.authorizationStatus()
             permissionDenied = (status == .denied)
         }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
         .confirmationDialog(L.settingsResetTitle, isPresented: $showResetConfirm, titleVisibility: .visible) {
             Button(L.settingsDeleteAll, role: .destructive) { store.resetEverything() }
             Button(L.commonCancel, role: .cancel) {}
