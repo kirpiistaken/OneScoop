@@ -205,21 +205,26 @@ enum WaterData {
 }
 
 /// OneScoop+ kilidi. Uygulama satın almayı doğruluyor ve sonucu buraya
-/// yazıyor; widget buradan okuyor.
+/// yazıyor; widget, bildirim ve Siri buradan okuyor.
+///
+/// Test satın alması: TestFlight'ta gerçek ödeme olmadan satın almayı
+/// denemek ve istenince geri almak için. Sadece uygulama TestFlight'tan
+/// (sandbox) çalışıyorsa geçerli; App Store sürümünde hiçbir etkisi yok.
 enum PlusAccess {
-    private static let key = "ct.plus.unlocked.v1"
-
-    /// TASLAK: Satın alma App Store Connect'te kurulana kadar test
-    /// build'lerinde her şey açık. Yayından önce `false` yapılacak.
-    static let draftUnlocksEverything = true
+    private static let purchasedKey = "ct.plus.unlocked.v1"
+    private static let simulatedKey = "ct.plus.simulated.v1"
+    private static let testBuildKey = "ct.plus.testBuild.v1"
 
     static var isUnlocked: Bool {
-        draftUnlocksEverything || AppGroup.defaults.bool(forKey: key)
+        AppGroup.defaults.bool(forKey: purchasedKey) || isSimulated
     }
 
-    static func setPurchased(_ value: Bool) {
-        AppGroup.defaults.set(value, forKey: key)
-    }
+    static var isTestBuild: Bool { AppGroup.defaults.bool(forKey: testBuildKey) }
+    static var isSimulated: Bool { isTestBuild && AppGroup.defaults.bool(forKey: simulatedKey) }
+
+    static func setPurchased(_ value: Bool) { AppGroup.defaults.set(value, forKey: purchasedKey) }
+    static func setSimulated(_ value: Bool) { AppGroup.defaults.set(value, forKey: simulatedKey) }
+    static func setTestBuild(_ value: Bool) { AppGroup.defaults.set(value, forKey: testBuildKey) }
 }
 
 extension Int {

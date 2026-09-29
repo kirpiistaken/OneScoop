@@ -61,14 +61,20 @@ struct WaterWidgetView: View {
 
     private var ready: Bool { entry.enabled && entry.unlocked }
 
+    /// Su açık ama OneScoop+ yok: widget'a dokununca satın alma ekranı.
+    private var needsPlus: Bool { entry.enabled && !entry.unlocked }
+
     var body: some View {
-        switch family {
-        case .accessoryCircular: circular
-        case .accessoryRectangular: rectangular
-        case .systemMedium: medium
-        case .systemLarge: large
-        default: small
+        Group {
+            switch family {
+            case .accessoryCircular: circular
+            case .accessoryRectangular: rectangular
+            case .systemMedium: medium
+            case .systemLarge: large
+            default: small
+            }
         }
+        .widgetURL(needsPlus ? URL(string: "onescoop://plus") : nil)
     }
 
     // MARK: Ortak parçalar
@@ -91,11 +97,32 @@ struct WaterWidgetView: View {
         }
     }
 
+    /// Butonların yerine: su kapalıysa kısa not, Plus yoksa sarı taç + "OneScoop+".
+    @ViewBuilder
     private var lockedNote: some View {
-        Text(entry.enabled ? L.widgetWaterPlus : L.widgetWaterOff)
-            .font(.system(size: 12, weight: .medium, design: .rounded))
-            .foregroundStyle(CT.inkSoft)
-            .fixedSize(horizontal: false, vertical: true)
+        if entry.enabled {
+            HStack(spacing: 8) {
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(CT.gold)
+                    .frame(width: 30, height: 30)
+                    .background(CT.goldSoft, in: Circle())
+                VStack(alignment: .leading, spacing: 1) {
+                    (Text(verbatim: "OneScoop").foregroundStyle(CT.ink)
+                     + Text(verbatim: "+").foregroundStyle(CT.gold))
+                        .font(.system(size: 14, weight: .heavy, design: .rounded))
+                    Text(L.widgetWaterPlus)
+                        .font(.system(size: 11, weight: .medium, design: .rounded))
+                        .foregroundStyle(CT.inkSoft)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        } else {
+            Text(L.widgetWaterOff)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
+                .foregroundStyle(CT.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 
     private func cupButton(_ cup: WaterCup, circle: CGFloat) -> some View {
@@ -258,6 +285,13 @@ struct WaterWidgetView: View {
                 }
                 .frame(width: 20, height: 26)
                 .widgetAccentable()
+                .overlay(alignment: .topTrailing) {
+                    if needsPlus {
+                        Image(systemName: "crown.fill")
+                            .font(.system(size: 8, weight: .bold))
+                            .offset(x: 8, y: -4)
+                    }
+                }
                 Text(verbatim: entry.total.litersString)
                     .font(.system(size: 11, weight: .bold, design: .rounded))
             }
@@ -279,13 +313,22 @@ struct WaterWidgetView: View {
                 Text(verbatim: "\(entry.total.litersString) / \(entry.goal.litersString) L")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .widgetAccentable()
-                HStack(spacing: 4) {
-                    ScoopShape(check: entry.creatineTaken)
-                        .fill(.primary)
-                        .frame(width: 13, height: 13)
-                    Text(entry.creatineTaken ? L.widgetDoseLogged : L.complicationNotYet)
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .lineLimit(1)
+                if needsPlus {
+                    Label {
+                        Text(verbatim: "OneScoop+")
+                    } icon: {
+                        Image(systemName: "crown.fill")
+                    }
+                    .font(.system(size: 12, weight: .semibold, design: .rounded))
+                } else {
+                    HStack(spacing: 4) {
+                        ScoopShape(check: entry.creatineTaken)
+                            .fill(.primary)
+                            .frame(width: 13, height: 13)
+                        Text(entry.creatineTaken ? L.widgetDoseLogged : L.complicationNotYet)
+                            .font(.system(size: 12, weight: .medium, design: .rounded))
+                            .lineLimit(1)
+                    }
                 }
             }
         }
@@ -314,11 +357,12 @@ struct AddWaterControl: ControlWidget {
 
     var body: some ControlWidgetConfiguration {
         StaticControlConfiguration(kind: Self.kind, provider: WaterTotalProvider()) { total in
+            // Plus yoksa taç ve "OneScoop+" görünüyor; dokunmak bir şey eklemiyor.
             ControlWidgetButton(action: AddWaterIntent()) {
                 Label {
-                    Text(verbatim: "\(total.litersString) L")
+                    Text(verbatim: PlusAccess.isUnlocked ? "\(total.litersString) L" : "OneScoop+")
                 } icon: {
-                    Image(systemName: "waterbottle.fill")
+                    Image(systemName: PlusAccess.isUnlocked ? "waterbottle.fill" : "crown.fill")
                 }
             }
         }

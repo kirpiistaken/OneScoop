@@ -2266,43 +2266,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wasser mit einem Tipp über Widgets, Sperrbildschirm, Kontrollzentrum und Aktionstaste eintragen"
+            "value": "Wasser mit einem Tipp über Widgets, Sperrbildschirm, Kontrollzentrum, Aktionstaste und Siri hinzufügen"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Log water with one tap from widgets, the Lock Screen, Control Center and the Action button"
+            "value": "Add water with one tap from widgets, the Lock Screen, Control Center, the Action button and Siri"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Registra agua con un toque desde widgets, la pantalla bloqueada, el Centro de control y el botón de acción"
+            "value": "Añade agua con un toque desde widgets, la pantalla bloqueada, el Centro de control, el botón de acción y Siri"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notez l’eau d’un geste depuis les widgets, l’écran verrouillé, le centre de contrôle et le bouton Action"
+            "value": "Ajoutez de l’eau d’un geste depuis les widgets, l’écran verrouillé, le centre de contrôle, le bouton Action et Siri"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Registra l’acqua con un tocco da widget, schermata di blocco, Centro di Controllo e tasto Azione"
+            "value": "Aggiungi acqua con un tocco da widget, schermata di blocco, Centro di Controllo, tasto Azione e Siri"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Registre água com um toque pelos widgets, pela Tela Bloqueada, pela Central de Controle e pelo botão de Ação"
+            "value": "Adicione água com um toque pelos widgets, Tela Bloqueada, Central de Controle, botão de Ação e Siri"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Widget'tan, kilit ekranından, Denetim Merkezi'nden ve Eylem düğmesinden tek dokunuşla su ekle"
+            "value": "Widget'tan, kilit ekranından, Denetim Merkezi'nden, Eylem düğmesinden ve Siri'den tek dokunuşla su ekle"
           }
         }
       }
@@ -2313,43 +2313,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Eigene Gläser und Flaschenportionen"
+            "value": "Drei Gefäße — Glas, Shaker und Flasche — jedes in seiner echten Größe"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Your own cups and bottle portions"
+            "value": "Three cups — glass, shaker and bottle — each set to its real size"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tus propios vasos y porciones de botella"
+            "value": "Tres recipientes — vaso, shaker y botella — cada uno con su tamaño real"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vos propres verres et portions de gourde"
+            "value": "Trois contenants — verre, shaker et gourde — chacun à sa vraie taille"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "I tuoi bicchieri e porzioni di borraccia"
+            "value": "Tre contenitori — bicchiere, shaker e borraccia — ognuno della sua vera capienza"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Seus próprios copos e porções de garrafa"
+            "value": "Três recipientes — copo, coqueteleira e garrafa — cada um no tamanho real"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kendi bardakların ve şişe payları"
+            "value": "Üç kap — bardak, shaker ve şişe — her biri kendi gerçek boyutunda"
           }
         }
       }
@@ -2360,43 +2360,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Health: dein Wasser wird auch dort gespeichert"
+            "value": "Apple-Health-Abgleich: dein Wasser wird dort gespeichert, Wasser aus anderen Apps zählt hier"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Health: your water is saved there too"
+            "value": "Apple Health sync: your water is saved there, and water from other apps counts here"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Salud de Apple: tu agua también se guarda allí"
+            "value": "Sincronización con Salud: tu agua se guarda allí y el agua de otras apps cuenta aquí"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Santé d’Apple : votre eau y est aussi enregistrée"
+            "value": "Synchronisation avec Santé : votre eau y est enregistrée et l’eau des autres apps compte ici"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Salute di Apple: la tua acqua viene salvata anche lì"
+            "value": "Sincronizzazione con Salute: la tua acqua viene salvata lì e quella di altre app conta qui"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Saúde da Apple: sua água também fica registrada lá"
+            "value": "Sincronização com o Saúde: sua água é salva lá e a água de outros apps conta aqui"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Sağlık: su kayıtların orada da tutulur"
+            "value": "Apple Sağlık eşitlemesi: suyun oraya kaydedilir, diğer uygulamalardaki su da burada sayılır"
           }
         }
       }
@@ -2407,90 +2407,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smarte Erinnerungen, die lernen, wann du normalerweise trinkst"
+            "value": "Smarte Erinnerungen, die lernen, wann du trinkst, und sich nur melden, wenn du zurückliegst"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart reminders that learn when you usually drink"
+            "value": "Smart reminders that learn when you usually drink and only nudge you when you fall behind"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Recordatorios inteligentes que aprenden cuándo sueles beber"
+            "value": "Recordatorios inteligentes que aprenden cuándo sueles beber y solo avisan si te quedas atrás"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Des rappels intelligents qui apprennent quand vous buvez d’habitude"
+            "value": "Des rappels intelligents qui apprennent quand vous buvez et ne se manifestent que si vous êtes en retard"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Promemoria intelligenti che imparano quando bevi di solito"
+            "value": "Promemoria intelligenti che imparano quando bevi e ti avvisano solo se resti indietro"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lembretes inteligentes que aprendem quando você costuma beber"
+            "value": "Lembretes inteligentes que aprendem quando você bebe e só avisam quando você fica para trás"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Su içme düzenini öğrenen akıllı hatırlatmalar"
-          }
-        }
-      }
-    },
-    "plus.bullet_watch": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Watch, Menge per Digital Crown einstellen"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Watch, with the Digital Crown to set the amount"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Watch, con la Digital Crown para ajustar la cantidad"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Watch, avec la Digital Crown pour régler la quantité"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Watch, con la Digital Crown per regolare la quantità"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Watch, com a Digital Crown para ajustar a quantidade"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Apple Watch'ta Digital Crown ile miktar ayarı"
+            "value": "Ne zaman su içtiğini öğrenen, sadece geride kaldığında hatırlatan akıllı hatırlatmalar"
           }
         }
       }
@@ -2773,6 +2726,194 @@
           "stringUnit": {
             "state": "translated",
             "value": "Satın alımları geri yükle"
+          }
+        }
+      }
+    },
+    "plus.test_buy": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kaufen (Test)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buy (test)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprar (prueba)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acheter (test)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acquista (prova)"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprar (teste)"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Satın al (test)"
+          }
+        }
+      }
+    },
+    "plus.test_message": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dies ist ein TestFlight-Build. Es wird nichts bezahlt, und du kannst es jederzeit in den Einstellungen zurücknehmen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This is a TestFlight build. No payment is made, and you can cancel it anytime in Settings."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta es una versión de TestFlight. No se cobra nada y puedes cancelarla cuando quieras en Ajustes."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ceci est une version TestFlight. Aucun paiement n’est effectué et vous pouvez l’annuler à tout moment dans Réglages."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questa è una build TestFlight. Non paghi nulla e puoi annullarlo quando vuoi in Impostazioni."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta é uma versão do TestFlight. Nada é cobrado e você pode cancelar quando quiser em Ajustes."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bu bir TestFlight sürümü. Ödeme alınmaz; istediğin zaman Ayarlar'dan iptal edebilirsin."
+          }
+        }
+      }
+    },
+    "plus.test_note": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TestFlight · Testkauf, keine Zahlung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TestFlight · test purchase, no payment"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TestFlight · compra de prueba, sin pago"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TestFlight · achat de test, sans paiement"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TestFlight · acquisto di prova, nessun pagamento"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TestFlight · compra de teste, sem pagamento"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TestFlight · test satın alması, ödeme yok"
+          }
+        }
+      }
+    },
+    "plus.test_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testkauf"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test purchase"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compra de prueba"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Achat de test"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acquisto di prova"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compra de teste"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test satın alması"
           }
         }
       }
@@ -4386,6 +4527,288 @@
           "stringUnit": {
             "state": "translated",
             "value": "Başlangıç"
+          }
+        }
+      }
+    },
+    "settings.test": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prueba"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prova"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Teste"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test"
+          }
+        }
+      }
+    },
+    "settings.test_cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testkauf zurücknehmen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel test purchase"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar compra de prueba"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler l’achat de test"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annulla acquisto di prova"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar compra de teste"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Test satın almasını iptal et"
+          }
+        }
+      }
+    },
+    "settings.test_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nur in TestFlight-Builds sichtbar. Zum Testen von OneScoop+ mit und ohne Kauf."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only visible in TestFlight builds. Lets you try OneScoop+ with and without a purchase."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Solo visible en versiones de TestFlight. Para probar OneScoop+ con y sin compra."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visible uniquement dans les versions TestFlight. Pour essayer OneScoop+ avec et sans achat."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visibile solo nelle build TestFlight. Per provare OneScoop+ con e senza acquisto."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visível só em versões do TestFlight. Para testar o OneScoop+ com e sem compra."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sadece TestFlight sürümlerinde görünür. OneScoop+'ı satın alınmış ve alınmamış haliyle denemen için."
+          }
+        }
+      }
+    },
+    "settings.test_open_paywall": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop+-Bildschirm öffnen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open OneScoop+ screen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir pantalla de OneScoop+"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir l’écran OneScoop+"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri la schermata OneScoop+"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir tela do OneScoop+"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop+ ekranını aç"
+          }
+        }
+      }
+    },
+    "settings.test_plus_off": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nicht gekauft"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not purchased"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No comprado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non acheté"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non acquistato"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não comprado"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Satın alınmadı"
+          }
+        }
+      }
+    },
+    "settings.test_plus_on": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktiv (Test)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active (test)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activo (prueba)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actif (test)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attivo (prova)"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ativo (teste)"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Açık (test)"
           }
         }
       }

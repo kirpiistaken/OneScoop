@@ -296,7 +296,7 @@ struct SettingsView: View {
                                 Image(systemName: "crown.fill").foregroundStyle(CT.gold)
                             }
                             Spacer()
-                            if plus.purchased {
+                            if plus.isUnlocked {
                                 Image(systemName: "checkmark").foregroundStyle(CT.accent)
                             } else if let price = plus.product?.displayPrice {
                                 Text(verbatim: price).foregroundStyle(CT.inkSoft)
@@ -329,6 +329,29 @@ struct SettingsView: View {
                     Button(L.settingsReset, role: .destructive) { showResetConfirm = true }
                 } footer: {
                     Text(store.iCloudEnabled ? L.settingsResetIcloud : L.settingsLocalOnly)
+                }
+
+                // MARK: Test (sadece TestFlight)
+                if plus.isTestBuild {
+                    Section {
+                        HStack {
+                            Text(verbatim: "OneScoop+")
+                            Spacer()
+                            Text(plus.isUnlocked ? L.settingsTestPlusOn : L.settingsTestPlusOff)
+                                .foregroundStyle(plus.isUnlocked ? CT.gold : CT.inkSoft)
+                        }
+                        if plus.simulated {
+                            Button(L.settingsTestCancel, role: .destructive) {
+                                Task { await plus.cancelSimulatedPurchase() }
+                            }
+                        } else {
+                            Button(L.settingsTestOpenPaywall) { showPaywall = true }
+                        }
+                    } header: {
+                        Label(L.settingsTest, systemImage: "hammer.fill")
+                    } footer: {
+                        Text(L.settingsTestFooter)
+                    }
                 }
             }
             .navigationTitle(L.tabSettings)

@@ -491,45 +491,37 @@ add("plus.headline",
     "Einmal zahlen, für immer behalten.", "Payez une fois, gardez-le pour toujours.",
     "Paghi una volta, è tuo per sempre.", "Pague uma vez e é seu para sempre.")
 add("plus.bullet_anywhere",
-    "Log water with one tap from widgets, the Lock Screen, Control Center and the Action button",
-    "Widget'tan, kilit ekranından, Denetim Merkezi'nden ve Eylem düğmesinden tek dokunuşla su ekle",
-    "Registra agua con un toque desde widgets, la pantalla bloqueada, el Centro de control y el botón de acción",
-    "Wasser mit einem Tipp über Widgets, Sperrbildschirm, Kontrollzentrum und Aktionstaste eintragen",
-    "Notez l’eau d’un geste depuis les widgets, l’écran verrouillé, le centre de contrôle et le bouton Action",
-    "Registra l’acqua con un tocco da widget, schermata di blocco, Centro di Controllo e tasto Azione",
-    "Registre água com um toque pelos widgets, pela Tela Bloqueada, pela Central de Controle e pelo botão de Ação")
-add("plus.bullet_watch",
-    "Apple Watch, with the Digital Crown to set the amount",
-    "Apple Watch'ta Digital Crown ile miktar ayarı",
-    "Apple Watch, con la Digital Crown para ajustar la cantidad",
-    "Apple Watch, Menge per Digital Crown einstellen",
-    "Apple Watch, avec la Digital Crown pour régler la quantité",
-    "Apple Watch, con la Digital Crown per regolare la quantità",
-    "Apple Watch, com a Digital Crown para ajustar a quantidade")
+    "Add water with one tap from widgets, the Lock Screen, Control Center, the Action button and Siri",
+    "Widget'tan, kilit ekranından, Denetim Merkezi'nden, Eylem düğmesinden ve Siri'den tek dokunuşla su ekle",
+    "Añade agua con un toque desde widgets, la pantalla bloqueada, el Centro de control, el botón de acción y Siri",
+    "Wasser mit einem Tipp über Widgets, Sperrbildschirm, Kontrollzentrum, Aktionstaste und Siri hinzufügen",
+    "Ajoutez de l’eau d’un geste depuis les widgets, l’écran verrouillé, le centre de contrôle, le bouton Action et Siri",
+    "Aggiungi acqua con un tocco da widget, schermata di blocco, Centro di Controllo, tasto Azione e Siri",
+    "Adicione água com um toque pelos widgets, Tela Bloqueada, Central de Controle, botão de Ação e Siri")
 add("plus.bullet_health",
-    "Apple Health: your water is saved there too",
-    "Apple Sağlık: su kayıtların orada da tutulur",
-    "Salud de Apple: tu agua también se guarda allí",
-    "Apple Health: dein Wasser wird auch dort gespeichert",
-    "Santé d’Apple : votre eau y est aussi enregistrée",
-    "Salute di Apple: la tua acqua viene salvata anche lì",
-    "Saúde da Apple: sua água também fica registrada lá")
+    "Apple Health sync: your water is saved there, and water from other apps counts here",
+    "Apple Sağlık eşitlemesi: suyun oraya kaydedilir, diğer uygulamalardaki su da burada sayılır",
+    "Sincronización con Salud: tu agua se guarda allí y el agua de otras apps cuenta aquí",
+    "Apple-Health-Abgleich: dein Wasser wird dort gespeichert, Wasser aus anderen Apps zählt hier",
+    "Synchronisation avec Santé : votre eau y est enregistrée et l’eau des autres apps compte ici",
+    "Sincronizzazione con Salute: la tua acqua viene salvata lì e quella di altre app conta qui",
+    "Sincronização com o Saúde: sua água é salva lá e a água de outros apps conta aqui")
 add("plus.bullet_reminders",
-    "Smart reminders that learn when you usually drink",
-    "Su içme düzenini öğrenen akıllı hatırlatmalar",
-    "Recordatorios inteligentes que aprenden cuándo sueles beber",
-    "Smarte Erinnerungen, die lernen, wann du normalerweise trinkst",
-    "Des rappels intelligents qui apprennent quand vous buvez d’habitude",
-    "Promemoria intelligenti che imparano quando bevi di solito",
-    "Lembretes inteligentes que aprendem quando você costuma beber")
+    "Smart reminders that learn when you usually drink and only nudge you when you fall behind",
+    "Ne zaman su içtiğini öğrenen, sadece geride kaldığında hatırlatan akıllı hatırlatmalar",
+    "Recordatorios inteligentes que aprenden cuándo sueles beber y solo avisan si te quedas atrás",
+    "Smarte Erinnerungen, die lernen, wann du trinkst, und sich nur melden, wenn du zurückliegst",
+    "Des rappels intelligents qui apprennent quand vous buvez et ne se manifestent que si vous êtes en retard",
+    "Promemoria intelligenti che imparano quando bevi e ti avvisano solo se resti indietro",
+    "Lembretes inteligentes que aprendem quando você bebe e só avisam quando você fica para trás")
 add("plus.bullet_cups",
-    "Your own cups and bottle portions",
-    "Kendi bardakların ve şişe payları",
-    "Tus propios vasos y porciones de botella",
-    "Eigene Gläser und Flaschenportionen",
-    "Vos propres verres et portions de gourde",
-    "I tuoi bicchieri e porzioni di borraccia",
-    "Seus próprios copos e porções de garrafa")
+    "Three cups — glass, shaker and bottle — each set to its real size",
+    "Üç kap — bardak, shaker ve şişe — her biri kendi gerçek boyutunda",
+    "Tres recipientes — vaso, shaker y botella — cada uno con su tamaño real",
+    "Drei Gefäße — Glas, Shaker und Flasche — jedes in seiner echten Größe",
+    "Trois contenants — verre, shaker et gourde — chacun à sa vraie taille",
+    "Tre contenitori — bicchiere, shaker e borraccia — ognuno della sua vera capienza",
+    "Três recipientes — copo, coqueteleira e garrafa — cada um no tamanho real")
 add("plus.no_subscription",
     "One-time purchase · no subscription", "Tek seferlik · abonelik yok",
     "Pago único · sin suscripción", "Einmalkauf · kein Abo", "Achat unique · sans abonnement",
@@ -707,6 +699,42 @@ add("settings.water_health_footer",
     "L’eau notée ici est enregistrée dans Santé, et l’eau des autres apps dans Santé apparaît dans OneScoop.",
     "L’acqua che registri qui viene salvata in Salute, e l’acqua di altre app in Salute compare in OneScoop.",
     "A água registrada aqui é salva no Saúde, e a água de outros apps no Saúde aparece no OneScoop.")
+
+# ── 2.0: TestFlight test satın alması ─────────────────────
+add("plus.test_title", "Test purchase", "Test satın alması", "Compra de prueba", "Testkauf",
+    "Achat de test", "Acquisto di prova", "Compra de teste")
+add("plus.test_message",
+    "This is a TestFlight build. No payment is made, and you can cancel it anytime in Settings.",
+    "Bu bir TestFlight sürümü. Ödeme alınmaz; istediğin zaman Ayarlar'dan iptal edebilirsin.",
+    "Esta es una versión de TestFlight. No se cobra nada y puedes cancelarla cuando quieras en Ajustes.",
+    "Dies ist ein TestFlight-Build. Es wird nichts bezahlt, und du kannst es jederzeit in den Einstellungen zurücknehmen.",
+    "Ceci est une version TestFlight. Aucun paiement n’est effectué et vous pouvez l’annuler à tout moment dans Réglages.",
+    "Questa è una build TestFlight. Non paghi nulla e puoi annullarlo quando vuoi in Impostazioni.",
+    "Esta é uma versão do TestFlight. Nada é cobrado e você pode cancelar quando quiser em Ajustes.")
+add("plus.test_buy", "Buy (test)", "Satın al (test)", "Comprar (prueba)", "Kaufen (Test)",
+    "Acheter (test)", "Acquista (prova)", "Comprar (teste)")
+add("plus.test_note",
+    "TestFlight · test purchase, no payment", "TestFlight · test satın alması, ödeme yok",
+    "TestFlight · compra de prueba, sin pago", "TestFlight · Testkauf, keine Zahlung",
+    "TestFlight · achat de test, sans paiement", "TestFlight · acquisto di prova, nessun pagamento",
+    "TestFlight · compra de teste, sem pagamento")
+add("settings.test", "Test", "Test", "Prueba", "Test", "Test", "Prova", "Teste")
+add("settings.test_plus_on", "Active (test)", "Açık (test)", "Activo (prueba)", "Aktiv (Test)",
+    "Actif (test)", "Attivo (prova)", "Ativo (teste)")
+add("settings.test_plus_off", "Not purchased", "Satın alınmadı", "No comprado", "Nicht gekauft",
+    "Non acheté", "Non acquistato", "Não comprado")
+add("settings.test_cancel", "Cancel test purchase", "Test satın almasını iptal et", "Cancelar compra de prueba",
+    "Testkauf zurücknehmen", "Annuler l’achat de test", "Annulla acquisto di prova", "Cancelar compra de teste")
+add("settings.test_open_paywall", "Open OneScoop+ screen", "OneScoop+ ekranını aç", "Abrir pantalla de OneScoop+",
+    "OneScoop+-Bildschirm öffnen", "Ouvrir l’écran OneScoop+", "Apri la schermata OneScoop+", "Abrir tela do OneScoop+")
+add("settings.test_footer",
+    "Only visible in TestFlight builds. Lets you try OneScoop+ with and without a purchase.",
+    "Sadece TestFlight sürümlerinde görünür. OneScoop+'ı satın alınmış ve alınmamış haliyle denemen için.",
+    "Solo visible en versiones de TestFlight. Para probar OneScoop+ con y sin compra.",
+    "Nur in TestFlight-Builds sichtbar. Zum Testen von OneScoop+ mit und ohne Kauf.",
+    "Visible uniquement dans les versions TestFlight. Pour essayer OneScoop+ avec et sans achat.",
+    "Visibile solo nelle build TestFlight. Per provare OneScoop+ con e senza acquisto.",
+    "Visível só em versões do TestFlight. Para testar o OneScoop+ com e sem compra.")
 
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.

@@ -13,6 +13,7 @@ struct WaterCard: View {
 
     @State private var wavePhase: Double = 0
     @State private var showEntries = false
+    @State private var showPaywall = false
 
     private var total: Int { store.waterTotalToday }
     private var goal: Int { store.water.goalMl }
@@ -52,6 +53,9 @@ struct WaterCard: View {
                 ForEach(plus.isUnlocked ? store.water.cups : [store.water.defaultCup]) { cup in
                     CupButton(cup: cup) { add(cup.ml) }
                 }
+                if !plus.isUnlocked {
+                    moreCupsButton
+                }
                 Spacer(minLength: 0)
                 undoButton
             }
@@ -59,6 +63,25 @@ struct WaterCard: View {
         .padding(16)
         .background(CT.surface, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .sheet(isPresented: $showEntries) { WaterEntriesSheet() }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
+    }
+
+    /// Ücretsizde tek kabın yanında: diğer iki kap OneScoop+ ile.
+    private var moreCupsButton: some View {
+        Button { showPaywall = true } label: {
+            VStack(spacing: 6) {
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(CT.gold)
+                    .frame(width: 58, height: 58)
+                    .background(CT.goldSoft, in: Circle())
+                Text(verbatim: "+2")
+                    .font(.system(.caption, design: .rounded).weight(.semibold))
+                    .foregroundStyle(CT.gold)
+            }
+        }
+        .buttonStyle(PressableStyle())
+        .accessibilityLabel(Text(verbatim: "OneScoop+"))
     }
 
     private var paceText: String {

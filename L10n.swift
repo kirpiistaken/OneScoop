@@ -44,13 +44,16 @@ enum L {
     static var plusBulletCups: String { String(localized: "plus.bullet_cups") }
     static var plusBulletHealth: String { String(localized: "plus.bullet_health") }
     static var plusBulletReminders: String { String(localized: "plus.bullet_reminders") }
-    static var plusBulletWatch: String { String(localized: "plus.bullet_watch") }
     static var plusBuy: String { String(localized: "plus.buy") }
     static var plusFamily: String { String(localized: "plus.family") }
     static var plusHeadline: String { String(localized: "plus.headline") }
     static var plusNoSubscription: String { String(localized: "plus.no_subscription") }
     static var plusNotNow: String { String(localized: "plus.not_now") }
     static var plusRestore: String { String(localized: "plus.restore") }
+    static var plusTestBuy: String { String(localized: "plus.test_buy") }
+    static var plusTestMessage: String { String(localized: "plus.test_message") }
+    static var plusTestNote: String { String(localized: "plus.test_note") }
+    static var plusTestTitle: String { String(localized: "plus.test_title") }
     static var plusUnavailable: String { String(localized: "plus.unavailable") }
     static var plusUnlocked: String { String(localized: "plus.unlocked") }
     static var restoreChecking: String { String(localized: "restore.checking") }
@@ -82,6 +85,12 @@ enum L {
     static var settingsResetMsg: String { String(localized: "settings.reset_msg") }
     static var settingsResetTitle: String { String(localized: "settings.reset_title") }
     static var settingsStartedOn: String { String(localized: "settings.started_on") }
+    static var settingsTest: String { String(localized: "settings.test") }
+    static var settingsTestCancel: String { String(localized: "settings.test_cancel") }
+    static var settingsTestFooter: String { String(localized: "settings.test_footer") }
+    static var settingsTestOpenPaywall: String { String(localized: "settings.test_open_paywall") }
+    static var settingsTestPlusOff: String { String(localized: "settings.test_plus_off") }
+    static var settingsTestPlusOn: String { String(localized: "settings.test_plus_on") }
     static var settingsTime: String { String(localized: "settings.time") }
     static func settingsUpTo(_ a0: Int) -> String { String(localized: "settings.up_to \(a0)") }
     static var settingsWater: String { String(localized: "settings.water") }

@@ -190,6 +190,7 @@ enum OpenCounter {
 struct MainTabView: View {
     @EnvironmentObject private var store: CreatineStore
     @State private var showWaterIntro = false
+    @State private var showPaywall = false
 
     var body: some View {
         TabView {
@@ -214,5 +215,10 @@ struct MainTabView: View {
             }
         }
         .sheet(isPresented: $showWaterIntro) { WaterIntroSheet() }
+        // Plus'sız widget'a dokununca: onescoop://plus
+        .onOpenURL { url in
+            if url.scheme == "onescoop", url.host == "plus" { showPaywall = true }
+        }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
     }
 }

@@ -46,6 +46,17 @@
 	<array>
 		<string>com.atalay.creatinetracker.midnight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.atalay.creatinetracker</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>onescoop</string>
+			</array>
+		</dict>
+	</array>
 	<key>NSHealthShareUsageDescription</key>
 	<string>OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal.</string>
 	<key>NSHealthUpdateUsageDescription</key>

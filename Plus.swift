@@ -12,8 +12,11 @@ final class PlusStore: ObservableObject {
     @Published private(set) var product: Product?
     @Published private(set) var purchased = false
     @Published private(set) var isWorking = false
+    /// TestFlight / sandbox'ta çalışıyor mu (test satın alması sadece orada).
+    @Published private(set) var isTestBuild = PlusAccess.isTestBuild
+    @Published private(set) var simulated = PlusAccess.isSimulated
 
-    var isUnlocked: Bool { purchased || PlusAccess.isUnlocked }
+    var isUnlocked: Bool { purchased || (isTestBuild && simulated) }
 
     private var updates: Task<Void, Never>?
 
@@ -28,6 +31,7 @@ final class PlusStore: ObservableObject {
     }
 
     func load() async {
+        await detectTestBuild()
         if product == nil {
             product = try? await Product.products(for: [Self.productID]).first
         }
@@ -59,6 +63,46 @@ final class PlusStore: ObservableObject {
         }
     }
 
+    // MARK: - Test satın alması (sadece TestFlight)
+
+    private func detectTestBuild() async {
+        var test = false
+        if case .verified(let app)? = try? await AppTransaction.shared {
+            test = app.environment != .production
+        } else {
+            // AppTransaction alınamazsa eski yöntem: TestFlight'ta fiş adı böyle.
+            test = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+        }
+        isTestBuild = test
+        PlusAccess.setTestBuild(test)
+        simulated = PlusAccess.isSimulated
+    }
+
+    /// Gerçek ödeme yok; App Store'un satın alma anını taklit ediyor.
+    func simulatePurchase() async {
+        guard isTestBuild else { return }
+        isWorking = true
+        try? await Task.sleep(for: .seconds(1.2))
+        PlusAccess.setSimulated(true)
+        simulated = true
+        isWorking = false
+        await applyChange()
+    }
+
+    func cancelSimulatedPurchase() async {
+        PlusAccess.setSimulated(false)
+        simulated = false
+        await applyChange()
+    }
+
+    /// Plus açılıp kapanınca: widget'lar, hatırlatmalar, Sağlık kopyası.
+    private func applyChange() async {
+        IntentRefresh.all()
+        CreatineStore.shared.reload()
+        await WaterReminders.reschedule()
+        await CreatineStore.shared.refreshHealth()
+    }
+
     func restore() async {
         isWorking = true
         defer { isWorking = false }
@@ -72,6 +116,8 @@ final class PlusStore: ObservableObject {
 struct PaywallView: View {
     @EnvironmentObject private var plus: PlusStore
     @Environment(\.dismiss) private var dismiss
+    @State private var confirmTestPurchase = false
+
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -87,17 +133,18 @@ struct PaywallView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 16) {
+                    // Sadece OneScoop+ ile gelenler. Kreatin tarafı ve basit su
+                    // takibi (tek kap, basit hatırlatma, takvim) herkese açık.
                     bullet("hand.tap.fill", L.plusBulletAnywhere)
-                    bullet("applewatch", L.plusBulletWatch)
-                    bullet("heart.fill", L.plusBulletHealth)
-                    bullet("bell.badge.fill", L.plusBulletReminders)
                     bullet("waterbottle.fill", L.plusBulletCups)
+                    bullet("bell.badge.fill", L.plusBulletReminders)
+                    bullet("heart.fill", L.plusBulletHealth)
                 }
                 .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(CT.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
 
-                if plus.purchased {
+                if plus.isUnlocked {
                     Label(L.plusUnlocked, systemImage: "checkmark.seal.fill")
                         .font(.system(.headline, design: .rounded))
                         .foregroundStyle(CT.accent)
@@ -137,7 +184,11 @@ struct PaywallView: View {
             }
 
             Button {
-                Task { await plus.purchase() }
+                if plus.isTestBuild {
+                    confirmTestPurchase = true
+                } else {
+                    Task { await plus.purchase() }
+                }
             } label: {
                 Group {
                     if plus.isWorking {
@@ -153,10 +204,21 @@ struct PaywallView: View {
                 .background(CT.accent, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
             .buttonStyle(PressableStyle())
-            .disabled(plus.product == nil || plus.isWorking)
-            .opacity(plus.product == nil ? 0.5 : 1)
+            .disabled((plus.product == nil && !plus.isTestBuild) || plus.isWorking)
+            .opacity(plus.product == nil && !plus.isTestBuild ? 0.5 : 1)
+            // TestFlight: gerçek ödeme yok, Ayarlar'dan geri alınabiliyor.
+            .confirmationDialog(L.plusTestTitle, isPresented: $confirmTestPurchase, titleVisibility: .visible) {
+                Button(L.plusTestBuy) { Task { await plus.simulatePurchase() } }
+                Button(L.commonCancel, role: .cancel) {}
+            } message: {
+                Text(L.plusTestMessage)
+            }
 
-            if plus.product == nil {
+            if plus.isTestBuild {
+                Label(L.plusTestNote, systemImage: "hammer.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(CT.inkSoft)
+            } else if plus.product == nil {
                 Text(L.plusUnavailable)
                     .font(.footnote)
                     .foregroundStyle(CT.inkSoft)
