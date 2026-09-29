@@ -204,9 +204,6 @@ struct SettingsView: View {
                             ), in: 100...1500, step: 50) {
                                 cupLabel(cup)
                             }
-                            .plusGated(plus.isUnlocked) { showPaywall = true } locked: {
-                                cupLabel(cup)
-                            }
                         }
                     } header: {
                         Text(L.settingsWaterCups)
@@ -384,11 +381,6 @@ struct SettingsView: View {
             Spacer()
             Text(verbatim: "\(cup.ml) ml")
                 .foregroundStyle(CT.inkSoft)
-            if !plus.isUnlocked {
-                Image(systemName: "crown.fill")
-                    .font(.caption)
-                    .foregroundStyle(CT.gold)
-            }
         }
     }
 
@@ -411,24 +403,6 @@ struct SettingsView: View {
             permissionDenied = await NotificationManager.authorizationStatus() == .denied
             await NotificationManager.reschedule()
             await WaterReminders.reschedule()
-        }
-    }
-}
-
-extension View {
-    /// OneScoop+ özelliği: Plus varsa kontrolün kendisi, yoksa dokununca
-    /// satın alma ekranını açan bir satır.
-    @ViewBuilder
-    func plusGated<Locked: View>(
-        _ unlocked: Bool,
-        onLockedTap: @escaping () -> Void,
-        @ViewBuilder locked: () -> Locked
-    ) -> some View {
-        if unlocked {
-            self
-        } else {
-            Button(action: onLockedTap) { locked() }
-                .foregroundStyle(CT.ink)
         }
     }
 }

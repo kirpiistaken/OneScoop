@@ -2260,100 +2260,6 @@
         }
       }
     },
-    "plus.bullet_anywhere": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wasser über Widgets, Kontrollzentrum und Siri"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add water from widgets, Control Center and Siri"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Añade agua desde widgets, Centro de control y Siri"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajoutez de l’eau via widgets, centre de contrôle et Siri"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aggiungi acqua da widget, Centro di Controllo e Siri"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicione água por widgets, Central de Controle e Siri"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Widget, Denetim Merkezi ve Siri'den su ekle"
-          }
-        }
-      }
-    },
-    "plus.bullet_cups": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Glas, Shaker und Flasche"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Glass, shaker and bottle"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vaso, shaker y botella"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verre, shaker et gourde"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bicchiere, shaker e borraccia"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copo, coqueteleira e garrafa"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bardak, shaker ve şişe"
-          }
-        }
-      }
-    },
     "plus.bullet_health": {
       "extractionState": "manual",
       "localizations": {
@@ -3008,6 +2914,100 @@
           "stringUnit": {
             "state": "translated",
             "value": "OneScoop+ açık. Teşekkürler!"
+          }
+        }
+      }
+    },
+    "plus.widget_subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widgets, Sperrbildschirm, Kontrollzentrum und Siri"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widgets, Lock Screen, Control Center and Siri"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widgets, pantalla bloqueada, Centro de control y Siri"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widgets, écran verrouillé, centre de contrôle et Siri"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget, schermata di blocco, Centro di Controllo e Siri"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widgets, Tela Bloqueada, Central de Controle e Siri"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Widget, kilit ekranı, Denetim Merkezi ve Siri"
+          }
+        }
+      }
+    },
+    "plus.widget_title": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wasser hinzufügen, ohne die App zu öffnen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add water without opening the app"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Añade agua sin abrir la app"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajoutez de l’eau sans ouvrir l’app"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi acqua senza aprire l’app"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicione água sem abrir o app"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygulamayı açmadan su ekle"
           }
         }
       }

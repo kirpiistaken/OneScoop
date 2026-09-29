@@ -40,8 +40,6 @@ enum L {
     static var onbReminderHint: String { String(localized: "onb.reminder_hint") }
     static var onbStart: String { String(localized: "onb.start") }
     static var onbTagline: String { String(localized: "onb.tagline") }
-    static var plusBulletAnywhere: String { String(localized: "plus.bullet_anywhere") }
-    static var plusBulletCups: String { String(localized: "plus.bullet_cups") }
     static var plusBulletHealth: String { String(localized: "plus.bullet_health") }
     static var plusBulletReminders: String { String(localized: "plus.bullet_reminders") }
     static var plusBuy: String { String(localized: "plus.buy") }
@@ -56,6 +54,8 @@ enum L {
     static var plusTestTitle: String { String(localized: "plus.test_title") }
     static var plusUnavailable: String { String(localized: "plus.unavailable") }
     static var plusUnlocked: String { String(localized: "plus.unlocked") }
+    static var plusWidgetSubtitle: String { String(localized: "plus.widget_subtitle") }
+    static var plusWidgetTitle: String { String(localized: "plus.widget_title") }
     static var restoreChecking: String { String(localized: "restore.checking") }
     static var settingsAdjust: String { String(localized: "settings.adjust") }
     static var settingsAdjustLoading: String { String(localized: "settings.adjust_loading") }

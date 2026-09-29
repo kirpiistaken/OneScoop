@@ -132,11 +132,12 @@ struct PaywallView: View {
                         .multilineTextAlignment(.center)
                 }
 
+                // Sadece OneScoop+ ile gelenler. Kreatin tarafı ve su takibinin
+                // kendisi (üç kap, basit hatırlatma, takvim) herkese açık.
+                // Asıl satış noktası: uygulamayı açmadan su eklemek.
+                PlusWidgetFeature()
+
                 VStack(alignment: .leading, spacing: 16) {
-                    // Sadece OneScoop+ ile gelenler. Kreatin tarafı ve basit su
-                    // takibi (tek kap, basit hatırlatma, takvim) herkese açık.
-                    bullet("hand.tap.fill", L.plusBulletAnywhere)
-                    bullet("waterbottle.fill", L.plusBulletCups)
                     bullet("bell.badge.fill", L.plusBulletReminders)
                     bullet("heart.fill", L.plusBulletHealth)
                 }
@@ -300,5 +301,52 @@ struct PlusHero: View {
         .onAppear {
             withAnimation(.spring(response: 0.55, dampingFraction: 0.6).delay(0.15)) { shown = true }
         }
+    }
+}
+
+/// Satın alma ekranındaki öne çıkan özellik: küçük bir su widget'ı çizimi
+/// ve "Uygulamayı açmadan su ekle".
+struct PlusWidgetFeature: View {
+    var body: some View {
+        HStack(spacing: 16) {
+            // Minyatür widget: bardak, toplam, üç kap
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .bottom, spacing: 8) {
+                    WaterGlass(fraction: 0.55, wavePhase: 1)
+                        .frame(width: 22, height: 32)
+                    Text(verbatim: "1,25 L")
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .foregroundStyle(CT.ink)
+                }
+                HStack(spacing: 5) {
+                    ForEach(WaterCup.Kind.allCases, id: \.self) { kind in
+                        CupIcon(kind: kind)
+                            .fill(CT.accent)
+                            .frame(width: 11, height: 11)
+                            .frame(width: 22, height: 22)
+                            .background(CT.accent.opacity(0.14), in: Circle())
+                    }
+                }
+            }
+            .padding(10)
+            .background(CT.bg, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(CT.hairline, lineWidth: 1))
+            .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L.plusWidgetTitle)
+                    .font(.system(.headline, design: .rounded))
+                    .foregroundStyle(CT.ink)
+                    .fixedSize(horizontal: false, vertical: true)
+                Text(L.plusWidgetSubtitle)
+                    .font(.system(.subheadline, design: .rounded))
+                    .foregroundStyle(CT.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(CT.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }
