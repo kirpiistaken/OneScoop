@@ -44,7 +44,10 @@ definitions:
       script: xcode-project use-profiles
 
     - name: Build numarasını artır
-      script: agvtool new-version -all $(($BUILD_NUMBER + $PROJECT_BUILD_NUMBER))
+      # PROJECT_BUILD_NUMBER tüm akışlarda ortak ve hep artıyor; main ve dev
+      # aynı numarayı almıyor, dev'in numarası main'in gerisinde kalmıyor.
+      # +100: eski formülle 72'ye kadar çıkmıştık, yeni numaralar onun üstünde başlasın.
+      script: agvtool new-version -all $(($PROJECT_BUILD_NUMBER + 100))
 
     - name: IPA oluştur
       script: |
