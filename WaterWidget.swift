@@ -8,20 +8,27 @@ struct WaterTimelineEntry: TimelineEntry {
     let date: Date
     let total: Int
     let goal: Int
-    let cupMl: Int
+    let cups: [WaterCup]
+    let defaultCup: WaterCup
+    let hasEntries: Bool
     let enabled: Bool
     let unlocked: Bool
     let creatineTaken: Bool
 
     var fraction: Double { goal > 0 ? min(1, Double(total) / Double(goal)) : 0 }
+    /// Her eklemede dalga biraz kaysın; WidgetKit iki durum arasını canlandırıyor.
+    var wavePhase: Double { Double(total) / 250 * .pi / 2 }
 
     static func now() -> WaterTimelineEntry {
         let s = WaterData.loadSettings()
+        let today = WaterData.entries()
         return WaterTimelineEntry(
             date: Date(),
-            total: WaterData.total(),
+            total: today.reduce(0) { $0 + $1.ml },
             goal: s.goalMl,
-            cupMl: s.defaultCup.ml,
+            cups: s.cups,
+            defaultCup: s.defaultCup,
+            hasEntries: !today.isEmpty,
             enabled: s.enabled,
             unlocked: PlusAccess.isUnlocked,
             creatineTaken: Persistence.isTaken()
@@ -29,7 +36,8 @@ struct WaterTimelineEntry: TimelineEntry {
     }
 
     static let placeholder = WaterTimelineEntry(
-        date: Date(), total: 1250, goal: 2500, cupMl: 250,
+        date: Date(), total: 1250, goal: 2500,
+        cups: WaterCup.defaults, defaultCup: WaterCup.defaults[0], hasEntries: true,
         enabled: true, unlocked: true, creatineTaken: true
     )
 }
@@ -56,39 +64,93 @@ struct WaterWidgetView: View {
         switch family {
         case .accessoryCircular: circular
         case .accessoryRectangular: rectangular
+        case .systemMedium: medium
+        case .systemLarge: large
         default: small
         }
     }
 
-    // MARK: Küçük: halka + tek dokunuş
+    // MARK: Ortak parçalar
+
+    private func glass(width: CGFloat, height: CGFloat) -> some View {
+        WaterGlass(fraction: entry.fraction, wavePhase: entry.wavePhase)
+            .frame(width: width, height: height)
+            .animation(.spring(response: 0.7, dampingFraction: 0.75), value: entry.total)
+    }
+
+    private func totals(_ size: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(verbatim: "\(entry.total.litersString) L")
+                .font(CT.display(size, .bold))
+                .foregroundStyle(CT.ink)
+                .contentTransition(.numericText())
+            Text(verbatim: "/ \(entry.goal.litersString) L")
+                .font(.system(size: size * 0.6, weight: .medium, design: .rounded))
+                .foregroundStyle(CT.inkSoft)
+        }
+    }
+
+    private var lockedNote: some View {
+        Text(entry.enabled ? L.widgetWaterPlus : L.widgetWaterOff)
+            .font(.system(size: 12, weight: .medium, design: .rounded))
+            .foregroundStyle(CT.inkSoft)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+
+    private func cupButton(_ cup: WaterCup, circle: CGFloat) -> some View {
+        Button(intent: AddWaterIntent(ml: cup.ml)) {
+            VStack(spacing: 4) {
+                CupIcon(kind: cup.kind)
+                    .fill(CT.accent)
+                    .frame(width: circle * 0.5, height: circle * 0.48)
+                    .frame(width: circle, height: circle)
+                    .background(CT.accent.opacity(0.14), in: Circle())
+                Text(verbatim: "\(cup.ml)")
+                    .font(.system(size: 11, weight: .semibold, design: .rounded))
+                    .foregroundStyle(CT.inkSoft)
+                    .lineLimit(1)
+                    .fixedSize()
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func undoButton(circle: CGFloat) -> some View {
+        Button(intent: UndoLastWaterIntent()) {
+            Image(systemName: "arrow.uturn.backward")
+                .font(.system(size: circle * 0.36, weight: .bold))
+                .foregroundStyle(entry.hasEntries ? CT.ink : CT.inkSoft.opacity(0.4))
+                .frame(width: circle, height: circle)
+                .background(CT.surface, in: Circle())
+                .overlay(Circle().stroke(CT.hairline, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .disabled(!entry.hasEntries)
+    }
+
+    /// Üç kap + geri al.
+    private func buttonRow(circle: CGFloat) -> some View {
+        HStack(alignment: .top, spacing: 10) {
+            ForEach(entry.cups) { cupButton($0, circle: circle) }
+            Spacer(minLength: 0)
+            undoButton(circle: circle * 0.8)
+                .padding(.top, circle * 0.1)
+        }
+    }
+
+    // MARK: Küçük: bardak + varsayılan kap
 
     private var small: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .center) {
-                ZStack {
-                    Circle().stroke(CT.accent.opacity(0.15), lineWidth: 7)
-                    Circle()
-                        .trim(from: 0, to: entry.fraction)
-                        .stroke(CT.accent, style: StrokeStyle(lineWidth: 7, lineCap: .round))
-                        .rotationEffect(.degrees(-90))
-                }
-                .frame(width: 44, height: 44)
+            HStack(alignment: .top) {
+                glass(width: 36, height: 52)
                 Spacer()
-                VStack(alignment: .trailing, spacing: 0) {
-                    Text(verbatim: "\(entry.total.litersString) L")
-                        .font(CT.display(20, .bold))
-                        .foregroundStyle(CT.ink)
-                    Text(verbatim: "/ \(entry.goal.litersString) L")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(CT.inkSoft)
-                }
+                totals(20)
             }
-
             Spacer(minLength: 0)
-
             if ready {
-                Button(intent: AddWaterIntent(ml: entry.cupMl)) {
-                    Text(verbatim: "+\(entry.cupMl) ml")
+                Button(intent: AddWaterIntent(ml: entry.defaultCup.ml)) {
+                    Text(verbatim: "+\(entry.defaultCup.ml) ml")
                         .font(CT.display(17, .heavy))
                         .foregroundStyle(.white)
                         .lineLimit(1)
@@ -99,10 +161,64 @@ struct WaterWidgetView: View {
                 }
                 .buttonStyle(.plain)
             } else {
-                Text(entry.enabled ? L.widgetWaterPlus : L.widgetWaterOff)
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                lockedNote
+            }
+        }
+    }
+
+    // MARK: Orta: bardak solda, üç kap + geri al sağda
+
+    private var medium: some View {
+        HStack(spacing: 16) {
+            VStack(alignment: .leading, spacing: 8) {
+                glass(width: 44, height: 64)
+                Spacer(minLength: 0)
+                totals(20)
+            }
+            if ready {
+                VStack(alignment: .leading, spacing: 0) {
+                    Spacer(minLength: 0)
+                    buttonRow(circle: 46)
+                    Spacer(minLength: 0)
+                }
+            } else {
+                lockedNote
+                Spacer(minLength: 0)
+            }
+        }
+    }
+
+    // MARK: Büyük: kocaman bardak, altta üç kap + geri al
+
+    private var large: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(L.waterTitle)
+                    .font(.system(size: 15, weight: .semibold, design: .rounded))
                     .foregroundStyle(CT.inkSoft)
-                    .fixedSize(horizontal: false, vertical: true)
+                Spacer()
+                HStack(spacing: 5) {
+                    ScoopShape(check: entry.creatineTaken)
+                        .fill(entry.creatineTaken ? CT.accent : CT.inkSoft)
+                        .frame(width: 16, height: 16)
+                    Text(entry.creatineTaken ? L.widgetDoseLogged : L.complicationNotYet)
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .foregroundStyle(CT.inkSoft)
+                        .lineLimit(1)
+                }
+            }
+
+            HStack(alignment: .bottom, spacing: 20) {
+                glass(width: 96, height: 138)
+                totals(34)
+                Spacer(minLength: 0)
+            }
+            .frame(maxHeight: .infinity)
+
+            if ready {
+                buttonRow(circle: 60)
+            } else {
+                lockedNote
             }
         }
     }
@@ -112,38 +228,54 @@ struct WaterWidgetView: View {
     @ViewBuilder
     private var circular: some View {
         if ready {
-            Button(intent: AddWaterIntent(ml: entry.cupMl)) { gauge }
+            Button(intent: AddWaterIntent(ml: entry.defaultCup.ml)) { circularFace }
                 .buttonStyle(.plain)
         } else {
-            gauge
+            circularFace
         }
     }
 
-    private var gauge: some View {
-        Gauge(value: entry.fraction) {
-            EmptyView()
-        } currentValueLabel: {
-            Text(verbatim: entry.total.litersString)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
+    private var circularFace: some View {
+        ZStack {
+            AccessoryWidgetBackground()
+            VStack(spacing: 1) {
+                ZStack {
+                    GlassShape().stroke(.primary.opacity(0.5), lineWidth: 1.5)
+                    WaveFill(fraction: entry.fraction, phase: entry.wavePhase)
+                        .fill(.primary)
+                        .clipShape(GlassShape())
+                }
+                .frame(width: 20, height: 26)
+                .widgetAccentable()
+                Text(verbatim: entry.total.litersString)
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+            }
         }
-        .gaugeStyle(.accessoryCircularCapacity)
-        .widgetAccentable()
     }
 
     private var rectangular: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(verbatim: "\(entry.total.litersString) / \(entry.goal.litersString) L")
-                .font(.system(size: 17, weight: .bold, design: .rounded))
-                .widgetAccentable()
-            Gauge(value: entry.fraction) { EmptyView() }
-                .gaugeStyle(.accessoryLinearCapacity)
-            HStack(spacing: 4) {
-                ScoopShape(check: entry.creatineTaken)
+        HStack(spacing: 8) {
+            ZStack {
+                GlassShape().stroke(.primary.opacity(0.5), lineWidth: 1.5)
+                WaveFill(fraction: entry.fraction, phase: entry.wavePhase)
                     .fill(.primary)
-                    .frame(width: 13, height: 13)
-                Text(entry.creatineTaken ? L.widgetDoseLogged : L.complicationNotYet)
-                    .font(.system(size: 12, weight: .medium, design: .rounded))
-                    .lineLimit(1)
+                    .clipShape(GlassShape())
+            }
+            .frame(width: 24, height: 34)
+            .widgetAccentable()
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: "\(entry.total.litersString) / \(entry.goal.litersString) L")
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .widgetAccentable()
+                HStack(spacing: 4) {
+                    ScoopShape(check: entry.creatineTaken)
+                        .fill(.primary)
+                        .frame(width: 13, height: 13)
+                    Text(entry.creatineTaken ? L.widgetDoseLogged : L.complicationNotYet)
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .lineLimit(1)
+                }
             }
         }
     }
@@ -159,7 +291,7 @@ struct WaterWidget: Widget {
         }
         .configurationDisplayName(Text(L.widgetWaterName))
         .description(Text(L.widgetWaterDesc))
-        .supportedFamilies([.systemSmall, .accessoryCircular, .accessoryRectangular])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .accessoryCircular, .accessoryRectangular])
     }
 }
 

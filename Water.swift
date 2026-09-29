@@ -117,6 +117,12 @@ enum WaterData {
         saveLog(log)
     }
 
+    /// Bugün en son girilen suyu siler (widget'taki geri al).
+    static func removeLatestToday() {
+        guard let last = entries().max(by: { $0.at < $1.at }) else { return }
+        remove(last.id)
+    }
+
     static func resetAll() {
         AppGroup.defaults.removeObject(forKey: logKey)
         AppGroup.defaults.removeObject(forKey: settingsKey)

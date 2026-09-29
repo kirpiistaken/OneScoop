@@ -157,13 +157,6 @@ final class CreatineStore: ObservableObject {
 
     var waterTotalToday: Int { waterToday.reduce(0) { $0 + $1.ml } }
 
-    /// Kreatin bugün alındıysa ve o andan sonra hiç su girilmediyse
-    /// "Yanında bir bardak su?" önerisi gösterilir.
-    var showsCreatineWaterBridge: Bool {
-        guard water.enabled, let taken = todayEntry?.takenAt else { return false }
-        return !waterToday.contains { $0.at >= taken.addingTimeInterval(-15 * 60) }
-    }
-
     @discardableResult
     func addWater(_ ml: Int) -> WaterEntry {
         let entry = WaterData.add(ml: ml)

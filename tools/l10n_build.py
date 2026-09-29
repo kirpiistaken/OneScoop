@@ -460,11 +460,6 @@ add("water.pace_behind %@",
 add("water.cup.glass", "Glass", "Bardak", "Vaso", "Glas", "Verre", "Bicchiere", "Copo")
 add("water.cup.shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Coqueteleira")
 add("water.cup.bottle", "Bottle", "Şişe", "Botella", "Flasche", "Gourde", "Borraccia", "Garrafa")
-add("water.bridge %@",
-    "Have a glass of water with it? +%@ ml", "Yanında bir bardak su? +%@ ml",
-    "¿Un vaso de agua con ella? +%@ ml", "Ein Glas Wasser dazu? +%@ ml",
-    "Un verre d’eau avec ? +%@ ml", "Un bicchiere d’acqua insieme? +%@ ml",
-    "Um copo de água junto? +%@ ml")
 add("water.today_entries",
     "Today's water", "Bugünkü su", "Agua de hoy", "Heutiges Wasser",
     "Eau du jour", "Acqua di oggi", "Água de hoje")
@@ -622,6 +617,8 @@ add("intent.water.desc",
     "Añade agua al total de hoy en OneScoop.", "Fügt Wasser zur heutigen Menge in OneScoop hinzu.",
     "Ajoute de l’eau au total du jour dans OneScoop.", "Aggiunge acqua al totale di oggi in OneScoop.",
     "Adiciona água ao total de hoje no OneScoop.")
+add("intent.water_undo.title", "Undo last water", "Son suyu geri al", "Deshacer el último agua",
+    "Letztes Wasser widerrufen", "Annuler la dernière eau", "Annulla l’ultima acqua", "Desfazer a última água")
 add("intent.water.amount", "Amount (ml)", "Miktar (ml)", "Cantidad (ml)", "Menge (ml)",
     "Quantité (ml)", "Quantità (ml)", "Quantidade (ml)")
 
@@ -629,7 +626,8 @@ add("intent.water.amount", "Amount (ml)", "Miktar (ml)", "Cantidad (ml)", "Menge
 # erişimci üretmeye gerek yok.
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
                "intent.undo.desc", "shortcut.undo",
-               "intent.water.title", "intent.water.desc", "intent.water.amount"}
+               "intent.water.title", "intent.water.desc", "intent.water.amount",
+               "intent.water_undo.title"}
 
 # ═══════════════════════════════════════════════════════════
 # Doğrulama

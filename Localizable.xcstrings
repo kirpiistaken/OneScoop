@@ -1248,6 +1248,53 @@
         }
       }
     },
+    "intent.water_undo.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letztes Wasser widerrufen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo last water"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deshacer el último agua"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler la dernière eau"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annulla l’ultima acqua"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desfazer a última água"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son suyu geri al"
+          }
+        }
+      }
+    },
     "notif.first": {
       "extractionState": "manual",
       "localizations": {
@@ -6460,53 +6507,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Önce OneScoop'u iPhone'unda kur."
-          }
-        }
-      }
-    },
-    "water.bridge %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ein Glas Wasser dazu? +%@ ml"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Have a glass of water with it? +%@ ml"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "¿Un vaso de agua con ella? +%@ ml"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Un verre d’eau avec ? +%@ ml"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Un bicchiere d’acqua insieme? +%@ ml"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Um copo de água junto? +%@ ml"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yanında bir bardak su? +%@ ml"
           }
         }
       }

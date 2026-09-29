@@ -57,6 +57,19 @@ struct AddWaterIntent: AppIntent {
     }
 }
 
+/// 2.0 — Bugün en son girilen suyu geri al (büyük su widget'ı).
+struct UndoLastWaterIntent: AppIntent {
+    static var title: LocalizedStringResource = "intent.water_undo.title"
+    static var isDiscoverable: Bool = false
+    static var openAppWhenRun: Bool = false
+
+    func perform() async throws -> some IntentResult {
+        WaterData.removeLatestToday()
+        IntentRefresh.all()
+        return .result()
+    }
+}
+
 /// Widget'ları ve Denetim Merkezi düğmesini yenile.
 enum IntentRefresh {
     static func all() {

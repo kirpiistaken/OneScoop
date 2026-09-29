@@ -132,11 +132,6 @@ struct TodayView: View {
                 }
             }
 
-            if store.showsCreatineWaterBridge {
-                CreatineWaterBridge()
-                    .transition(.scale.combined(with: .opacity))
-            }
-
             Button {
                 withAnimation(.snappy) { store.undo() }
                 UIImpactFeedbackGenerator(style: .rigid).impactOccurred()

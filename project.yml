@@ -48,8 +48,10 @@ targets:
       - path: PhoneWatchBridge.swift
       - path: WatchPayload.swift
       - path: Water.swift
+      - path: WaterShapes.swift
       - path: WaterViews.swift
       - path: Plus.swift
+      - path: ScoopShape.swift
       - path: Assets.xcassets
     dependencies:
       - target: CreatineWidgetExtension
@@ -88,6 +90,7 @@ targets:
       - path: LogControl.swift
       - path: ScoopShape.swift
       - path: Water.swift
+      - path: WaterShapes.swift
       - path: WaterWidget.swift
       - path: WidgetSymbols.xcassets
     settings:

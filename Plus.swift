@@ -72,17 +72,11 @@ final class PlusStore: ObservableObject {
 struct PaywallView: View {
     @EnvironmentObject private var plus: PlusStore
     @Environment(\.dismiss) private var dismiss
-    @State private var fill = 0.2
-
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                WaterGlass(fraction: fill, wavePhase: fill * 10)
-                    .frame(width: 76, height: 108)
+                PlusHero()
                     .padding(.top, 28)
-                    .onAppear {
-                        withAnimation(.easeInOut(duration: 1.6).delay(0.2)) { fill = 0.75 }
-                    }
 
                 VStack(spacing: 8) {
                     PlusWordmark(size: 34)
@@ -195,22 +189,49 @@ struct PaywallView: View {
     }
 }
 
-/// "OneScoop+" yazısı ve sağ üstünde küçük sarı taç.
+/// "OneScoop" + altın renginde "+".
 struct PlusWordmark: View {
     var size: CGFloat
 
     var body: some View {
-        HStack(alignment: .top, spacing: size * 0.12) {
-            Text(verbatim: "OneScoop+")
-                .font(CT.display(size, .heavy))
-                .foregroundStyle(CT.ink)
+        (Text(verbatim: "OneScoop").foregroundStyle(CT.ink)
+         + Text(verbatim: "+").foregroundStyle(CT.gold))
+            .font(CT.display(size, .heavy))
+    }
+}
+
+/// Satın alma ekranının üstü: logodaki kepçe, altın renginde, üstünde taç.
+struct PlusHero: View {
+    @State private var shown = false
+    private let size: CGFloat = 120
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(CT.goldSoft)
+                .frame(width: size * 1.35, height: size * 1.35)
+
+            ScoopShape()
+                .fill(LinearGradient(
+                    colors: [CT.gold.opacity(0.75), CT.gold],
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                ))
+                .frame(width: size, height: size)
+                .scaleEffect(shown ? 1 : 0.85)
+
+            // Tacı kepçenin ağzının üstüne oturt (ScoopShape koordinatlarından).
             Image(systemName: "crown.fill")
-                .font(.system(size: size * 0.42, weight: .bold))
+                .font(.system(size: size * 0.28, weight: .bold))
                 .foregroundStyle(CT.gold)
-                .padding(size * 0.14)
-                .background(CT.goldSoft, in: Circle())
-                .offset(y: -size * 0.08)
+                .rotationEffect(.degrees(-10))
+                .offset(x: -165 / 870 * size, y: -195 / 870 * size - size * 0.2)
+                .offset(y: shown ? 0 : -14)
+                .opacity(shown ? 1 : 0)
         }
-        .accessibilityElement(children: .combine)
+        .frame(height: size * 1.35)
+        .accessibilityHidden(true)
+        .onAppear {
+            withAnimation(.spring(response: 0.55, dampingFraction: 0.6).delay(0.15)) { shown = true }
+        }
     }
 }

@@ -120,7 +120,6 @@ enum L {
     static var todayYes: String { String(localized: "today.yes") }
     static var todayYesA11y: String { String(localized: "today.yes_a11y") }
     static var watchSetupFirst: String { String(localized: "watch.setup_first") }
-    static func waterBridge(_ a0: String) -> String { String(localized: "water.bridge \(a0)") }
     static var waterCupBottle: String { String(localized: "water.cup.bottle") }
     static var waterCupGlass: String { String(localized: "water.cup.glass") }
     static var waterCupShaker: String { String(localized: "water.cup.shaker") }
