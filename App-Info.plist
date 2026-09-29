@@ -46,6 +46,10 @@
 	<array>
 		<string>com.atalay.creatinetracker.midnight</string>
 	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>OneScoop saves the water you log to Apple Health.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 </dict>

@@ -35,6 +35,9 @@ struct WaterSettings: Codable, Equatable {
     var sleepHour: Int = 22
     var simpleIntervalHours: Int = 2
 
+    /// Apple Sağlık ile eşitleme (OneScoop+).
+    var healthEnabled: Bool = false
+
     static let `default` = WaterSettings()
 
     var defaultCup: WaterCup {
@@ -44,6 +47,7 @@ struct WaterSettings: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case enabled, goalMl, cups, defaultCupID, hasSeenIntro
         case reminderMode, wakeHour, sleepHour, simpleIntervalHours
+        case healthEnabled
     }
 
     init() {}
@@ -60,6 +64,7 @@ struct WaterSettings: Codable, Equatable {
         wakeHour = try c.decodeIfPresent(Int.self, forKey: .wakeHour) ?? d.wakeHour
         sleepHour = try c.decodeIfPresent(Int.self, forKey: .sleepHour) ?? d.sleepHour
         simpleIntervalHours = try c.decodeIfPresent(Int.self, forKey: .simpleIntervalHours) ?? d.simpleIntervalHours
+        healthEnabled = try c.decodeIfPresent(Bool.self, forKey: .healthEnabled) ?? d.healthEnabled
     }
 }
 
@@ -67,6 +72,11 @@ struct WaterEntry: Codable, Equatable, Identifiable {
     var id: UUID = UUID()
     var ml: Int
     var at: Date
+    /// Apple Sağlık'tan (başka bir uygulamadan) gelen kayıt. Sadece
+    /// gösterilir ve hesaba katılır; OneScoop'tan silinemez, geri alınamaz.
+    var fromHealth: Bool? = nil
+
+    var isFromHealth: Bool { fromHealth == true }
 }
 
 /// Su verisinin okunup yazıldığı tek yer. Persistence gibi her mutasyon
@@ -74,6 +84,12 @@ struct WaterEntry: Codable, Equatable, Identifiable {
 enum WaterData {
     private static let settingsKey = "ct.water.settings.v1"
     private static let logKey = "ct.water.log.v1"      // [gün: [kayıt]]
+    /// Apple Sağlık'taki diğer uygulamaların su kayıtları (son 180 gün).
+    /// Sadece uygulama doldurur; widget kilit ekranında Sağlık'ı okuyamadığı
+    /// için buradaki kopyayı kullanır.
+    private static let healthKey = "ct.water.health.v1"
+    /// Sağlık'a yazılmış kendi kayıtlarımızın kimlikleri.
+    private static let healthSyncedKey = "ct.water.healthSynced.v1"
 
     private static let encoder = JSONEncoder()
     private static let decoder = JSONDecoder()
@@ -104,8 +120,50 @@ enum WaterData {
         AppGroup.defaults.set(data, forKey: logKey)
     }
 
-    static func entries(on date: Date = Date()) -> [WaterEntry] {
+    /// Sadece OneScoop'ta girilenler (geri alınabilenler).
+    static func localEntries(on date: Date = Date()) -> [WaterEntry] {
         (loadLog()[DayKey.key(for: date)] ?? []).sorted { $0.at < $1.at }
+    }
+
+    /// Gösterilen ve hesaba katılan: OneScoop'un kayıtları + (açıksa) Sağlık'tan gelenler.
+    static func entries(on date: Date = Date()) -> [WaterEntry] {
+        let key = DayKey.key(for: date)
+        return ((loadLog()[key] ?? []) + (healthActive ? (loadHealth()[key] ?? []) : []))
+            .sorted { $0.at < $1.at }
+    }
+
+    /// Takvim ve akıllı hatırlatma için birleşik kayıt.
+    static func mergedLog() -> [String: [WaterEntry]] {
+        var log = loadLog()
+        if healthActive {
+            for (day, list) in loadHealth() { log[day, default: []].append(contentsOf: list) }
+        }
+        return log
+    }
+
+    private static var healthActive: Bool {
+        loadSettings().healthEnabled && PlusAccess.isUnlocked
+    }
+
+    // MARK: Sağlık kopyası
+
+    static func loadHealth() -> [String: [WaterEntry]] {
+        guard let data = AppGroup.defaults.data(forKey: healthKey),
+              let log = try? decoder.decode([String: [WaterEntry]].self, from: data) else { return [:] }
+        return log
+    }
+
+    static func saveHealth(_ log: [String: [WaterEntry]]) {
+        guard let data = try? encoder.encode(log) else { return }
+        AppGroup.defaults.set(data, forKey: healthKey)
+    }
+
+    static func healthSyncedIDs() -> Set<String> {
+        Set(AppGroup.defaults.stringArray(forKey: healthSyncedKey) ?? [])
+    }
+
+    static func saveHealthSyncedIDs(_ ids: Set<String>) {
+        AppGroup.defaults.set(Array(ids), forKey: healthSyncedKey)
     }
 
     static func total(on date: Date = Date()) -> Int {
@@ -132,13 +190,17 @@ enum WaterData {
 
     /// Bugün en son girilen suyu siler (widget'taki geri al).
     static func removeLatestToday() {
-        guard let last = entries().max(by: { $0.at < $1.at }) else { return }
+        guard let last = localEntries().max(by: { $0.at < $1.at }) else { return }
         remove(last.id)
     }
 
     static func resetAll() {
         AppGroup.defaults.removeObject(forKey: logKey)
         AppGroup.defaults.removeObject(forKey: settingsKey)
+        AppGroup.defaults.removeObject(forKey: healthKey)
+        AppGroup.defaults.removeObject(forKey: healthSyncedKey)
+        // Sağlık'a daha önce yazılmış sular orada kalır; o veri kullanıcının
+        // Sağlık kaydı, oradan Sağlık uygulamasıyla silinebilir.
     }
 }
 

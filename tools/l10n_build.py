@@ -686,6 +686,28 @@ add("notif.water_pace %@",
     "Vous avez %@ ml de retard sur l’objectif du jour.", "Sei %@ ml indietro rispetto all’obiettivo di oggi.",
     "Você está %@ ml atrás da meta de hoje.")
 
+# ── 2.0: Takvim (su) ve Apple Sağlık ──────────────────────
+add("history.creatine", "Creatine", "Kreatin", "Creatina", "Kreatin", "Créatine", "Creatina", "Creatina")
+add("history.water_goal_days", "Days at goal", "Hedefe ulaşılan gün", "Días con objetivo", "Tage am Ziel",
+    "Jours à l’objectif", "Giorni a obiettivo", "Dias na meta")
+add("history.water_average", "Daily average", "Günlük ortalama", "Media diaria", "Tagesschnitt",
+    "Moyenne par jour", "Media giornaliera", "Média diária")
+add("history.water_hint",
+    "Tap a day to see its water.", "O günün sularını görmek için bir güne dokun.",
+    "Toca un día para ver su agua.", "Tippe auf einen Tag, um sein Wasser zu sehen.",
+    "Touchez un jour pour voir son eau.", "Tocca un giorno per vederne l’acqua.",
+    "Toque em um dia para ver a água dele.")
+add("settings.water_health", "Apple Health", "Apple Sağlık", "Salud de Apple", "Apple Health",
+    "Santé d’Apple", "Salute di Apple", "Saúde da Apple")
+add("settings.water_health_footer",
+    "Water you log here is saved to Apple Health, and water from other apps in Health shows up in OneScoop.",
+    "Burada girdiğin su Apple Sağlık'a da kaydedilir; Sağlık'taki diğer uygulamaların suyu da OneScoop'ta görünür.",
+    "El agua que registras aquí se guarda en Salud, y el agua de otras apps en Salud aparece en OneScoop.",
+    "Wasser, das du hier einträgst, wird in Apple Health gespeichert, und Wasser aus anderen Apps in Health erscheint in OneScoop.",
+    "L’eau notée ici est enregistrée dans Santé, et l’eau des autres apps dans Santé apparaît dans OneScoop.",
+    "L’acqua che registri qui viene salvata in Salute, e l’acqua di altre app in Salute compare in OneScoop.",
+    "A água registrada aqui é salva no Saúde, e a água de outros apps no Saúde aparece no OneScoop.")
+
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
@@ -773,6 +795,36 @@ lines.append("}")
 lines.append("")
 with open(os.path.join(ROOT, "L10n.swift"), "w", encoding="utf-8") as f:
     f.write("\n".join(lines))
+
+# ═══════════════════════════════════════════════════════════
+# InfoPlist.xcstrings — iOS izin pencerelerindeki metinler
+# ═══════════════════════════════════════════════════════════
+PLIST = {
+    "NSHealthShareUsageDescription": [
+        "OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal.",
+        "OneScoop, diğer uygulamalarda girdiğin su da günlük hedefine sayılsın diye Apple Sağlık'tan su verisini okur.",
+        "OneScoop lee el agua de Salud para que el agua que registras en otras apps cuente para tu objetivo diario.",
+        "OneScoop liest Wasser aus Apple Health, damit Wasser aus anderen Apps zu deinem Tagesziel zählt.",
+        "OneScoop lit l’eau dans Santé pour que l’eau notée dans d’autres apps compte dans votre objectif quotidien.",
+        "OneScoop legge l’acqua da Salute così l’acqua registrata in altre app conta per il tuo obiettivo giornaliero.",
+        "O OneScoop lê a água do Saúde para que a água registrada em outros apps conte para sua meta diária.",
+    ],
+    "NSHealthUpdateUsageDescription": [
+        "OneScoop saves the water you log to Apple Health.",
+        "OneScoop, girdiğin suyu Apple Sağlık'a kaydeder.",
+        "OneScoop guarda en Salud el agua que registras.",
+        "OneScoop speichert das Wasser, das du einträgst, in Apple Health.",
+        "OneScoop enregistre dans Santé l’eau que vous notez.",
+        "OneScoop salva in Salute l’acqua che registri.",
+        "O OneScoop salva no Saúde a água que você registra.",
+    ],
+}
+plist_strings = {k: {"extractionState": "manual",
+                     "localizations": {lang: unit(v) for lang, v in zip(LANGS, vals)}}
+                 for k, vals in PLIST.items()}
+with open(os.path.join(ROOT, "InfoPlist.xcstrings"), "w", encoding="utf-8") as f:
+    json.dump({"sourceLanguage": "en", "strings": plist_strings, "version": "1.0"},
+              f, ensure_ascii=False, indent=2, sort_keys=True)
 
 print(f"{len(T)} anahtar × {len(LANGS)} dil — doğrulama geçti")
 for n in sorted(names):

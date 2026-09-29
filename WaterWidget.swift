@@ -22,13 +22,14 @@ struct WaterTimelineEntry: TimelineEntry {
     static func now() -> WaterTimelineEntry {
         let s = WaterData.loadSettings()
         let today = WaterData.entries()
+        let undoable = !WaterData.localEntries().isEmpty
         return WaterTimelineEntry(
             date: Date(),
             total: today.reduce(0) { $0 + $1.ml },
             goal: s.goalMl,
             cups: s.cups,
             defaultCup: s.defaultCup,
-            hasEntries: !today.isEmpty,
+            hasEntries: undoable,
             enabled: s.enabled,
             unlocked: PlusAccess.isUnlocked,
             creatineTaken: Persistence.isTaken()

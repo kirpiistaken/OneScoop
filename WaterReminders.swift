@@ -63,12 +63,27 @@ enum WaterReminders {
         return totals.count % 2 == 1 ? totals[mid] : (totals[mid - 1] + totals[mid]) / 2
     }
 
-    /// Hedefe göre düz tempo: uyanıştan uykuya doğrusal.
-    static func linearExpected(atMinutes minutes: Int, settings s: WaterSettings) -> Int {
-        let start = s.wakeHour * 60, end = s.sleepHour * 60
+    /// Hedefe göre düz tempo: gün başından sonuna doğrusal.
+    static func linearExpected(atMinutes minutes: Int, start startHour: Int, end endHour: Int, goal: Int) -> Int {
+        let start = startHour * 60, end = endHour * 60
         guard end > start, minutes > start else { return 0 }
-        guard minutes < end else { return s.goalMl }
-        return s.goalMl * (minutes - start) / (end - start)
+        guard minutes < end else { return goal }
+        return goal * (minutes - start) / (end - start)
+    }
+
+    /// Öğrenilen günlerde ilk ve son su saatinin medyanı → akıllı hatırlatma
+    /// penceresi. Makul sınırlar içinde tutuluyor.
+    static func learnedWindow(days: [[WaterEntry]]) -> (Int, Int) {
+        let cal = DayKey.calendar
+        func median(_ xs: [Int]) -> Int? {
+            let s = xs.sorted()
+            return s.isEmpty ? nil : s[s.count / 2]
+        }
+        let firsts = days.compactMap { $0.map(\.at).min().map { cal.component(.hour, from: $0) } }
+        let lasts = days.compactMap { $0.map(\.at).max().map { cal.component(.hour, from: $0) + 1 } }
+        let start = min(max(median(firsts) ?? 8, 5), 12)
+        let end = max(min(median(lasts) ?? 22, 24), start + 6)
+        return (start, min(end, 24))
     }
 
     /// Şu ana kadar "beklenen" miktar. Bugün kartındaki tempo satırı da bunu
@@ -78,18 +93,21 @@ enum WaterReminders {
         let c = DayKey.calendar.dateComponents([.hour, .minute], from: date)
         let minutes = (c.hour ?? 0) * 60 + (c.minute ?? 0)
         if PlusAccess.isUnlocked {
-            let days = learningDays(log: WaterData.loadLog(), goal: s.goalMl, now: date)
+            let days = learningDays(log: WaterData.mergedLog(), goal: s.goalMl, now: date)
             if days.count >= daysToLearn {
                 return learnedExpected(atMinutes: minutes, days: days)
             }
         }
-        return linearExpected(atMinutes: minutes, settings: s)
+        // Akıllıda gün penceresi öğrenilenden, basitte kullanıcının seçtiği.
+        return s.reminderMode == .simple
+            ? linearExpected(atMinutes: minutes, start: s.wakeHour, end: s.sleepHour, goal: s.goalMl)
+            : linearExpected(atMinutes: minutes, start: 8, end: 22, goal: s.goalMl)
     }
 
     /// Ayarlarda "öğreniliyor 1/3" göstermek için.
     static func learnedDayCount() -> Int {
         let s = WaterData.loadSettings()
-        return learningDays(log: WaterData.loadLog(), goal: s.goalMl).count
+        return learningDays(log: WaterData.mergedLog(), goal: s.goalMl).count
     }
 
     // MARK: - Planlama
@@ -107,7 +125,7 @@ enum WaterReminders {
         guard status == .authorized || status == .provisional else { return }
 
         let mode: WaterReminderMode = (s.reminderMode == .smart && PlusAccess.isUnlocked) ? .smart : .simple
-        let log = WaterData.loadLog()
+        let log = WaterData.mergedLog()
         let learned = learningDays(log: log, goal: s.goalMl)
         let usesLearned = mode == .smart && learned.count >= daysToLearn
         let cal = DayKey.calendar
@@ -158,14 +176,16 @@ enum WaterReminders {
                 }
 
             case .smart:
-                // Her saat başı kontrol noktası (uyanış+2 ile uyku-1 arası).
-                // O saatte beklenenin belirgin gerisindeysen bildirim; arada
-                // en az 2 saat, günde en fazla 4.
-                var m = (s.wakeHour + 2) * 60
-                while m <= (s.sleepHour - 1) * 60 && index < smartMaxPerDay {
+                // Her saat başı kontrol noktası. Gün penceresi kullanıcıya
+                // sorulmuyor: öğrenilen günlerden (ilk ve son su saati) çıkıyor,
+                // veri yoksa 08–22. O saatte beklenenin belirgin gerisindeysen
+                // bildirim; arada en az 2 saat, günde en fazla 4.
+                let window = usesLearned ? learnedWindow(days: learned) : (8, 22)
+                var m = (window.0 + 2) * 60
+                while m <= (window.1 - 1) * 60 && index < smartMaxPerDay {
                     let expected = usesLearned
                         ? learnedExpected(atMinutes: m, days: learned)
-                        : linearExpected(atMinutes: m, settings: s)
+                        : linearExpected(atMinutes: m, start: window.0, end: window.1, goal: s.goalMl)
                     let behind = expected - total
                     let fire = cal.date(bySettingHour: m / 60, minute: 0, second: 0, of: day) ?? day
                     let gapOK = lastFire.map { fire.timeIntervalSince($0) >= smartMinGap } ?? true

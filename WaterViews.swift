@@ -69,7 +69,7 @@ struct WaterCard: View {
 
     /// Her basış en son girilen suyu siler; art arda basılabilir.
     private var undoButton: some View {
-        let canUndo = !store.waterToday.isEmpty
+        let canUndo = store.canUndoWater
         return Button {
             store.undoLastWater()
             UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
@@ -125,33 +125,31 @@ struct WaterEntriesSheet: View {
     @EnvironmentObject private var store: CreatineStore
     @Environment(\.dismiss) private var dismiss
 
+    /// Hangi gün (Bugün kartından bugün, takvimden seçilen gün).
+    var date: Date = Date()
+    @State private var entries: [WaterEntry] = []
+
+    private var isToday: Bool { DayKey.key(for: date) == DayKey.today }
+    private var total: Int { entries.reduce(0) { $0 + $1.ml } }
+
     var body: some View {
         NavigationStack {
             List {
-                if store.waterToday.isEmpty {
+                if entries.isEmpty {
                     Text(L.waterNoEntries)
                         .foregroundStyle(CT.inkSoft)
                 } else {
-                    ForEach(store.waterToday.reversed()) { entry in
-                        HStack {
-                            Text(entry.at, style: .time)
-                                .foregroundStyle(CT.inkSoft)
-                            Spacer()
-                            Text(verbatim: "\(entry.ml) ml")
-                                .font(.system(.body, design: .rounded).weight(.semibold))
+                    Section {
+                        ForEach(entries.reversed()) { entry in
+                            row(entry)
                         }
-                        .swipeActions {
-                            Button(role: .destructive) {
-                                store.removeWater(entry.id)
-                            } label: {
-                                Label(L.waterDelete, systemImage: "trash")
-                            }
-                            .tint(.red)
-                        }
+                    } footer: {
+                        Text(verbatim: "\(total.litersString) / \(store.water.goalMl.litersString) L")
                     }
                 }
             }
-            .navigationTitle(L.waterTodayEntries)
+            .navigationTitle(isToday ? L.waterTodayEntries
+                             : date.formatted(.dateTime.day().month(.wide).weekday(.wide)))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
@@ -160,6 +158,43 @@ struct WaterEntriesSheet: View {
             }
         }
         .presentationDetents([.medium, .large])
+        .onAppear(perform: load)
+        .onChange(of: store.waterToday) { _, _ in load() }
+    }
+
+    @ViewBuilder
+    private func row(_ entry: WaterEntry) -> some View {
+        let content = HStack {
+            Text(entry.at, style: .time)
+                .foregroundStyle(CT.inkSoft)
+            if entry.isFromHealth {
+                // Başka bir uygulamadan Apple Sağlık üzerinden geldi.
+                Image(systemName: "heart.fill")
+                    .font(.caption)
+                    .foregroundStyle(.pink)
+                    .accessibilityLabel(L.settingsWaterHealth)
+            }
+            Spacer()
+            Text(verbatim: "\(entry.ml) ml")
+                .font(.system(.body, design: .rounded).weight(.semibold))
+        }
+        if entry.isFromHealth {
+            content
+        } else {
+            content.swipeActions {
+                Button(role: .destructive) {
+                    store.removeWater(entry.id)
+                    load()
+                } label: {
+                    Label(L.waterDelete, systemImage: "trash")
+                }
+                .tint(.red)
+            }
+        }
+    }
+
+    private func load() {
+        entries = WaterData.entries(on: date)
     }
 }
 

@@ -4,6 +4,11 @@ import UIKit
 struct HistoryView: View {
     @EnvironmentObject private var store: CreatineStore
     @State private var month = DayKey.startOfDay(Date())
+    /// 2.0 — Takvimin altındaki küçük düğme: kreatin ya da su takvimi.
+    @AppStorage("ct.history.showWater") private var showWaterPref = false
+    @State private var waterDay: WaterDaySelection?
+
+    private var showWater: Bool { showWaterPref && store.water.enabled }
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 6), count: 7)
 
@@ -15,15 +20,103 @@ struct HistoryView: View {
                 VStack(spacing: 22) {
                     monthHeader
                     weekdayRow
-                    grid
-                    legend
-                    summary
+                    if showWater {
+                        waterGrid
+                    } else {
+                        grid
+                    }
+                    if store.water.enabled { modeSwitch }
+                    if showWater {
+                        waterSummary
+                    } else {
+                        legend
+                        summary
+                    }
                 }
                 .padding(.horizontal, 18)
                 .padding(.bottom, 32)
             }
         }
+        .sheet(item: $waterDay) { WaterEntriesSheet(date: $0.date) }
     }
+
+    // MARK: - Kreatin / Su düğmesi
+
+    private var modeSwitch: some View {
+        Picker(selection: Binding(
+            get: { showWater },
+            set: { new in withAnimation(.snappy) { showWaterPref = new } }
+        )) {
+            Text(L.historyCreatine).tag(false)
+            Text(L.waterTitle).tag(true)
+        } label: {
+            EmptyView()
+        }
+        .pickerStyle(.segmented)
+        .controlSize(.small)
+        .frame(width: 180)
+        .frame(maxWidth: .infinity)
+    }
+
+    // MARK: - Su takvimi
+
+    /// Bu ekran store'daki su değişince yeniden çiziliyor; geçmiş günler
+    /// (ve Sağlık'tan gelenler) doğrudan kayıttan okunuyor.
+    private var waterLog: [String: [WaterEntry]] {
+        _ = store.waterToday
+        return WaterData.mergedLog()
+    }
+
+    private func waterTotal(_ day: Date, in log: [String: [WaterEntry]]) -> Int {
+        (log[DayKey.key(for: day)] ?? []).reduce(0) { $0 + $1.ml }
+    }
+
+    private var waterGrid: some View {
+        let log = waterLog
+        return LazyVGrid(columns: columns, spacing: 6) {
+            ForEach(Array(gridDays.enumerated()), id: \.offset) { _, day in
+                if let day {
+                    let isFuture = DayKey.startOfDay(day) > DayKey.startOfDay(Date())
+                    WaterDayCell(
+                        date: day,
+                        total: waterTotal(day, in: log),
+                        goal: store.water.goalMl,
+                        isToday: DayKey.key(for: day) == DayKey.today,
+                        isFuture: isFuture
+                    )
+                    .onTapGesture {
+                        guard !isFuture else { return }
+                        waterDay = WaterDaySelection(date: day)
+                    }
+                } else {
+                    Color.clear.frame(height: 46)
+                }
+            }
+        }
+    }
+
+    private var waterSummary: some View {
+        let log = waterLog
+        let days = monthDays.filter { DayKey.startOfDay($0) <= DayKey.startOfDay(Date()) }
+        let totals = days.map { waterTotal($0, in: log) }
+        let drankDays = totals.filter { $0 > 0 }
+        let goalDays = totals.filter { $0 >= store.water.goalMl }.count
+        let average = drankDays.isEmpty ? 0 : drankDays.reduce(0, +) / drankDays.count
+        let monthTotal = totals.reduce(0, +)
+
+        return VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 12) {
+                statBox(value: "\(goalDays)", label: L.historyWaterGoalDays)
+                statBox(value: "\(average.litersString) L", label: L.historyWaterAverage)
+                statBox(value: "\(monthTotal.litersString) L", label: L.historyThisMonth)
+            }
+            Text(L.historyWaterHint)
+                .font(.caption)
+                .foregroundStyle(CT.inkSoft.opacity(0.8))
+        }
+    }
+
+    private var monthDays: [Date] { gridDays.compactMap { $0 } }
 
     // MARK: - Header
 
@@ -227,6 +320,58 @@ private struct DayCell: View {
         .overlay {
             RoundedRectangle(cornerRadius: 13, style: .continuous)
                 .strokeBorder(CT.accent, lineWidth: isToday && entry == nil ? 2 : 0)
+        }
+    }
+}
+
+// MARK: - Su günü
+
+struct WaterDaySelection: Identifiable {
+    let date: Date
+    var id: String { DayKey.key(for: date) }
+}
+
+/// Hedefe göre alttan dolan gün kutusu; hedefe ulaşılan gün tamamen dolu.
+private struct WaterDayCell: View {
+    let date: Date
+    let total: Int
+    let goal: Int
+    let isToday: Bool
+    let isFuture: Bool
+
+    private var fraction: Double { goal > 0 ? min(1, Double(total) / Double(goal)) : 0 }
+    private var reached: Bool { total >= goal && goal > 0 }
+
+    var body: some View {
+        VStack(spacing: 3) {
+            Text(verbatim: "\(DayKey.calendar.component(.day, from: date))")
+                .font(.system(size: 15, weight: total > 0 ? .bold : .medium, design: .rounded))
+                .foregroundStyle(reached ? .white : (isFuture ? CT.inkSoft.opacity(0.4) : CT.ink))
+
+            if total > 0 {
+                Text(verbatim: total.litersString)
+                    .font(.system(size: 9, weight: .semibold, design: .rounded))
+                    .foregroundStyle(reached ? .white.opacity(0.85) : CT.inkSoft)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 46)
+        .background {
+            let shape = RoundedRectangle(cornerRadius: 13, style: .continuous)
+            ZStack(alignment: .bottom) {
+                shape.fill(CT.surface)
+                GeometryReader { geo in
+                    Rectangle()
+                        .fill(reached ? CT.accent : CT.accent.opacity(0.28))
+                        .frame(height: geo.size.height * fraction)
+                        .frame(maxHeight: .infinity, alignment: .bottom)
+                }
+            }
+            .clipShape(shape)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: 13, style: .continuous)
+                .strokeBorder(CT.accent, lineWidth: isToday && !reached ? 2 : 0)
         }
     }
 }

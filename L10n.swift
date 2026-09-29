@@ -9,12 +9,16 @@ enum L {
     static var complicationNotYet: String { String(localized: "complication.not_yet") }
     static var controlDescription: String { String(localized: "control.description") }
     static var controlWaterDesc: String { String(localized: "control.water_desc") }
+    static var historyCreatine: String { String(localized: "history.creatine") }
     static var historyDayStreak: String { String(localized: "history.day_streak") }
     static var historyDaysLogged: String { String(localized: "history.days_logged") }
     static var historyLoading: String { String(localized: "history.loading") }
     static var historyMaintenance: String { String(localized: "history.maintenance") }
     static var historyTapHint: String { String(localized: "history.tap_hint") }
     static var historyThisMonth: String { String(localized: "history.this_month") }
+    static var historyWaterAverage: String { String(localized: "history.water_average") }
+    static var historyWaterGoalDays: String { String(localized: "history.water_goal_days") }
+    static var historyWaterHint: String { String(localized: "history.water_hint") }
     static var insightConsistent: String { String(localized: "insight.consistent") }
     static func insightEmpty(_ a0: String) -> String { String(localized: "insight.empty \(a0)") }
     static func insightLoading(_ a0: Int, _ a1: String, _ a2: String) -> String { String(localized: "insight.loading \(a0) \(a1) \(a2)") }
@@ -89,6 +93,8 @@ enum L {
     static func settingsWaterEvery(_ a0: Int) -> String { String(localized: "settings.water_every \(a0)") }
     static var settingsWaterFooter: String { String(localized: "settings.water_footer") }
     static var settingsWaterGoal: String { String(localized: "settings.water_goal") }
+    static var settingsWaterHealth: String { String(localized: "settings.water_health") }
+    static var settingsWaterHealthFooter: String { String(localized: "settings.water_health_footer") }
     static var settingsWaterRemindOff: String { String(localized: "settings.water_remind_off") }
     static var settingsWaterRemindOffFooter: String { String(localized: "settings.water_remind_off_footer") }
     static var settingsWaterRemindSimple: String { String(localized: "settings.water_remind_simple") }

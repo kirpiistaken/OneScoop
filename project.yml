@@ -51,6 +51,8 @@ targets:
       - path: WaterShapes.swift
       - path: WaterReminders.swift
       - path: WaterViews.swift
+      - path: HealthSync.swift
+      - path: InfoPlist.xcstrings
       - path: Plus.swift
       - path: ScoopShape.swift
       - path: Assets.xcassets

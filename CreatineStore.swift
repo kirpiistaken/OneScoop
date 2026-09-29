@@ -162,21 +162,54 @@ final class CreatineStore: ObservableObject {
         let entry = WaterData.add(ml: ml)
         waterToday = WaterData.entries()
         IntentRefresh.all()
-        Task { await WaterReminders.reschedule() }
+        Task {
+            await WaterReminders.reschedule()
+            await HealthSync.pushLocalChanges()
+        }
         return entry
     }
 
     /// En son girilen suyu siler. Art arda basılınca sırayla geri gider.
+    /// Sağlık'tan gelen kayıtlar atlanır (onlar başka uygulamanın).
     func undoLastWater() {
-        guard let last = waterToday.max(by: { $0.at < $1.at }) else { return }
+        guard let last = waterToday.filter({ !$0.isFromHealth }).max(by: { $0.at < $1.at }) else { return }
         removeWater(last.id)
+    }
+
+    var canUndoWater: Bool { waterToday.contains { !$0.isFromHealth } }
+
+    /// Apple Sağlık eşitlemesini aç/kapat. Açarken izin istenir.
+    func setHealthEnabled(_ on: Bool) async {
+        if on { _ = await HealthSync.requestAccess() }
+        updateWater { $0.healthEnabled = on }
+        if on {
+            await HealthSync.syncAll()
+        } else {
+            HealthSync.forgetHealthCopy()
+        }
+        waterToday = WaterData.entries()
+        IntentRefresh.all()
+        await WaterReminders.reschedule()
+    }
+
+    /// Uygulama öne gelince: widget'tan girilenleri Sağlık'a yaz, Sağlık'taki
+    /// diğer uygulamaların sularını al.
+    func refreshHealth() async {
+        guard HealthSync.isActive else { return }
+        await HealthSync.syncAll()
+        waterToday = WaterData.entries()
+        IntentRefresh.all()
+        await WaterReminders.reschedule()
     }
 
     func removeWater(_ id: UUID) {
         WaterData.remove(id)
         waterToday = WaterData.entries()
         IntentRefresh.all()
-        Task { await WaterReminders.reschedule() }
+        Task {
+            await WaterReminders.reschedule()
+            await HealthSync.pushLocalChanges()
+        }
     }
 
     func updateWater(_ transform: (inout WaterSettings) -> Void) {

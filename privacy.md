@@ -4,7 +4,7 @@ title: Privacy Policy
 
 # Privacy Policy — OneScoop
 
-Last updated: 27 September 2026
+Last updated: 29 September 2026
 
 ## Short version
 
@@ -18,6 +18,7 @@ OneScoop saves the following:
 - The dates on which you logged a dose, and the amount for each
 - Your reminder time and whether reminders are on
 - Your supply amount, if you use supply tracking
+- The water you log (amount and time), your water goal, cup sizes and water reminder settings, if you use water tracking
 
 On your iPhone, this data is kept in a shared container so that the app and its widget can both read it.
 
@@ -31,12 +32,20 @@ This copy is stored by Apple under your Apple Account. The developer has no acce
 
 If you use the OneScoop Apple Watch app, your iPhone and Apple Watch exchange today's status and your streak directly with each other using Apple's Watch Connectivity. This data does not go through any server.
 
+## Apple Health
+
+If you turn on Apple Health in the water settings, OneScoop saves the water you log to Apple Health and reads water from Apple Health that other apps have saved, so it can count toward your daily goal, appear in your history and shape your reminders. OneScoop only asks for water. This data is read and written on your device; it is not sent to the developer or to anyone else, and it is not used for advertising. You can change or revoke this access at any time in the Health app or in your iPhone's Settings.
+
+## Purchases
+
+OneScoop+ is a one-time in-app purchase handled by Apple. The developer does not receive your payment details.
+
 ## What the app does not do
 
 - No user accounts, no sign-in
 - No analytics, crash reporting, tracking, or advertising SDKs
 - No servers operated by the developer
-- No access to contacts, location, photos, health data, or any other personal information
+- No access to contacts, location, photos, or any other personal information; Apple Health is used only for water, only if you turn it on
 - Nothing is shared with the developer or with third parties
 
 ## Notifications

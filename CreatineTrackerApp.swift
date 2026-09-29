@@ -40,6 +40,7 @@ struct CreatineTrackerApp: App {
                 Task {
                     await NotificationManager.reschedule()
                     await WaterReminders.reschedule()
+                    await store.refreshHealth()
                 }
             }
         }

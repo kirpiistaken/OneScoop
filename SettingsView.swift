@@ -164,11 +164,35 @@ struct SettingsView: View {
                                 Text(verbatim: "\(cup.kind.title) · \(cup.ml) ml").tag(cup.id)
                             }
                         }
+
+                        if HealthSync.isAvailable {
+                            Toggle(isOn: Binding(
+                                get: { store.water.healthEnabled && plus.isUnlocked },
+                                set: { new in
+                                    guard plus.isUnlocked else { showPaywall = true; return }
+                                    Task { await store.setHealthEnabled(new) }
+                                }
+                            )) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "heart.fill").foregroundStyle(.pink)
+                                    Text(L.settingsWaterHealth)
+                                    if !plus.isUnlocked {
+                                        Image(systemName: "crown.fill")
+                                            .font(.caption)
+                                            .foregroundStyle(CT.gold)
+                                    }
+                                }
+                            }
+                        }
                     }
                 } header: {
                     Text(L.settingsWater)
                 } footer: {
-                    if store.water.enabled { Text(L.settingsWaterFooter) }
+                    if store.water.enabled {
+                        Text(store.water.healthEnabled && plus.isUnlocked
+                             ? L.settingsWaterHealthFooter + "\n\n" + L.settingsWaterFooter
+                             : L.settingsWaterFooter)
+                    }
                 }
 
                 if store.water.enabled {
@@ -178,18 +202,11 @@ struct SettingsView: View {
                                 get: { cup.ml },
                                 set: { new in store.updateWater { $0.cups[index].ml = new } }
                             ), in: 100...1500, step: 50) {
-                                HStack {
-                                    Label {
-                                        Text(cup.kind.title)
-                                    } icon: {
-                                        CupIcon(kind: cup.kind).fill(CT.accent).frame(width: 20, height: 20)
-                                    }
-                                    Spacer()
-                                    Text(verbatim: "\(cup.ml) ml")
-                                        .foregroundStyle(CT.inkSoft)
-                                }
+                                cupLabel(cup)
                             }
-                            .disabled(!plus.isUnlocked)
+                            .plusGated(plus.isUnlocked) { showPaywall = true } locked: {
+                                cupLabel(cup)
+                            }
                         }
                     } header: {
                         Text(L.settingsWaterCups)
@@ -207,7 +224,8 @@ struct SettingsView: View {
                         )) {
                             Text(L.settingsWaterRemindOff).tag(WaterReminderMode.off)
                             Text(L.settingsWaterRemindSimple).tag(WaterReminderMode.simple)
-                            Text(L.settingsWaterRemindSmart).tag(WaterReminderMode.smart)
+                            Label(L.settingsWaterRemindSmart, systemImage: "crown.fill")
+                                .tag(WaterReminderMode.smart)
                         }
 
                         if store.water.reminderMode == .simple {
@@ -219,7 +237,8 @@ struct SettingsView: View {
                             }
                         }
 
-                        if store.water.reminderMode != .off {
+                        // Akıllıda gün penceresi sorulmuyor; öğrenilen düzenden çıkıyor.
+                        if store.water.reminderMode == .simple {
                             Stepper(value: Binding(
                                 get: { store.water.wakeHour },
                                 set: { new in store.updateWater { $0.wakeHour = new } }
@@ -332,6 +351,24 @@ struct SettingsView: View {
         }
     }
 
+    private func cupLabel(_ cup: WaterCup) -> some View {
+        HStack {
+            Label {
+                Text(cup.kind.title)
+            } icon: {
+                CupIcon(kind: cup.kind).fill(CT.accent).frame(width: 20, height: 20)
+            }
+            Spacer()
+            Text(verbatim: "\(cup.ml) ml")
+                .foregroundStyle(CT.inkSoft)
+            if !plus.isUnlocked {
+                Image(systemName: "crown.fill")
+                    .font(.caption)
+                    .foregroundStyle(CT.gold)
+            }
+        }
+    }
+
     /// Akıllı hatırlatma OneScoop+'a özel: Plus yoksa satın alma ekranı açılır.
     private func setWaterReminder(_ mode: WaterReminderMode) {
         if mode == .smart && !plus.isUnlocked {
@@ -351,6 +388,24 @@ struct SettingsView: View {
             permissionDenied = await NotificationManager.authorizationStatus() == .denied
             await NotificationManager.reschedule()
             await WaterReminders.reschedule()
+        }
+    }
+}
+
+extension View {
+    /// OneScoop+ özelliği: Plus varsa kontrolün kendisi, yoksa dokununca
+    /// satın alma ekranını açan bir satır.
+    @ViewBuilder
+    func plusGated<Locked: View>(
+        _ unlocked: Bool,
+        onLockedTap: @escaping () -> Void,
+        @ViewBuilder locked: () -> Locked
+    ) -> some View {
+        if unlocked {
+            self
+        } else {
+            Button(action: onLockedTap) { locked() }
+                .foregroundStyle(CT.ink)
         }
     }
 }
