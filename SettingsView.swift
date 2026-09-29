@@ -1,370 +1,101 @@
 import SwiftUI
 import UserNotifications
 
+// Ayarlar sade tutuluyor: ana ekranda birkaç satır, detaylar alt sayfalarda.
+//
+//   OneScoop+
+//   Kreatin ›        doz, yükleme fazı, hatırlatma
+//   Su ›             hedef, kaplar, hatırlatma, Apple Sağlık
+//   Uygulama ikonu
+//   iCloud
+//   Veriler ›        dışa aktar, sıfırla
+//   (Test — sadece TestFlight)
+
 struct SettingsView: View {
     @EnvironmentObject private var store: CreatineStore
     @EnvironmentObject private var plus: PlusStore
     @State private var showPaywall = false
     @State private var showIconPicker = false
-    @State private var exportFile: ExportFile?
-    @State private var reminderTime = Date()
-    @State private var showResetConfirm = false
-    @State private var permissionDenied = false
-
-    private let intervalOptions = [15, 30, 60, 120]
-
-    private func intervalLabel(_ minutes: Int) -> String {
-        minutes < 60 ? L.settingsMinutes(minutes) : L.settingsHours(minutes / 60)
-    }
 
     var body: some View {
         NavigationStack {
             Form {
-                // MARK: Dose
-                Section(L.settingsDose) {
-                    HStack {
-                        Text(L.onbDailyDose)
-                        Spacer()
-                        Text(verbatim: "\(store.settings.maintenanceDose.gramString) g")
-                            .foregroundStyle(CT.inkSoft)
-                    }
-                    Stepper(L.settingsAdjust, value: Binding(
-                        get: { store.settings.maintenanceDose },
-                        set: { new in store.update { $0.maintenanceDose = new } }
-                    ), in: 1...15, step: 0.5)
-                    .labelsHidden()
-                }
-
-                // MARK: Loading
-                Section {
-                    Toggle(L.settingsLoadingPhase, isOn: Binding(
-                        get: { store.settings.usesLoadingPhase },
-                        set: { new in store.update { $0.usesLoadingPhase = new } }
-                    ))
-
-                    if store.settings.usesLoadingPhase {
-                        HStack {
-                            Text(L.settingsLoadingDose)
-                            Spacer()
-                            Text(verbatim: "\(store.settings.loadingDose.gramString) g")
-                                .foregroundStyle(CT.inkSoft)
-                        }
-                        Stepper(L.settingsAdjustLoading, value: Binding(
-                            get: { store.settings.loadingDose },
-                            set: { new in store.update { $0.loadingDose = new } }
-                        ), in: 5...30, step: 1)
-                        .labelsHidden()
-
-                        Stepper(value: Binding(
-                            get: { store.settings.loadingDays },
-                            set: { new in store.update { $0.loadingDays = new } }
-                        ), in: 3...14) {
-                            Text(L.settingsLength(store.settings.loadingDays))
-                        }
-
-                        DatePicker(L.settingsStartedOn, selection: Binding(
-                            get: { store.settings.startDate },
-                            set: { new in store.update { $0.startDate = DayKey.startOfDay(new) } }
-                        ), displayedComponents: .date)
-                    }
-                } footer: {
-                    if store.settings.usesLoadingPhase {
-                        Text(L.settingsLoadingFooter(store.settings.loadingDaysRemaining))
-                    }
-                }
-
-                // MARK: Reminder
-                Section {
-                    Toggle(L.onbReminder, isOn: Binding(
-                        get: { store.settings.reminderEnabled },
-                        set: { new in
-                            store.update { $0.reminderEnabled = new }
-                            if new { requestPermissionIfNeeded() }
-                        }
-                    ))
-
-                    if store.settings.reminderEnabled {
-                        DatePicker(L.settingsTime, selection: $reminderTime, displayedComponents: .hourAndMinute)
-                            .onChange(of: reminderTime) { _, new in
-                                let comps = Calendar.current.dateComponents([.hour, .minute], from: new)
-                                store.update {
-                                    $0.reminderHour = comps.hour ?? 18
-                                    $0.reminderMinute = comps.minute ?? 0
-                                }
-                            }
-                    }
-                } header: {
-                    Text(L.settingsNotifications)
-                } footer: {
-                    Text(permissionDenied ? L.settingsDenied : L.settingsOnlyUnlogged)
-                }
-
-                // MARK: Repeat
-                if store.settings.reminderEnabled {
-                    Section {
-                        Toggle(L.settingsRemindAgain, isOn: Binding(
-                            get: { store.settings.repeatEnabled },
-                            set: { new in store.update { $0.repeatEnabled = new } }
-                        ))
-
-                        if store.settings.repeatEnabled {
-                            Picker(L.settingsEvery, selection: Binding(
-                                get: { store.settings.repeatIntervalMinutes },
-                                set: { new in store.update { $0.repeatIntervalMinutes = new } }
-                            )) {
-                                ForEach(intervalOptions, id: \.self) { minutes in
-                                    Text(intervalLabel(minutes)).tag(minutes)
-                                }
-                            }
-
-                            Stepper(value: Binding(
-                                get: { store.settings.repeatCount },
-                                set: { new in store.update { $0.repeatCount = new } }
-                            ), in: 1...4) {
-                                Text(L.settingsUpTo(store.settings.repeatCount))
-                            }
-                        }
-                    } header: {
-                        Text(L.settingsRepeat)
-                    } footer: {
-                        if store.settings.repeatEnabled {
-                            Text(L.settingsRepeatFooterOn(
-                                store.settings.reminderTimeLocalized,
-                                intervalLabel(store.settings.repeatIntervalMinutes)
-                            ))
-                        } else {
-                            Text(L.settingsRepeatFooterOff)
-                        }
-                    }
-                }
-
-                // MARK: Su (2.0)
-                Section {
-                    Toggle(L.settingsWaterToggle, isOn: Binding(
-                        get: { store.water.enabled },
-                        set: { new in store.updateWater { $0.enabled = new } }
-                    ))
-
-                    if store.water.enabled {
-                        Stepper(value: Binding(
-                            get: { store.water.goalMl },
-                            set: { new in store.updateWater { $0.goalMl = new } }
-                        ), in: 1000...5000, step: 250) {
-                            HStack {
-                                Text(L.settingsWaterGoal)
-                                Spacer()
-                                Text(verbatim: "\(store.water.goalMl.litersString) L")
-                                    .foregroundStyle(CT.inkSoft)
-                            }
-                        }
-
-                        Picker(L.settingsWaterDefault, selection: Binding(
-                            get: { store.water.defaultCup.id },
-                            set: { new in store.updateWater { $0.defaultCupID = new } }
-                        )) {
-                            ForEach(store.water.cups) { cup in
-                                Text(verbatim: "\(cup.kind.title) · \(cup.ml) ml").tag(cup.id)
-                            }
-                        }
-
-                        if HealthSync.isAvailable {
-                            Toggle(isOn: Binding(
-                                get: { store.water.healthEnabled && plus.isUnlocked },
-                                set: { new in
-                                    guard plus.isUnlocked else { showPaywall = true; return }
-                                    Task { await store.setHealthEnabled(new) }
-                                }
-                            )) {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "heart.fill").foregroundStyle(.pink)
-                                    Text(L.settingsWaterHealth)
-                                    if !plus.isUnlocked {
-                                        Image(systemName: "crown.fill")
-                                            .font(.caption)
-                                            .foregroundStyle(CT.gold)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                        // Antrenman günü hedefi: Sağlık açıkken (OneScoop+).
-                        if store.water.healthEnabled && plus.isUnlocked {
-                            Toggle(isOn: Binding(
-                                get: { store.water.workoutBoostEnabled },
-                                set: { new in Task { await store.setWorkoutBoost(new) } }
-                            )) {
-                                Label(L.settingsWaterWorkout, systemImage: "figure.strengthtraining.traditional")
-                            }
-                            if store.water.workoutBoostEnabled {
-                                Stepper(value: Binding(
-                                    get: { store.water.workoutBoostMl },
-                                    set: { new in store.updateWater { $0.workoutBoostMl = new } }
-                                ), in: 250...1500, step: 250) {
-                                    HStack {
-                                        Text(L.settingsWaterWorkoutExtra)
-                                        Spacer()
-                                        Text(verbatim: "+\(store.water.workoutBoostMl) ml")
-                                            .foregroundStyle(CT.inkSoft)
-                                    }
-                                }
-                            }
-                        }
-                } header: {
-                    Text(L.settingsWater)
-                } footer: {
-                    if store.water.enabled {
-                        Text(store.water.healthEnabled && plus.isUnlocked
-                             ? L.settingsWaterHealthFooter + "\n\n" + L.settingsWaterFooter
-                             : L.settingsWaterFooter)
-                    }
-                }
-
-                if store.water.enabled {
-                    Section {
-                        ForEach(Array(store.water.cups.enumerated()), id: \.element.id) { index, cup in
-                            Stepper(value: Binding(
-                                get: { cup.ml },
-                                set: { new in store.updateWater { $0.cups[index].ml = new } }
-                            ), in: 100...1500, step: 50) {
-                                cupLabel(cup)
-                            }
-                        }
-                    } header: {
-                        Text(L.settingsWaterCups)
-                    } footer: {
-                        Text(L.settingsWaterCupsFooter)
-                    }
-                }
-
-                // MARK: Su hatırlatmaları (2.0)
-                if store.water.enabled {
-                    Section {
-                        Picker(L.settingsWaterReminders, selection: Binding(
-                            get: { store.water.reminderMode },
-                            set: { new in setWaterReminder(new) }
-                        )) {
-                            Text(L.settingsWaterRemindOff).tag(WaterReminderMode.off)
-                            Text(L.settingsWaterRemindSimple).tag(WaterReminderMode.simple)
-                            Label(L.settingsWaterRemindSmart, systemImage: "crown.fill")
-                                .tag(WaterReminderMode.smart)
-                        }
-
-                        if store.water.reminderMode == .simple {
-                            Stepper(value: Binding(
-                                get: { store.water.simpleIntervalHours },
-                                set: { new in store.updateWater { $0.simpleIntervalHours = new } }
-                            ), in: 1...4) {
-                                Text(L.settingsWaterEvery(store.water.simpleIntervalHours))
-                            }
-                        }
-
-                        // Akıllıda gün penceresi sorulmuyor; öğrenilen düzenden çıkıyor.
-                        if store.water.reminderMode == .simple {
-                            Stepper(value: Binding(
-                                get: { store.water.wakeHour },
-                                set: { new in store.updateWater { $0.wakeHour = new } }
-                            ), in: 5...12) {
-                                HStack {
-                                    Text(L.settingsWaterDayStart)
-                                    Spacer()
-                                    Text(verbatim: String(format: "%02d:00", store.water.wakeHour))
-                                        .foregroundStyle(CT.inkSoft)
-                                }
-                            }
-                            Stepper(value: Binding(
-                                get: { store.water.sleepHour },
-                                set: { new in store.updateWater { $0.sleepHour = new } }
-                            ), in: 18...23) {
-                                HStack {
-                                    Text(L.settingsWaterDayEnd)
-                                    Spacer()
-                                    Text(verbatim: String(format: "%02d:00", store.water.sleepHour))
-                                        .foregroundStyle(CT.inkSoft)
-                                }
-                            }
-                        }
-                    } header: {
-                        HStack(spacing: 6) {
-                            Text(L.settingsWaterReminders)
-                            if store.water.reminderMode == .smart {
-                                Image(systemName: "crown.fill").foregroundStyle(CT.gold)
-                            }
-                        }
-                    } footer: {
-                        switch store.water.reminderMode {
-                        case .off:
-                            Text(L.settingsWaterRemindOffFooter)
-                        case .simple:
-                            Text(L.settingsWaterRemindSimpleFooter)
-                        case .smart:
-                            let learned = WaterReminders.learnedDayCount()
-                            if learned >= WaterReminders.daysToLearn {
-                                Text(L.settingsWaterRemindSmartReady)
-                            } else {
-                                Text(L.settingsWaterRemindSmartLearning(learned, WaterReminders.daysToLearn))
-                            }
-                        }
-                    }
-                }
-
                 // MARK: OneScoop+
                 Section {
                     Button { showPaywall = true } label: {
-                        HStack {
-                            Label {
-                                Text(verbatim: "OneScoop+").foregroundStyle(CT.ink)
-                            } icon: {
-                                Image(systemName: "crown.fill").foregroundStyle(CT.gold)
+                        HStack(spacing: 14) {
+                            Image(systemName: "crown.fill")
+                                .font(.system(size: 17, weight: .bold))
+                                .foregroundStyle(CT.gold)
+                                .frame(width: 36, height: 36)
+                                .background(CT.goldSoft, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            VStack(alignment: .leading, spacing: 2) {
+                                PlusWordmark(size: 17)
+                                if !plus.isUnlocked {
+                                    Text(L.settingsPlusSubtitle)
+                                        .font(.footnote)
+                                        .foregroundStyle(CT.inkSoft)
+                                }
                             }
                             Spacer()
                             if plus.isUnlocked {
-                                Image(systemName: "checkmark").foregroundStyle(CT.accent)
-                            } else if let price = plus.product?.displayPrice {
-                                Text(verbatim: price).foregroundStyle(CT.inkSoft)
+                                Image(systemName: "checkmark.circle.fill").foregroundStyle(CT.accent)
+                            } else {
+                                chevron
                             }
                         }
                     }
-
-                    // Uygulama ikonu: seçici herkes açabilir, klasik dışındakiler Plus.
-                    Button { showIconPicker = true } label: {
-                        plusRow(L.settingsAppIcon, symbol: "app.badge.fill", locked: false)
-                    }
-
-                    Button {
-                        guard plus.isUnlocked else { showPaywall = true; return }
-                        if let url = DataExport.makeCSV() { exportFile = ExportFile(url: url) }
-                    } label: {
-                        plusRow(L.settingsExport, symbol: "square.and.arrow.up", locked: !plus.isUnlocked)
-                    }
-                } footer: {
-                    Text(L.settingsExportFooter)
                 }
 
-                // MARK: Widget
-                Section(L.settingsWidget) {
-                    Label(L.settingsWidgetHelp, systemImage: "square.grid.2x2")
-                        .font(.footnote)
-                        .foregroundStyle(CT.inkSoft)
-                }
-
-                // MARK: iCloud
+                // MARK: Kreatin ve su
                 Section {
-                    Toggle(L.settingsIcloudToggle, isOn: Binding(
+                    NavigationLink {
+                        CreatineSettingsView()
+                    } label: {
+                        row(L.historyCreatine, detail: creatineDetail) {
+                            ScoopShape().fill(CT.accent).frame(width: 20, height: 20)
+                        }
+                    }
+                    NavigationLink {
+                        WaterSettingsView()
+                    } label: {
+                        row(L.settingsWater, detail: waterDetail) {
+                            CupIcon(kind: .glass).fill(CT.accent).frame(width: 18, height: 18)
+                        }
+                    }
+                }
+
+                // MARK: Görünüm ve yedek
+                Section {
+                    Button { showIconPicker = true } label: {
+                        HStack {
+                            row(L.settingsAppIcon, detail: AppIconOption.current.title) {
+                                Image(systemName: "app.badge.fill").foregroundStyle(CT.accent)
+                            }
+                            chevron
+                        }
+                    }
+                    Toggle(isOn: Binding(
                         get: { store.iCloudEnabled },
                         set: { store.setICloudEnabled($0) }
-                    ))
-                } header: {
-                    Text(L.settingsIcloud)
+                    )) {
+                        row(L.settingsIcloudToggle, detail: nil) {
+                            Image(systemName: "icloud.fill").foregroundStyle(CT.accent)
+                        }
+                    }
                 } footer: {
                     Text(store.iCloudEnabled ? L.settingsIcloudOn : L.settingsIcloudOff)
                 }
 
-                // MARK: Data
+                // MARK: Veriler
                 Section {
-                    Button(L.settingsReset, role: .destructive) { showResetConfirm = true }
-                } footer: {
-                    Text(store.iCloudEnabled ? L.settingsResetIcloud : L.settingsLocalOnly)
+                    NavigationLink {
+                        DataSettingsView()
+                    } label: {
+                        row(L.settingsData, detail: nil) {
+                            Image(systemName: "externaldrive.fill").foregroundStyle(CT.accent)
+                        }
+                    }
                 }
 
                 // MARK: Test (sadece TestFlight)
@@ -394,15 +125,405 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(CT.bg)
         }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showIconPicker) { AppIconPicker() }
+    }
+
+    private var creatineDetail: String {
+        let dose = "\(store.settings.maintenanceDose.gramString) g"
+        return store.settings.reminderEnabled
+            ? "\(dose) · \(store.settings.reminderTimeLocalized)"
+            : dose
+    }
+
+    private var waterDetail: String {
+        store.water.enabled ? "\(store.water.goalMl.litersString) L" : L.settingsWaterRemindOff
+    }
+
+    private var chevron: some View {
+        Image(systemName: "chevron.right")
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(CT.inkSoft.opacity(0.6))
+    }
+
+    private func row<Icon: View>(_ title: String, detail: String?, @ViewBuilder icon: () -> Icon) -> some View {
+        HStack(spacing: 12) {
+            icon().frame(width: 24)
+            Text(title).foregroundStyle(CT.ink)
+            Spacer()
+            if let detail {
+                Text(verbatim: detail)
+                    .foregroundStyle(CT.inkSoft)
+                    .lineLimit(1)
+            }
+        }
+    }
+}
+
+// MARK: - Bildirim izni (kreatin ve su ortak)
+
+enum NotificationPermission {
+    /// Gerekirse izin ister, bildirimleri yeniden kurar. İzin reddedildiyse `true`.
+    static func requestIfNeeded() async -> Bool {
+        if await NotificationManager.authorizationStatus() == .notDetermined {
+            _ = await NotificationManager.requestAuthorization()
+        }
+        await NotificationManager.reschedule()
+        await WaterReminders.reschedule()
+        return await NotificationManager.authorizationStatus() == .denied
+    }
+}
+
+// MARK: - Kreatin
+
+struct CreatineSettingsView: View {
+    @EnvironmentObject private var store: CreatineStore
+    @State private var reminderTime = Date()
+    @State private var permissionDenied = false
+
+    private let intervalOptions = [15, 30, 60, 120]
+
+    private func intervalLabel(_ minutes: Int) -> String {
+        minutes < 60 ? L.settingsMinutes(minutes) : L.settingsHours(minutes / 60)
+    }
+
+    var body: some View {
+        Form {
+            // Doz ve yükleme fazı
+            Section {
+                Stepper(value: Binding(
+                    get: { store.settings.maintenanceDose },
+                    set: { new in store.update { $0.maintenanceDose = new } }
+                ), in: 1...15, step: 0.5) {
+                    valueRow(L.onbDailyDose, "\(store.settings.maintenanceDose.gramString) g")
+                }
+
+                Toggle(L.settingsLoadingPhase, isOn: Binding(
+                    get: { store.settings.usesLoadingPhase },
+                    set: { new in store.update { $0.usesLoadingPhase = new } }
+                ))
+
+                if store.settings.usesLoadingPhase {
+                    Stepper(value: Binding(
+                        get: { store.settings.loadingDose },
+                        set: { new in store.update { $0.loadingDose = new } }
+                    ), in: 5...30, step: 1) {
+                        valueRow(L.settingsLoadingDose, "\(store.settings.loadingDose.gramString) g")
+                    }
+                    Stepper(value: Binding(
+                        get: { store.settings.loadingDays },
+                        set: { new in store.update { $0.loadingDays = new } }
+                    ), in: 3...14) {
+                        Text(L.settingsLength(store.settings.loadingDays))
+                    }
+                    DatePicker(L.settingsStartedOn, selection: Binding(
+                        get: { store.settings.startDate },
+                        set: { new in store.update { $0.startDate = DayKey.startOfDay(new) } }
+                    ), displayedComponents: .date)
+                }
+            } header: {
+                Text(L.settingsDose)
+            } footer: {
+                if store.settings.usesLoadingPhase {
+                    Text(L.settingsLoadingFooter(store.settings.loadingDaysRemaining))
+                }
+            }
+
+            // Hatırlatma (tekrar dahil, tek grupta)
+            Section {
+                Toggle(L.onbReminder, isOn: Binding(
+                    get: { store.settings.reminderEnabled },
+                    set: { new in
+                        store.update { $0.reminderEnabled = new }
+                        if new { askPermission() }
+                    }
+                ))
+
+                if store.settings.reminderEnabled {
+                    DatePicker(L.settingsTime, selection: $reminderTime, displayedComponents: .hourAndMinute)
+                        .onChange(of: reminderTime) { _, new in
+                            let comps = Calendar.current.dateComponents([.hour, .minute], from: new)
+                            store.update {
+                                $0.reminderHour = comps.hour ?? 18
+                                $0.reminderMinute = comps.minute ?? 0
+                            }
+                        }
+
+                    Toggle(L.settingsRemindAgain, isOn: Binding(
+                        get: { store.settings.repeatEnabled },
+                        set: { new in store.update { $0.repeatEnabled = new } }
+                    ))
+
+                    if store.settings.repeatEnabled {
+                        Picker(L.settingsEvery, selection: Binding(
+                            get: { store.settings.repeatIntervalMinutes },
+                            set: { new in store.update { $0.repeatIntervalMinutes = new } }
+                        )) {
+                            ForEach(intervalOptions, id: \.self) { minutes in
+                                Text(intervalLabel(minutes)).tag(minutes)
+                            }
+                        }
+                        Stepper(value: Binding(
+                            get: { store.settings.repeatCount },
+                            set: { new in store.update { $0.repeatCount = new } }
+                        ), in: 1...4) {
+                            Text(L.settingsUpTo(store.settings.repeatCount))
+                        }
+                    }
+                }
+            } header: {
+                Text(L.settingsNotifications)
+            } footer: {
+                if permissionDenied {
+                    Text(L.settingsDenied)
+                } else if store.settings.reminderEnabled {
+                    Text(L.settingsOnlyUnlogged)
+                }
+            }
+        }
+        .navigationTitle(L.historyCreatine)
+        .navigationBarTitleDisplayMode(.inline)
+        .scrollContentBackground(.hidden)
+        .background(CT.bg)
         .task {
             reminderTime = Calendar.current.date(
                 from: DateComponents(hour: store.settings.reminderHour, minute: store.settings.reminderMinute)
             ) ?? Date()
-            let status = await NotificationManager.authorizationStatus()
-            permissionDenied = (status == .denied)
+            permissionDenied = await NotificationManager.authorizationStatus() == .denied
         }
+    }
+
+    private func askPermission() {
+        Task { permissionDenied = await NotificationPermission.requestIfNeeded() }
+    }
+}
+
+// MARK: - Su
+
+struct WaterSettingsView: View {
+    @EnvironmentObject private var store: CreatineStore
+    @EnvironmentObject private var plus: PlusStore
+    @State private var showPaywall = false
+    @State private var permissionDenied = false
+
+    var body: some View {
+        Form {
+            // Aç/kapa ve hedef
+            Section {
+                Toggle(L.settingsWaterToggle, isOn: Binding(
+                    get: { store.water.enabled },
+                    set: { new in store.updateWater { $0.enabled = new } }
+                ))
+                if store.water.enabled {
+                    Stepper(value: Binding(
+                        get: { store.water.goalMl },
+                        set: { new in store.updateWater { $0.goalMl = new } }
+                    ), in: 1000...5000, step: 250) {
+                        valueRow(L.settingsWaterGoal, "\(store.water.goalMl.litersString) L")
+                    }
+                }
+            } footer: {
+                if store.water.enabled { Text(L.settingsWaterFooter) }
+            }
+
+            if store.water.enabled {
+                // Kaplar ve varsayılan kap
+                Section {
+                    ForEach(Array(store.water.cups.enumerated()), id: \.element.id) { index, cup in
+                        Stepper(value: Binding(
+                            get: { cup.ml },
+                            set: { new in store.updateWater { $0.cups[index].ml = new } }
+                        ), in: 100...1500, step: 50) {
+                            HStack {
+                                Label {
+                                    Text(cup.kind.title)
+                                } icon: {
+                                    CupIcon(kind: cup.kind).fill(CT.accent).frame(width: 20, height: 20)
+                                }
+                                Spacer()
+                                Text(verbatim: "\(cup.ml) ml").foregroundStyle(CT.inkSoft)
+                            }
+                        }
+                    }
+                    Picker(L.settingsWaterDefault, selection: Binding(
+                        get: { store.water.defaultCup.id },
+                        set: { new in store.updateWater { $0.defaultCupID = new } }
+                    )) {
+                        ForEach(store.water.cups) { cup in
+                            Text(verbatim: cup.kind.title).tag(cup.id)
+                        }
+                    }
+                } header: {
+                    Text(L.settingsWaterCups)
+                }
+
+                // Hatırlatma
+                Section {
+                    Picker(L.settingsWaterReminders, selection: Binding(
+                        get: { store.water.reminderMode },
+                        set: { new in setReminder(new) }
+                    )) {
+                        Text(L.settingsWaterRemindOff).tag(WaterReminderMode.off)
+                        Text(L.settingsWaterRemindSimple).tag(WaterReminderMode.simple)
+                        Label(L.settingsWaterRemindSmart, systemImage: "crown.fill")
+                            .tag(WaterReminderMode.smart)
+                    }
+
+                    // Gün saatleri sadece basitte; akıllı kendisi öğreniyor.
+                    if store.water.reminderMode == .simple {
+                        Stepper(value: Binding(
+                            get: { store.water.simpleIntervalHours },
+                            set: { new in store.updateWater { $0.simpleIntervalHours = new } }
+                        ), in: 1...4) {
+                            Text(L.settingsWaterEvery(store.water.simpleIntervalHours))
+                        }
+                        Stepper(value: Binding(
+                            get: { store.water.wakeHour },
+                            set: { new in store.updateWater { $0.wakeHour = new } }
+                        ), in: 5...12) {
+                            valueRow(L.settingsWaterDayStart, String(format: "%02d:00", store.water.wakeHour))
+                        }
+                        Stepper(value: Binding(
+                            get: { store.water.sleepHour },
+                            set: { new in store.updateWater { $0.sleepHour = new } }
+                        ), in: 18...23) {
+                            valueRow(L.settingsWaterDayEnd, String(format: "%02d:00", store.water.sleepHour))
+                        }
+                    }
+                } header: {
+                    Text(L.settingsNotifications)
+                } footer: {
+                    reminderFooter
+                }
+
+                // Apple Sağlık (OneScoop+)
+                if HealthSync.isAvailable {
+                    Section {
+                        Toggle(isOn: Binding(
+                            get: { store.water.healthEnabled && plus.isUnlocked },
+                            set: { new in
+                                guard plus.isUnlocked else { showPaywall = true; return }
+                                Task { await store.setHealthEnabled(new) }
+                            }
+                        )) {
+                            HStack(spacing: 6) {
+                                Text(L.settingsWaterHealth)
+                                if !plus.isUnlocked { crown }
+                            }
+                        }
+
+                        if store.water.healthEnabled && plus.isUnlocked {
+                            Toggle(L.settingsWaterWorkout, isOn: Binding(
+                                get: { store.water.workoutBoostEnabled },
+                                set: { new in Task { await store.setWorkoutBoost(new) } }
+                            ))
+                            if store.water.workoutBoostEnabled {
+                                Stepper(value: Binding(
+                                    get: { store.water.workoutBoostMl },
+                                    set: { new in store.updateWater { $0.workoutBoostMl = new } }
+                                ), in: 250...1500, step: 250) {
+                                    valueRow(L.settingsWaterWorkoutExtra, "+\(store.water.workoutBoostMl) ml")
+                                }
+                            }
+                        }
+                    } footer: {
+                        if store.water.healthEnabled && plus.isUnlocked {
+                            Text(L.settingsWaterHealthFooter)
+                        }
+                    }
+                }
+            }
+        }
+        .navigationTitle(L.settingsWater)
+        .navigationBarTitleDisplayMode(.inline)
+        .scrollContentBackground(.hidden)
+        .background(CT.bg)
         .sheet(isPresented: $showPaywall) { PaywallView() }
-        .sheet(isPresented: $showIconPicker) { AppIconPicker() }
+        .task { permissionDenied = await NotificationManager.authorizationStatus() == .denied }
+    }
+
+    @ViewBuilder
+    private var reminderFooter: some View {
+        if permissionDenied && store.water.reminderMode != .off {
+            Text(L.settingsDenied)
+        } else {
+            switch store.water.reminderMode {
+            case .off:
+                EmptyView()
+            case .simple:
+                Text(L.settingsWaterRemindSimpleFooter)
+            case .smart:
+                let learned = WaterReminders.learnedDayCount()
+                if learned >= WaterReminders.daysToLearn {
+                    Text(L.settingsWaterRemindSmartReady)
+                } else {
+                    Text(L.settingsWaterRemindSmartLearning(learned, WaterReminders.daysToLearn))
+                }
+            }
+        }
+    }
+
+    private var crown: some View {
+        Image(systemName: "crown.fill")
+            .font(.caption)
+            .foregroundStyle(CT.gold)
+    }
+
+    /// Akıllı hatırlatma OneScoop+'a özel: Plus yoksa satın alma ekranı açılır.
+    private func setReminder(_ mode: WaterReminderMode) {
+        if mode == .smart && !plus.isUnlocked {
+            showPaywall = true
+            return
+        }
+        store.updateWater { $0.reminderMode = mode }
+        if mode != .off {
+            Task { permissionDenied = await NotificationPermission.requestIfNeeded() }
+        }
+    }
+}
+
+// MARK: - Veriler
+
+struct DataSettingsView: View {
+    @EnvironmentObject private var store: CreatineStore
+    @EnvironmentObject private var plus: PlusStore
+    @State private var showPaywall = false
+    @State private var showResetConfirm = false
+    @State private var exportFile: ExportFile?
+
+    var body: some View {
+        Form {
+            Section {
+                Button {
+                    guard plus.isUnlocked else { showPaywall = true; return }
+                    if let url = DataExport.makeCSV() { exportFile = ExportFile(url: url) }
+                } label: {
+                    HStack {
+                        Label(L.settingsExport, systemImage: "square.and.arrow.up")
+                            .foregroundStyle(CT.ink)
+                        Spacer()
+                        if !plus.isUnlocked {
+                            Image(systemName: "crown.fill")
+                                .font(.caption)
+                                .foregroundStyle(CT.gold)
+                        }
+                    }
+                }
+            } footer: {
+                Text(L.settingsExportFooter)
+            }
+
+            Section {
+                Button(L.settingsReset, role: .destructive) { showResetConfirm = true }
+            } footer: {
+                Text(store.iCloudEnabled ? L.settingsResetIcloud : L.settingsLocalOnly)
+            }
+        }
+        .navigationTitle(L.settingsData)
+        .navigationBarTitleDisplayMode(.inline)
+        .scrollContentBackground(.hidden)
+        .background(CT.bg)
+        .sheet(isPresented: $showPaywall) { PaywallView() }
         .sheet(item: $exportFile) { ShareSheet(url: $0.url) }
         .confirmationDialog(L.settingsResetTitle, isPresented: $showResetConfirm, titleVisibility: .visible) {
             Button(L.settingsDeleteAll, role: .destructive) { store.resetEverything() }
@@ -411,56 +532,15 @@ struct SettingsView: View {
             Text(L.settingsResetMsg)
         }
     }
+}
 
-    private func plusRow(_ title: String, symbol: String, locked: Bool) -> some View {
-        HStack {
-            Label(title, systemImage: symbol)
-                .foregroundStyle(CT.ink)
-            Spacer()
-            if locked {
-                Image(systemName: "crown.fill")
-                    .font(.caption)
-                    .foregroundStyle(CT.gold)
-            } else {
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(CT.inkSoft.opacity(0.6))
-            }
-        }
-    }
+// MARK: - Ortak
 
-    private func cupLabel(_ cup: WaterCup) -> some View {
-        HStack {
-            Label {
-                Text(cup.kind.title)
-            } icon: {
-                CupIcon(kind: cup.kind).fill(CT.accent).frame(width: 20, height: 20)
-            }
-            Spacer()
-            Text(verbatim: "\(cup.ml) ml")
-                .foregroundStyle(CT.inkSoft)
-        }
-    }
-
-    /// Akıllı hatırlatma OneScoop+'a özel: Plus yoksa satın alma ekranı açılır.
-    private func setWaterReminder(_ mode: WaterReminderMode) {
-        if mode == .smart && !plus.isUnlocked {
-            showPaywall = true
-            return
-        }
-        store.updateWater { $0.reminderMode = mode }
-        if mode != .off { requestPermissionIfNeeded() }
-    }
-
-    private func requestPermissionIfNeeded() {
-        Task {
-            let status = await NotificationManager.authorizationStatus()
-            if status == .notDetermined {
-                _ = await NotificationManager.requestAuthorization()
-            }
-            permissionDenied = await NotificationManager.authorizationStatus() == .denied
-            await NotificationManager.reschedule()
-            await WaterReminders.reschedule()
-        }
+/// "Başlık ........ değer" satırı (Stepper etiketi olarak).
+private func valueRow(_ title: String, _ value: String) -> some View {
+    HStack {
+        Text(title)
+        Spacer()
+        Text(verbatim: value).foregroundStyle(CT.inkSoft)
     }
 }

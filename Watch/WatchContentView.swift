@@ -1,4 +1,5 @@
 import SwiftUI
+import WatchKit
 
 /// Saatte tek ekran: soru, "Yes" butonu ve seri. Takvim ve ayarlar yok.
 struct WatchContentView: View {
@@ -119,6 +120,14 @@ struct WatchWaterView: View {
     @State private var didSetInitial = false
     /// Sayfa açılınca Crown doğrudan miktarı çevirsin.
     @FocusState private var crownFocused: Bool
+    /// Crown'un ham değeri. Miktara doğrudan bağlı değil: her tam adım
+    /// (bir "tık") miktarı 50 ml değiştiriyor ve haptik veriyor.
+    @State private var crown: Double = 0
+    @State private var crownAnchor: Double = 0
+
+    private let step = 50
+    private let minAmount = 50
+    private let maxAmount = 1500
 
     private let accent = Color(red: 0.36, green: 0.53, blue: 1.0)      // #5C86FF
     private let soft = Color(red: 0.58, green: 0.61, blue: 0.65)       // #939CA6
@@ -173,9 +182,10 @@ struct WatchWaterView: View {
                 .contentTransition(.numericText())
                 .focusable()
                 .focused($crownFocused)
-                .digitalCrownRotation($amount, from: 50, through: 1500, by: 50,
-                                      sensitivity: .low, isContinuous: false,
-                                      isHapticFeedbackEnabled: true)
+                .digitalCrownRotation($crown, from: -10_000, through: 10_000, by: 1,
+                                      sensitivity: .medium, isContinuous: true,
+                                      isHapticFeedbackEnabled: false)
+                .onChange(of: crown) { _, new in crownMoved(to: new) }
 
             HStack(spacing: 6) {
                 ForEach(w.cups) { cup in
@@ -213,6 +223,21 @@ struct WatchWaterView: View {
             .buttonStyle(.plain)
         }
         .padding(.horizontal, 4)
+    }
+
+    /// Crown kaç tam adım döndüyse o kadar 50 ml; her adımda bir tık.
+    /// Sınıra gelince haptik yok, değer taşmıyor.
+    private func crownMoved(to value: Double) {
+        let steps = Int((value - crownAnchor).rounded(.towardZero))
+        guard steps != 0 else { return }
+        crownAnchor += Double(steps)
+        let direction = steps > 0 ? 1 : -1
+        for _ in 0..<abs(steps) {
+            let next = Int(amount) + direction * step
+            guard next >= minAmount, next <= maxAmount else { break }
+            amount = Double(next)
+            WKInterfaceDevice.current().play(.click)
+        }
     }
 
     private var locked: some View {

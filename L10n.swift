@@ -77,6 +77,7 @@ enum L {
     static var settingsAdjust: String { String(localized: "settings.adjust") }
     static var settingsAdjustLoading: String { String(localized: "settings.adjust_loading") }
     static var settingsAppIcon: String { String(localized: "settings.app_icon") }
+    static var settingsData: String { String(localized: "settings.data") }
     static var settingsDeleteAll: String { String(localized: "settings.delete_all") }
     static var settingsDenied: String { String(localized: "settings.denied") }
     static var settingsDose: String { String(localized: "settings.dose") }
@@ -96,6 +97,7 @@ enum L {
     static func settingsMinutes(_ a0: Int) -> String { String(localized: "settings.minutes \(a0)") }
     static var settingsNotifications: String { String(localized: "settings.notifications") }
     static var settingsOnlyUnlogged: String { String(localized: "settings.only_unlogged") }
+    static var settingsPlusSubtitle: String { String(localized: "settings.plus_subtitle") }
     static var settingsRemindAgain: String { String(localized: "settings.remind_again") }
     static var settingsRepeat: String { String(localized: "settings.repeat") }
     static var settingsRepeatFooterOff: String { String(localized: "settings.repeat_footer_off") }

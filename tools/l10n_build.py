@@ -816,6 +816,14 @@ add("plus.bullet_icons", "Custom app icons", "Özel uygulama ikonları", "Iconos
 add("plus.bullet_export", "Export your data", "Verini dışa aktar", "Exporta tus datos", "Daten exportieren",
     "Exportez vos données", "Esporta i tuoi dati", "Exporte seus dados")
 
+# ── 2.0: Sade ayarlar ─────────────────────────────────────
+add("settings.data", "Data", "Veriler", "Datos", "Daten", "Données", "Dati", "Dados")
+add("settings.plus_subtitle",
+    "Widgets, Apple Watch, smart reminders", "Widget, Apple Watch, akıllı hatırlatma",
+    "Widgets, Apple Watch, recordatorios inteligentes", "Widgets, Apple Watch, smarte Erinnerungen",
+    "Widgets, Apple Watch, rappels intelligents", "Widget, Apple Watch, promemoria intelligenti",
+    "Widgets, Apple Watch, lembretes inteligentes")
+
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
