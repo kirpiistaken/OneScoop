@@ -37,7 +37,10 @@ struct CreatineTrackerApp: App {
                 MidnightRefresh.schedule()
                 // Dil değiştiyse bildirim butonu ve metinleri de yenilensin.
                 NotificationManager.registerCategories()
-                Task { await NotificationManager.reschedule() }
+                Task {
+                    await NotificationManager.reschedule()
+                    await WaterReminders.reschedule()
+                }
             }
         }
         .backgroundTask(.appRefresh(MidnightRefresh.identifier)) {
@@ -62,6 +65,7 @@ enum MidnightRefresh {
     static func run() async {
         schedule()
         IntentRefresh.all()
+        await WaterReminders.reschedule()   // yeni günün su hatırlatmaları
     }
 }
 
@@ -91,6 +95,11 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
                 CreatineStore.shared.reload()
                 PhoneWatchBridge.shared.pushStatus()
             }
+        case WaterReminders.addActionID:
+            WaterData.add(ml: WaterData.loadSettings().defaultCup.ml)
+            IntentRefresh.all()
+            await WaterReminders.reschedule()
+            await MainActor.run { CreatineStore.shared.reload() }
         case UNNotificationDefaultActionIdentifier:
             await MainActor.run { CreatineStore.shared.reload() }
         default:

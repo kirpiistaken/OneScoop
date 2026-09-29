@@ -515,13 +515,13 @@ add("plus.bullet_health",
     "Salute di Apple: la tua acqua viene salvata anche lì",
     "Saúde da Apple: sua água também fica registrada lá")
 add("plus.bullet_reminders",
-    "Smart reminders only when you fall behind",
-    "Sadece geride kaldığında gelen akıllı hatırlatmalar",
-    "Recordatorios inteligentes solo cuando te quedas atrás",
-    "Smarte Erinnerungen nur, wenn du zurückliegst",
-    "Rappels intelligents seulement quand vous êtes en retard",
-    "Promemoria intelligenti solo quando resti indietro",
-    "Lembretes inteligentes só quando você fica para trás")
+    "Smart reminders that learn when you usually drink",
+    "Su içme düzenini öğrenen akıllı hatırlatmalar",
+    "Recordatorios inteligentes que aprenden cuándo sueles beber",
+    "Smarte Erinnerungen, die lernen, wann du normalerweise trinkst",
+    "Des rappels intelligents qui apprennent quand vous buvez d’habitude",
+    "Promemoria intelligenti che imparano quando bevi di solito",
+    "Lembretes inteligentes que aprendem quando você costuma beber")
 add("plus.bullet_cups",
     "Your own cups and bottle portions",
     "Kendi bardakların ve şişe payları",
@@ -621,6 +621,70 @@ add("intent.water_undo.title", "Undo last water", "Son suyu geri al", "Deshacer 
     "Letztes Wasser widerrufen", "Annuler la dernière eau", "Annulla l’ultima acqua", "Desfazer a última água")
 add("intent.water.amount", "Amount (ml)", "Miktar (ml)", "Cantidad (ml)", "Menge (ml)",
     "Quantité (ml)", "Quantità (ml)", "Quantidade (ml)")
+
+# ── 2.0: Su hatırlatmaları ────────────────────────────────
+add("settings.water_reminders", "Water reminders", "Su hatırlatmaları", "Recordatorios de agua",
+    "Wasser-Erinnerungen", "Rappels d’eau", "Promemoria acqua", "Lembretes de água")
+add("settings.water_remind_off", "Off", "Kapalı", "Desactivados", "Aus", "Désactivés", "Disattivati", "Desativados")
+add("settings.water_remind_simple", "Simple", "Basit", "Simples", "Einfach", "Simples", "Semplici", "Simples")
+add("settings.water_remind_smart", "Smart (OneScoop+)", "Akıllı (OneScoop+)", "Inteligentes (OneScoop+)",
+    "Smart (OneScoop+)", "Intelligents (OneScoop+)", "Intelligenti (OneScoop+)", "Inteligentes (OneScoop+)")
+add("settings.water_every %lld",
+    P("Every %lld hour", "Every %lld hours"),
+    "%lld saatte bir",
+    P("Cada %lld hora", "Cada %lld horas"),
+    P("Alle %lld Stunde", "Alle %lld Stunden"),
+    P("Toutes les %lld heure", "Toutes les %lld heures"),
+    P("Ogni %lld ora", "Ogni %lld ore"),
+    P("A cada %lld hora", "A cada %lld horas"))
+add("settings.water_day_start", "Day starts", "Gün başlangıcı", "El día empieza", "Tagesbeginn",
+    "Début de journée", "Inizio giornata", "Início do dia")
+add("settings.water_day_end", "Day ends", "Gün bitişi", "El día termina", "Tagesende",
+    "Fin de journée", "Fine giornata", "Fim do dia")
+add("settings.water_remind_off_footer",
+    "No water reminders.", "Su için hatırlatma gelmez.", "No recibirás recordatorios de agua.",
+    "Keine Wasser-Erinnerungen.", "Aucun rappel d’eau.", "Nessun promemoria per l’acqua.",
+    "Nenhum lembrete de água.")
+add("settings.water_remind_simple_footer",
+    "A reminder at a fixed interval during your day. They stop once you reach your goal.",
+    "Gün içinde sabit aralıklarla hatırlatır. Hedefe ulaşınca susar.",
+    "Un recordatorio a intervalos fijos durante tu día. Se detienen al alcanzar tu objetivo.",
+    "Eine Erinnerung in festen Abständen über den Tag. Sie hören auf, sobald du dein Ziel erreichst.",
+    "Un rappel à intervalle fixe pendant la journée. Ils s’arrêtent une fois l’objectif atteint.",
+    "Un promemoria a intervalli fissi durante la giornata. Si fermano quando raggiungi l’obiettivo.",
+    "Um lembrete em intervalos fixos durante o dia. Eles param quando você atinge a meta.")
+add("settings.water_remind_smart_ready",
+    "OneScoop has learned when you usually drink. You only get a reminder when you're clearly behind your own routine.",
+    "OneScoop genelde ne zaman su içtiğini öğrendi. Sadece kendi düzeninin belirgin gerisinde kaldığında hatırlatır.",
+    "OneScoop ya sabe cuándo sueles beber. Solo te avisa cuando vas claramente por detrás de tu propia rutina.",
+    "OneScoop weiß jetzt, wann du normalerweise trinkst. Du wirst nur erinnert, wenn du deutlich hinter deiner eigenen Routine liegst.",
+    "OneScoop a appris quand vous buvez d’habitude. Vous n’êtes rappelé que si vous êtes nettement en retard sur votre propre rythme.",
+    "OneScoop ha imparato quando bevi di solito. Ti avvisa solo quando sei chiaramente indietro rispetto alla tua routine.",
+    "O OneScoop já aprendeu quando você costuma beber. Você só recebe um lembrete quando está claramente atrás da sua própria rotina.")
+add("settings.water_remind_smart_learning %lld %lld",
+    "Learning your routine: %1$lld of %2$lld days. Until then, reminders follow your daily goal.",
+    "Düzenin öğreniliyor: %1$lld/%2$lld gün. O zamana kadar günlük hedefine göre hatırlatır.",
+    "Aprendiendo tu rutina: %1$lld de %2$lld días. Mientras tanto, los recordatorios siguen tu objetivo diario.",
+    "Deine Routine wird gelernt: %1$lld von %2$lld Tagen. Bis dahin richten sich die Erinnerungen nach deinem Tagesziel.",
+    "Apprentissage de votre rythme : %1$lld jour(s) sur %2$lld. D’ici là, les rappels suivent votre objectif quotidien.",
+    "Sto imparando la tua routine: %1$lld di %2$lld giorni. Fino ad allora i promemoria seguono l’obiettivo giornaliero.",
+    "Aprendendo sua rotina: %1$lld de %2$lld dias. Até lá, os lembretes seguem sua meta diária.")
+add("notif.water_simple",
+    "Time for some water.", "Bir bardak su vakti.", "Hora de beber agua.", "Zeit für etwas Wasser.",
+    "C’est l’heure de boire de l’eau.", "È ora di bere un po’ d’acqua.", "Hora de beber água.")
+add("notif.water_smart %@ %@",
+    "By now you've usually had %1$@ L. Today you're at %2$@ L.",
+    "Genelde bu saate kadar %1$@ L içmiş oluyorsun. Bugün %2$@ L'desin.",
+    "A esta hora sueles llevar %1$@ L. Hoy vas por %2$@ L.",
+    "Um diese Zeit hast du meist schon %1$@ L getrunken. Heute sind es %2$@ L.",
+    "À cette heure, vous en êtes d’habitude à %1$@ L. Aujourd’hui : %2$@ L.",
+    "A quest’ora di solito sei a %1$@ L. Oggi sei a %2$@ L.",
+    "Até esta hora você costuma ter bebido %1$@ L. Hoje você está em %2$@ L.")
+add("notif.water_pace %@",
+    "You're %@ ml behind today's goal.", "Bugünkü hedefinin %@ ml gerisindesin.",
+    "Vas %@ ml por detrás del objetivo de hoy.", "Du liegst %@ ml hinter deinem heutigen Ziel.",
+    "Vous avez %@ ml de retard sur l’objectif du jour.", "Sei %@ ml indietro rispetto all’obiettivo di oggi.",
+    "Você está %@ ml atrás da meta de hoje.")
 
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.

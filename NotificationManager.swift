@@ -4,7 +4,8 @@ import UserNotifications
 enum NotificationManager {
 
     static let prefix = "ct.reminder."
-    static let maxPending = 60
+    /// iOS en fazla 64 bekleyen bildirim tutuyor; ~16'sı su hatırlatmalarına.
+    static let maxPending = 48
     static let maxHorizonDays = 30
 
     static let categoryID = "CT_REMINDER"
@@ -22,7 +23,7 @@ enum NotificationManager {
             intentIdentifiers: [],
             options: []
         )
-        UNUserNotificationCenter.current().setNotificationCategories([category])
+        UNUserNotificationCenter.current().setNotificationCategories([category, WaterReminders.category()])
     }
 
     static func requestAuthorization() async -> Bool {

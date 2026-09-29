@@ -63,7 +63,7 @@ struct WaterCard: View {
 
     private var paceText: String {
         if total >= goal { return L.waterGoalReached }
-        let behind = WaterData.expectedByNow(goal: goal) - total
+        let behind = WaterReminders.expected() - total
         return behind > 150 ? L.waterPaceBehind(String(behind)) : L.waterPaceOn
     }
 

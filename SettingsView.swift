@@ -198,6 +198,75 @@ struct SettingsView: View {
                     }
                 }
 
+                // MARK: Su hatırlatmaları (2.0)
+                if store.water.enabled {
+                    Section {
+                        Picker(L.settingsWaterReminders, selection: Binding(
+                            get: { store.water.reminderMode },
+                            set: { new in setWaterReminder(new) }
+                        )) {
+                            Text(L.settingsWaterRemindOff).tag(WaterReminderMode.off)
+                            Text(L.settingsWaterRemindSimple).tag(WaterReminderMode.simple)
+                            Text(L.settingsWaterRemindSmart).tag(WaterReminderMode.smart)
+                        }
+
+                        if store.water.reminderMode == .simple {
+                            Stepper(value: Binding(
+                                get: { store.water.simpleIntervalHours },
+                                set: { new in store.updateWater { $0.simpleIntervalHours = new } }
+                            ), in: 1...4) {
+                                Text(L.settingsWaterEvery(store.water.simpleIntervalHours))
+                            }
+                        }
+
+                        if store.water.reminderMode != .off {
+                            Stepper(value: Binding(
+                                get: { store.water.wakeHour },
+                                set: { new in store.updateWater { $0.wakeHour = new } }
+                            ), in: 5...12) {
+                                HStack {
+                                    Text(L.settingsWaterDayStart)
+                                    Spacer()
+                                    Text(verbatim: String(format: "%02d:00", store.water.wakeHour))
+                                        .foregroundStyle(CT.inkSoft)
+                                }
+                            }
+                            Stepper(value: Binding(
+                                get: { store.water.sleepHour },
+                                set: { new in store.updateWater { $0.sleepHour = new } }
+                            ), in: 18...23) {
+                                HStack {
+                                    Text(L.settingsWaterDayEnd)
+                                    Spacer()
+                                    Text(verbatim: String(format: "%02d:00", store.water.sleepHour))
+                                        .foregroundStyle(CT.inkSoft)
+                                }
+                            }
+                        }
+                    } header: {
+                        HStack(spacing: 6) {
+                            Text(L.settingsWaterReminders)
+                            if store.water.reminderMode == .smart {
+                                Image(systemName: "crown.fill").foregroundStyle(CT.gold)
+                            }
+                        }
+                    } footer: {
+                        switch store.water.reminderMode {
+                        case .off:
+                            Text(L.settingsWaterRemindOffFooter)
+                        case .simple:
+                            Text(L.settingsWaterRemindSimpleFooter)
+                        case .smart:
+                            let learned = WaterReminders.learnedDayCount()
+                            if learned >= WaterReminders.daysToLearn {
+                                Text(L.settingsWaterRemindSmartReady)
+                            } else {
+                                Text(L.settingsWaterRemindSmartLearning(learned, WaterReminders.daysToLearn))
+                            }
+                        }
+                    }
+                }
+
                 // MARK: OneScoop+
                 Section {
                     Button { showPaywall = true } label: {
@@ -263,6 +332,16 @@ struct SettingsView: View {
         }
     }
 
+    /// Akıllı hatırlatma OneScoop+'a özel: Plus yoksa satın alma ekranı açılır.
+    private func setWaterReminder(_ mode: WaterReminderMode) {
+        if mode == .smart && !plus.isUnlocked {
+            showPaywall = true
+            return
+        }
+        store.updateWater { $0.reminderMode = mode }
+        if mode != .off { requestPermissionIfNeeded() }
+    }
+
     private func requestPermissionIfNeeded() {
         Task {
             let status = await NotificationManager.authorizationStatus()
@@ -271,6 +350,7 @@ struct SettingsView: View {
             }
             permissionDenied = await NotificationManager.authorizationStatus() == .denied
             await NotificationManager.reschedule()
+            await WaterReminders.reschedule()
         }
     }
 }

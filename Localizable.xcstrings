@@ -1436,6 +1436,147 @@
         }
       }
     },
+    "notif.water_pace %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du liegst %@ ml hinter deinem heutigen Ziel."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're %@ ml behind today's goal."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vas %@ ml por detrás del objetivo de hoy."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous avez %@ ml de retard sur l’objectif du jour."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sei %@ ml indietro rispetto all’obiettivo di oggi."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você está %@ ml atrás da meta de hoje."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bugünkü hedefinin %@ ml gerisindesin."
+          }
+        }
+      }
+    },
+    "notif.water_simple": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zeit für etwas Wasser."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time for some water."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hora de beber agua."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "C’est l’heure de boire de l’eau."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "È ora di bere un po’ d’acqua."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hora de beber água."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir bardak su vakti."
+          }
+        }
+      }
+    },
+    "notif.water_smart %@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um diese Zeit hast du meist schon %1$@ L getrunken. Heute sind es %2$@ L."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "By now you've usually had %1$@ L. Today you're at %2$@ L."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A esta hora sueles llevar %1$@ L. Hoy vas por %2$@ L."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À cette heure, vous en êtes d’habitude à %1$@ L. Aujourd’hui : %2$@ L."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A quest’ora di solito sei a %1$@ L. Oggi sei a %2$@ L."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Até esta hora você costuma ter bebido %1$@ L. Hoje você está em %2$@ L."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Genelde bu saate kadar %1$@ L içmiş oluyorsun. Bugün %2$@ L'desin."
+          }
+        }
+      }
+    },
     "onb.daily_dose": {
       "extractionState": "manual",
       "localizations": {
@@ -2078,43 +2219,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smarte Erinnerungen nur, wenn du zurückliegst"
+            "value": "Smarte Erinnerungen, die lernen, wann du normalerweise trinkst"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Smart reminders only when you fall behind"
+            "value": "Smart reminders that learn when you usually drink"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Recordatorios inteligentes solo cuando te quedas atrás"
+            "value": "Recordatorios inteligentes que aprenden cuándo sueles beber"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rappels intelligents seulement quand vous êtes en retard"
+            "value": "Des rappels intelligents qui apprennent quand vous buvez d’habitude"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Promemoria intelligenti solo quando resti indietro"
+            "value": "Promemoria intelligenti che imparano quando bevi di solito"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Lembretes inteligentes só quando você fica para trás"
+            "value": "Lembretes inteligentes que aprendem quando você costuma beber"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sadece geride kaldığında gelen akıllı hatırlatmalar"
+            "value": "Su içme düzenini öğrenen akıllı hatırlatmalar"
           }
         }
       }
@@ -4368,6 +4509,100 @@
         }
       }
     },
+    "settings.water_day_end": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tagesende"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day ends"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El día termina"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fin de journée"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fine giornata"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fim do dia"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gün bitişi"
+          }
+        }
+      }
+    },
+    "settings.water_day_start": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tagesbeginn"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day starts"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "El día empieza"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Début de journée"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inizio giornata"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Início do dia"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gün başlangıcı"
+          }
+        }
+      }
+    },
     "settings.water_default": {
       "extractionState": "manual",
       "localizations": {
@@ -4411,6 +4646,125 @@
           "stringUnit": {
             "state": "translated",
             "value": "Varsayılan kap"
+          }
+        }
+      }
+    },
+    "settings.water_every %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Alle %lld Stunde"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Alle %lld Stunden"
+                }
+              }
+            }
+          }
+        },
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every %lld hour"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Every %lld hours"
+                }
+              }
+            }
+          }
+        },
+        "es": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Cada %lld hora"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Cada %lld horas"
+                }
+              }
+            }
+          }
+        },
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Toutes les %lld heure"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Toutes les %lld heures"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ogni %lld ora"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Ogni %lld ore"
+                }
+              }
+            }
+          }
+        },
+        "pt-BR": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "A cada %lld hora"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "A cada %lld horas"
+                }
+              }
+            }
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld saatte bir"
           }
         }
       }
@@ -4505,6 +4859,382 @@
           "stringUnit": {
             "state": "translated",
             "value": "Günlük hedef"
+          }
+        }
+      }
+    },
+    "settings.water_remind_off": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aus"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desactivados"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactivés"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disattivati"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desativados"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kapalı"
+          }
+        }
+      }
+    },
+    "settings.water_remind_off_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keine Wasser-Erinnerungen."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No water reminders."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No recibirás recordatorios de agua."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun rappel d’eau."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun promemoria per l’acqua."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum lembrete de água."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su için hatırlatma gelmez."
+          }
+        }
+      }
+    },
+    "settings.water_remind_simple": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Einfach"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simple"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simples"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simples"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semplici"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Simples"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Basit"
+          }
+        }
+      }
+    },
+    "settings.water_remind_simple_footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Erinnerung in festen Abständen über den Tag. Sie hören auf, sobald du dein Ziel erreichst."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A reminder at a fixed interval during your day. They stop once you reach your goal."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un recordatorio a intervalos fijos durante tu día. Se detienen al alcanzar tu objetivo."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un rappel à intervalle fixe pendant la journée. Ils s’arrêtent une fois l’objectif atteint."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un promemoria a intervalli fissi durante la giornata. Si fermano quando raggiungi l’obiettivo."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um lembrete em intervalos fixos durante o dia. Eles param quando você atinge a meta."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gün içinde sabit aralıklarla hatırlatır. Hedefe ulaşınca susar."
+          }
+        }
+      }
+    },
+    "settings.water_remind_smart": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart (OneScoop+)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart (OneScoop+)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inteligentes (OneScoop+)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intelligents (OneScoop+)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Intelligenti (OneScoop+)"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inteligentes (OneScoop+)"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Akıllı (OneScoop+)"
+          }
+        }
+      }
+    },
+    "settings.water_remind_smart_learning %lld %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deine Routine wird gelernt: %1$lld von %2$lld Tagen. Bis dahin richten sich die Erinnerungen nach deinem Tagesziel."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Learning your routine: %1$lld of %2$lld days. Until then, reminders follow your daily goal."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aprendiendo tu rutina: %1$lld de %2$lld días. Mientras tanto, los recordatorios siguen tu objetivo diario."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apprentissage de votre rythme : %1$lld jour(s) sur %2$lld. D’ici là, les rappels suivent votre objectif quotidien."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sto imparando la tua routine: %1$lld di %2$lld giorni. Fino ad allora i promemoria seguono l’obiettivo giornaliero."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aprendendo sua rotina: %1$lld de %2$lld dias. Até lá, os lembretes seguem sua meta diária."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Düzenin öğreniliyor: %1$lld/%2$lld gün. O zamana kadar günlük hedefine göre hatırlatır."
+          }
+        }
+      }
+    },
+    "settings.water_remind_smart_ready": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop weiß jetzt, wann du normalerweise trinkst. Du wirst nur erinnert, wenn du deutlich hinter deiner eigenen Routine liegst."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop has learned when you usually drink. You only get a reminder when you're clearly behind your own routine."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop ya sabe cuándo sueles beber. Solo te avisa cuando vas claramente por detrás de tu propia rutina."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop a appris quand vous buvez d’habitude. Vous n’êtes rappelé que si vous êtes nettement en retard sur votre propre rythme."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop ha imparato quando bevi di solito. Ti avvisa solo quando sei chiaramente indietro rispetto alla tua routine."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O OneScoop já aprendeu quando você costuma beber. Você só recebe um lembrete quando está claramente atrás da sua própria rotina."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OneScoop genelde ne zaman su içtiğini öğrendi. Sadece kendi düzeninin belirgin gerisinde kaldığında hatırlatır."
+          }
+        }
+      }
+    },
+    "settings.water_reminders": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wasser-Erinnerungen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Water reminders"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recordatorios de agua"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rappels d’eau"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Promemoria acqua"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lembretes de água"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Su hatırlatmaları"
           }
         }
       }

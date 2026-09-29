@@ -29,13 +29,22 @@ struct WaterSettings: Codable, Equatable {
     /// 2.0'ın "Yeni: Su" tanıtımı bir kez gösterilsin.
     var hasSeenIntro: Bool = false
 
+    // Hatırlatmalar (WaterReminders.swift)
+    var reminderMode: WaterReminderMode = .off
+    var wakeHour: Int = 8
+    var sleepHour: Int = 22
+    var simpleIntervalHours: Int = 2
+
     static let `default` = WaterSettings()
 
     var defaultCup: WaterCup {
         cups.first { $0.id == defaultCupID } ?? cups.first ?? WaterCup.defaults[0]
     }
 
-    enum CodingKeys: String, CodingKey { case enabled, goalMl, cups, defaultCupID, hasSeenIntro }
+    enum CodingKeys: String, CodingKey {
+        case enabled, goalMl, cups, defaultCupID, hasSeenIntro
+        case reminderMode, wakeHour, sleepHour, simpleIntervalHours
+    }
 
     init() {}
 
@@ -47,6 +56,10 @@ struct WaterSettings: Codable, Equatable {
         cups = try c.decodeIfPresent([WaterCup].self, forKey: .cups) ?? d.cups
         defaultCupID = try c.decodeIfPresent(UUID.self, forKey: .defaultCupID)
         hasSeenIntro = try c.decodeIfPresent(Bool.self, forKey: .hasSeenIntro) ?? d.hasSeenIntro
+        reminderMode = try c.decodeIfPresent(WaterReminderMode.self, forKey: .reminderMode) ?? d.reminderMode
+        wakeHour = try c.decodeIfPresent(Int.self, forKey: .wakeHour) ?? d.wakeHour
+        sleepHour = try c.decodeIfPresent(Int.self, forKey: .sleepHour) ?? d.sleepHour
+        simpleIntervalHours = try c.decodeIfPresent(Int.self, forKey: .simpleIntervalHours) ?? d.simpleIntervalHours
     }
 }
 
@@ -126,20 +139,6 @@ enum WaterData {
     static func resetAll() {
         AppGroup.defaults.removeObject(forKey: logKey)
         AppGroup.defaults.removeObject(forKey: settingsKey)
-    }
-
-    // MARK: Tempo
-
-    /// Gün içinde şu ana kadar içilmiş olması "beklenen" miktar: 08:00–22:00
-    /// arasına düz çizgi. Uyanış/uyku saati ayarı sonraki adımda gelecek.
-    static func expectedByNow(goal: Int, now: Date = Date()) -> Int {
-        let cal = DayKey.calendar
-        let start = cal.date(bySettingHour: 8, minute: 0, second: 0, of: now) ?? now
-        let end = cal.date(bySettingHour: 22, minute: 0, second: 0, of: now) ?? now
-        guard now > start else { return 0 }
-        guard now < end else { return goal }
-        let f = now.timeIntervalSince(start) / end.timeIntervalSince(start)
-        return Int(Double(goal) * f)
     }
 }
 

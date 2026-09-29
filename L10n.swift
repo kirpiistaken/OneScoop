@@ -24,6 +24,9 @@ enum L {
     static var notifFirst: String { String(localized: "notif.first") }
     static var notifLogIt: String { String(localized: "notif.log_it") }
     static var notifRepeat: String { String(localized: "notif.repeat") }
+    static func notifWaterPace(_ a0: String) -> String { String(localized: "notif.water_pace \(a0)") }
+    static var notifWaterSimple: String { String(localized: "notif.water_simple") }
+    static func notifWaterSmart(_ a0: String, _ a1: String) -> String { String(localized: "notif.water_smart \(a0) \(a1)") }
     static var onbDailyDose: String { String(localized: "onb.daily_dose") }
     static var onbDoseHint: String { String(localized: "onb.dose_hint") }
     static func onbLoadingForDays(_ a0: Int) -> String { String(localized: "onb.loading_for_days \(a0)") }
@@ -80,9 +83,20 @@ enum L {
     static var settingsWater: String { String(localized: "settings.water") }
     static var settingsWaterCups: String { String(localized: "settings.water_cups") }
     static var settingsWaterCupsFooter: String { String(localized: "settings.water_cups_footer") }
+    static var settingsWaterDayEnd: String { String(localized: "settings.water_day_end") }
+    static var settingsWaterDayStart: String { String(localized: "settings.water_day_start") }
     static var settingsWaterDefault: String { String(localized: "settings.water_default") }
+    static func settingsWaterEvery(_ a0: Int) -> String { String(localized: "settings.water_every \(a0)") }
     static var settingsWaterFooter: String { String(localized: "settings.water_footer") }
     static var settingsWaterGoal: String { String(localized: "settings.water_goal") }
+    static var settingsWaterRemindOff: String { String(localized: "settings.water_remind_off") }
+    static var settingsWaterRemindOffFooter: String { String(localized: "settings.water_remind_off_footer") }
+    static var settingsWaterRemindSimple: String { String(localized: "settings.water_remind_simple") }
+    static var settingsWaterRemindSimpleFooter: String { String(localized: "settings.water_remind_simple_footer") }
+    static var settingsWaterRemindSmart: String { String(localized: "settings.water_remind_smart") }
+    static func settingsWaterRemindSmartLearning(_ a0: Int, _ a1: Int) -> String { String(localized: "settings.water_remind_smart_learning \(a0) \(a1)") }
+    static var settingsWaterRemindSmartReady: String { String(localized: "settings.water_remind_smart_ready") }
+    static var settingsWaterReminders: String { String(localized: "settings.water_reminders") }
     static var settingsWaterToggle: String { String(localized: "settings.water_toggle") }
     static var settingsWidget: String { String(localized: "settings.widget") }
     static var settingsWidgetHelp: String { String(localized: "settings.widget_help") }

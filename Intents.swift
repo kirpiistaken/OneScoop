@@ -53,6 +53,7 @@ struct AddWaterIntent: AppIntent {
         guard settings.enabled, PlusAccess.isUnlocked else { return .result() }
         WaterData.add(ml: ml > 0 ? ml : settings.defaultCup.ml)
         IntentRefresh.all()
+        await WaterReminders.reschedule()
         return .result()
     }
 }
@@ -66,6 +67,7 @@ struct UndoLastWaterIntent: AppIntent {
     func perform() async throws -> some IntentResult {
         WaterData.removeLatestToday()
         IntentRefresh.all()
+        await WaterReminders.reschedule()
         return .result()
     }
 }

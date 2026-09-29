@@ -162,6 +162,7 @@ final class CreatineStore: ObservableObject {
         let entry = WaterData.add(ml: ml)
         waterToday = WaterData.entries()
         IntentRefresh.all()
+        Task { await WaterReminders.reschedule() }
         return entry
     }
 
@@ -175,6 +176,7 @@ final class CreatineStore: ObservableObject {
         WaterData.remove(id)
         waterToday = WaterData.entries()
         IntentRefresh.all()
+        Task { await WaterReminders.reschedule() }
     }
 
     func updateWater(_ transform: (inout WaterSettings) -> Void) {
@@ -183,6 +185,8 @@ final class CreatineStore: ObservableObject {
         water = copy
         WaterData.saveSettings(copy)
         IntentRefresh.all()
+        NotificationManager.registerCategories()   // "+250 ml" düğmesi varsayılan kabı izlesin
+        Task { await WaterReminders.reschedule() }
     }
 
     private func syncSideEffects() {
