@@ -105,7 +105,8 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        # Sadece dahili test (sen). Harici beta incelemesine gönderme.
-        submit_to_testflight: false
+        # Main'deki gibi TestFlight'a gönder; kapalıyken Codemagic sadece
+        # yüklüyor, post-processing çalışmıyor ve build TestFlight'a düşmüyor.
+        submit_to_testflight: true
         submit_to_app_store: false
       email: *email
