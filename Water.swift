@@ -8,22 +8,11 @@ import Foundation
 struct WaterCup: Codable, Equatable, Identifiable, Hashable {
     enum Kind: String, Codable, CaseIterable {
         case glass, shaker, bottle
-
-        var symbol: String {
-            switch self {
-            case .glass: "cup.and.saucer.fill"
-            case .shaker: "takeoutbag.and.cup.and.straw.fill"
-            case .bottle: "waterbottle.fill"
-            }
-        }
     }
 
     var id: UUID = UUID()
     var kind: Kind
     var ml: Int
-
-    /// Büyük kaplarda "ne kadarını içtin?" (¼, ½, ¾, tamamı) seçeneği çıkıyor.
-    var offersPortions: Bool { ml >= 500 }
 
     static let defaults: [WaterCup] = [
         WaterCup(kind: .glass, ml: 250),

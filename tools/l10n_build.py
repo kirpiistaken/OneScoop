@@ -447,9 +447,6 @@ add("complication.description",
 # ── 2.0: Su ───────────────────────────────────────────────
 add("common.done", "Done", "Bitti", "Listo", "Fertig", "OK", "Fine", "OK")
 add("water.title", "Water", "Su", "Agua", "Wasser", "Eau", "Acqua", "Água")
-add("water.added %@",
-    "+%@ ml · Undo", "+%@ ml · Geri al", "+%@ ml · Deshacer", "+%@ ml · Widerrufen",
-    "+%@ ml · Annuler", "+%@ ml · Annulla", "+%@ ml · Desfazer")
 add("water.goal_reached",
     "Goal reached", "Hedefe ulaştın", "Objetivo cumplido", "Ziel erreicht",
     "Objectif atteint", "Obiettivo raggiunto", "Meta atingida")
@@ -460,7 +457,6 @@ add("water.pace_behind %@",
     "%@ ml behind your pace", "Temponun %@ ml gerisindesin", "%@ ml por detrás de tu ritmo",
     "%@ ml hinter deinem Plan", "%@ ml de retard sur votre rythme",
     "%@ ml indietro rispetto al ritmo", "%@ ml atrás do seu ritmo")
-add("water.full", "Full", "Tamamı", "Entera", "Ganz", "En entier", "Intera", "Inteira")
 add("water.cup.glass", "Glass", "Bardak", "Vaso", "Glas", "Verre", "Bicchiere", "Copo")
 add("water.cup.shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Coqueteleira")
 add("water.cup.bottle", "Bottle", "Şişe", "Botella", "Flasche", "Gourde", "Borraccia", "Garrafa")
@@ -587,13 +583,13 @@ add("settings.water_footer",
 add("settings.water_cups", "Your cups", "Kapların", "Tus vasos", "Deine Gefäße",
     "Vos contenants", "I tuoi contenitori", "Seus copos")
 add("settings.water_cups_footer",
-    "Set each one to its real size. Cups of 500 ml or more let you log a portion.",
-    "Her birini gerçek hacmine ayarla. 500 ml ve üstü kaplarda bir kısmını da girebilirsin.",
-    "Ajusta cada uno a su tamaño real. En los de 500 ml o más puedes registrar una parte.",
-    "Stell jedes auf seine echte Größe ein. Ab 500 ml kannst du auch einen Teil eintragen.",
-    "Réglez chacun sur sa taille réelle. À partir de 500 ml, vous pouvez noter une partie.",
-    "Imposta ognuno sulla sua capienza reale. Da 500 ml in su puoi registrarne una parte.",
-    "Ajuste cada um ao tamanho real. Nos de 500 ml ou mais dá para registrar uma parte.")
+    "Set each one to its real size. They appear as buttons on the Today tab.",
+    "Her birini gerçek hacmine ayarla. Bugün sekmesinde buton olarak görünürler.",
+    "Ajusta cada uno a su tamaño real. Aparecen como botones en la pestaña Hoy.",
+    "Stell jedes auf seine echte Größe ein. Sie erscheinen als Tasten im Tab „Heute“.",
+    "Réglez chacun sur sa taille réelle. Ils apparaissent comme boutons dans l’onglet Aujourd’hui.",
+    "Imposta ognuno sulla sua capienza reale. Compaiono come pulsanti nella scheda Oggi.",
+    "Ajuste cada um ao tamanho real. Eles aparecem como botões na aba Hoje.")
 
 add("widget.water_name", "Water", "Su", "Agua", "Wasser", "Eau", "Acqua", "Água")
 add("widget.water_desc",

@@ -34,6 +34,10 @@ enum CT {
     static let accent    = Color.adaptive(light: 0x2F5BEA, dark: 0x5C86FF)
     static let accentSoft = Color.adaptive(light: 0xDCE4FD, dark: 0x22304F)
 
+    /// OneScoop+ için: küçük taç ve rozetlerde, başka yerde kullanılmıyor.
+    static let gold      = Color.adaptive(light: 0xD19A08, dark: 0xF4C542)
+    static let goldSoft  = Color.adaptive(light: 0xFBF0D2, dark: 0x3A3016)
+
     static let loading   = Color.adaptive(light: 0xC98A2B, dark: 0xE0A44A)
     static let loadingSoft = Color.adaptive(light: 0xF6E7CC, dark: 0x3A2E1B)
 

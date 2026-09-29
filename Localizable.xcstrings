@@ -4280,43 +4280,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stell jedes auf seine echte Größe ein. Ab 500 ml kannst du auch einen Teil eintragen."
+            "value": "Stell jedes auf seine echte Größe ein. Sie erscheinen als Tasten im Tab „Heute“."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Set each one to its real size. Cups of 500 ml or more let you log a portion."
+            "value": "Set each one to its real size. They appear as buttons on the Today tab."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ajusta cada uno a su tamaño real. En los de 500 ml o más puedes registrar una parte."
+            "value": "Ajusta cada uno a su tamaño real. Aparecen como botones en la pestaña Hoy."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Réglez chacun sur sa taille réelle. À partir de 500 ml, vous pouvez noter une partie."
+            "value": "Réglez chacun sur sa taille réelle. Ils apparaissent comme boutons dans l’onglet Aujourd’hui."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Imposta ognuno sulla sua capienza reale. Da 500 ml in su puoi registrarne una parte."
+            "value": "Imposta ognuno sulla sua capienza reale. Compaiono come pulsanti nella scheda Oggi."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ajuste cada um ao tamanho real. Nos de 500 ml ou mais dá para registrar uma parte."
+            "value": "Ajuste cada um ao tamanho real. Eles aparecem como botões na aba Hoje."
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Her birini gerçek hacmine ayarla. 500 ml ve üstü kaplarda bir kısmını da girebilirsin."
+            "value": "Her birini gerçek hacmine ayarla. Bugün sekmesinde buton olarak görünürler."
           }
         }
       }
@@ -6464,53 +6464,6 @@
         }
       }
     },
-    "water.added %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%@ ml · Widerrufen"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%@ ml · Undo"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%@ ml · Deshacer"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%@ ml · Annuler"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%@ ml · Annulla"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%@ ml · Desfazer"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "+%@ ml · Geri al"
-          }
-        }
-      }
-    },
     "water.bridge %@": {
       "extractionState": "manual",
       "localizations": {
@@ -6742,53 +6695,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sil"
-          }
-        }
-      }
-    },
-    "water.full": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ganz"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Full"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Entera"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "En entier"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Intera"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inteira"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tamamı"
           }
         }
       }

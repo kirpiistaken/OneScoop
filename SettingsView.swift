@@ -179,7 +179,11 @@ struct SettingsView: View {
                                 set: { new in store.updateWater { $0.cups[index].ml = new } }
                             ), in: 100...1500, step: 50) {
                                 HStack {
-                                    Label(cup.kind.title, systemImage: cup.kind.symbol)
+                                    Label {
+                                        Text(cup.kind.title)
+                                    } icon: {
+                                        CupIcon(kind: cup.kind).fill(CT.accent).frame(width: 20, height: 20)
+                                    }
                                     Spacer()
                                     Text(verbatim: "\(cup.ml) ml")
                                         .foregroundStyle(CT.inkSoft)
@@ -201,7 +205,7 @@ struct SettingsView: View {
                             Label {
                                 Text(verbatim: "OneScoop+").foregroundStyle(CT.ink)
                             } icon: {
-                                Image(systemName: "plus.circle.fill").foregroundStyle(CT.accent)
+                                Image(systemName: "crown.fill").foregroundStyle(CT.gold)
                             }
                             Spacer()
                             if plus.purchased {

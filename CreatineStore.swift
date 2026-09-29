@@ -172,6 +172,12 @@ final class CreatineStore: ObservableObject {
         return entry
     }
 
+    /// En son girilen suyu siler. Art arda basılınca sırayla geri gider.
+    func undoLastWater() {
+        guard let last = waterToday.max(by: { $0.at < $1.at }) else { return }
+        removeWater(last.id)
+    }
+
     func removeWater(_ id: UUID) {
         WaterData.remove(id)
         waterToday = WaterData.entries()

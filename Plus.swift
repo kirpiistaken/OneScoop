@@ -85,9 +85,7 @@ struct PaywallView: View {
                     }
 
                 VStack(spacing: 8) {
-                    Text(verbatim: "OneScoop+")
-                        .font(CT.display(34, .heavy))
-                        .foregroundStyle(CT.ink)
+                    PlusWordmark(size: 34)
                     Text(L.plusHeadline)
                         .font(.system(.title3, design: .rounded).weight(.medium))
                         .foregroundStyle(CT.inkSoft)
@@ -134,9 +132,11 @@ struct PaywallView: View {
     private var buySection: some View {
         VStack(spacing: 12) {
             VStack(spacing: 2) {
-                Text(verbatim: plus.product?.displayPrice ?? "—")
-                    .font(CT.display(34, .heavy))
-                    .foregroundStyle(CT.ink)
+                if let price = plus.product?.displayPrice {
+                    Text(verbatim: price)
+                        .font(CT.display(34, .heavy))
+                        .foregroundStyle(CT.ink)
+                }
                 Text(L.plusNoSubscription)
                     .font(.system(.footnote, design: .rounded).weight(.semibold))
                     .foregroundStyle(CT.inkSoft)
@@ -192,5 +192,25 @@ struct PaywallView: View {
                 .foregroundStyle(CT.ink)
                 .fixedSize(horizontal: false, vertical: true)
         }
+    }
+}
+
+/// "OneScoop+" yazısı ve sağ üstünde küçük sarı taç.
+struct PlusWordmark: View {
+    var size: CGFloat
+
+    var body: some View {
+        HStack(alignment: .top, spacing: size * 0.12) {
+            Text(verbatim: "OneScoop+")
+                .font(CT.display(size, .heavy))
+                .foregroundStyle(CT.ink)
+            Image(systemName: "crown.fill")
+                .font(.system(size: size * 0.42, weight: .bold))
+                .foregroundStyle(CT.gold)
+                .padding(size * 0.14)
+                .background(CT.goldSoft, in: Circle())
+                .offset(y: -size * 0.08)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
