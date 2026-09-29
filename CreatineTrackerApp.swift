@@ -17,6 +17,9 @@ struct CreatineTrackerApp: App {
         // Saat komutları uygulama kapalıyken de gelebilir; en başta dinlemeye başla.
         PhoneWatchBridge.shared.activate()
 
+        // Sağlık'a başka uygulamadan su/antrenman gelince arka planda haber al.
+        HealthSync.startObserving()
+
         // iCloud'dan başka bir cihazın değişikliği gelince ekranı yenile.
         CloudSync.start {
             Task { @MainActor in CreatineStore.shared.applyRemoteChange() }

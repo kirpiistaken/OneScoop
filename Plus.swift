@@ -13,7 +13,7 @@ final class PlusStore: ObservableObject {
     @Published private(set) var purchased = false
     @Published private(set) var isWorking = false
     /// TestFlight / sandbox'ta çalışıyor mu (test satın alması sadece orada).
-    @Published private(set) var isTestBuild = PlusAccess.isTestBuild
+    @Published private(set) var isTestBuild = BuildFlags.testPurchaseEnabled && PlusAccess.isTestBuild
     @Published private(set) var simulated = PlusAccess.isSimulated
 
     var isUnlocked: Bool { purchased || (isTestBuild && simulated) }
@@ -74,8 +74,9 @@ final class PlusStore: ObservableObject {
             // AppTransaction alınamazsa eski yöntem: TestFlight'ta fiş adı böyle.
             test = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
         }
-        isTestBuild = test
-        PlusAccess.setTestBuild(test)
+        // Test satın alması sadece dev build'lerinde (BuildFlags); main/review'da hiç yok.
+        isTestBuild = BuildFlags.testPurchaseEnabled && test
+        PlusAccess.setTestBuild(isTestBuild)
         simulated = PlusAccess.isSimulated
     }
 

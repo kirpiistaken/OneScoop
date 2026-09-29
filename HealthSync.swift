@@ -51,6 +51,46 @@ enum HealthSync {
         await refreshWorkoutDays()
     }
 
+    // MARK: - Arka planda haber alma
+
+    private static var observing = false
+
+    /// Başka bir uygulama (ya da Apple Watch) Sağlık'a su veya antrenman
+    /// yazınca iOS uygulamayı arka planda uyandırıyor: bugünkü toplam, widget'lar,
+    /// saat ve hatırlatmalar güncelleniyor. Uygulama açılışında (App.init) ve
+    /// Sağlık açılınca çağrılıyor; iOS'un uyandırması için açılışta kurulmalı.
+    static func startObserving() {
+        guard isActive, !observing else { return }
+        observing = true
+
+        var types: [HKSampleType] = [waterType]
+        if WaterData.loadSettings().workoutBoostEnabled { types.append(HKObjectType.workoutType()) }
+
+        for type in types {
+            let query = HKObserverQuery(sampleType: type, predicate: nil) { _, completion, error in
+                guard error == nil, isActive else { completion(); return }
+                Task {
+                    await refreshFromHealth()
+                    await refreshWorkoutDays()
+                    IntentRefresh.all()
+                    await WaterReminders.reschedule()
+                    await MainActor.run {
+                        CreatineStore.shared.reload()
+                        PhoneWatchBridge.shared.pushStatus()
+                    }
+                    completion()
+                }
+            }
+            store.execute(query)
+            store.enableBackgroundDelivery(for: type, frequency: .immediate) { _, _ in }
+        }
+    }
+
+    /// Sağlık kapatılınca arka planda uyandırmayı durdur.
+    static func stopObserving() {
+        store.disableAllBackgroundDelivery { _, _ in }
+    }
+
     // MARK: - Antrenmanlar
 
     /// Son 180 günde Sağlık'ta antrenman olan günler (herhangi bir uygulamadan,

@@ -22,6 +22,15 @@ definitions:
     - name: XcodeGen kur
       script: brew install xcodegen
 
+    # dev dalı: TestFlight'ta ödemesiz test satın alması açık (BuildFlags.swift).
+    # main dalı (review'a giden) bu adımı atlıyor: sadece gerçek satın alma.
+    - name: Dev build ayarları
+      script: |
+        if [ "$CM_BRANCH" = "dev" ]; then
+          sed -i '' 's/testPurchaseEnabled = false/testPurchaseEnabled = true/' BuildFlags.swift
+          grep -q "testPurchaseEnabled = true" BuildFlags.swift
+        fi
+
     - name: Xcode projesini üret
       script: xcodegen generate --spec project.yml
 

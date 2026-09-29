@@ -102,6 +102,9 @@ enum WaterData {
     private static let healthSyncedKey = "ct.water.healthSynced.v1"
     /// Sağlık'ta antrenman olan günler (son 180 gün).
     private static let workoutDaysKey = "ct.water.workoutDays.v1"
+    /// iCloud için: silinen su kayıtları (kimlik → silinme anı) ve ayar zamanı.
+    private static let tombKey = "ct.water.tombstones.v1"
+    private static let settingsAtKey = "ct.water.settings.updatedAt"
 
     private static let encoder = JSONEncoder()
     private static let decoder = JSONDecoder()
@@ -114,9 +117,36 @@ enum WaterData {
         return s
     }
 
-    static func saveSettings(_ s: WaterSettings) {
+    static func saveSettings(_ s: WaterSettings, updatedAt: Date = Date()) {
         guard let data = try? encoder.encode(s) else { return }
         AppGroup.defaults.set(data, forKey: settingsKey)
+        AppGroup.defaults.set(updatedAt, forKey: settingsAtKey)
+    }
+
+    static var settingsUpdatedAt: Date? {
+        AppGroup.defaults.object(forKey: settingsAtKey) as? Date
+    }
+
+    static var hasStoredSettings: Bool {
+        AppGroup.defaults.data(forKey: settingsKey) != nil
+    }
+
+    // MARK: iCloud yardımcıları
+
+    static func loadTombstones() -> [String: Date] {
+        guard let data = AppGroup.defaults.data(forKey: tombKey),
+              let t = try? decoder.decode([String: Date].self, from: data) else { return [:] }
+        return t
+    }
+
+    static func saveTombstones(_ t: [String: Date]) {
+        guard let data = try? encoder.encode(t) else { return }
+        AppGroup.defaults.set(data, forKey: tombKey)
+    }
+
+    /// iCloud birleştirmesinin sonucunu yazmak için.
+    static func replaceLog(_ log: [String: [WaterEntry]]) {
+        saveLog(log)
     }
 
     // MARK: Kayıt
@@ -215,6 +245,11 @@ enum WaterData {
     }
 
     static func remove(_ id: UUID) {
+        // Diğer cihazlar bu kaydı iCloud'dan geri getirmesin.
+        var tomb = loadTombstones()
+        tomb[id.uuidString] = Date()
+        saveTombstones(tomb)
+
         var log = loadLog()
         for (day, list) in log where list.contains(where: { $0.id == id }) {
             let rest = list.filter { $0.id != id }
@@ -230,10 +265,16 @@ enum WaterData {
     }
 
     static func resetAll() {
-        AppGroup.defaults.removeObject(forKey: logKey)
-        AppGroup.defaults.removeObject(forKey: settingsKey)
+        // Silinen her kayıt için iz bırak: iCloud açıkken diğer cihazlar geri getirmesin.
+        let now = Date()
+        var tomb = loadTombstones()
+        for e in loadLog().values.flatMap({ $0 }) { tomb[e.id.uuidString] = now }
+        saveTombstones(tomb)
+        saveLog([:])
+        saveSettings(.default, updatedAt: now)
         AppGroup.defaults.removeObject(forKey: healthKey)
         AppGroup.defaults.removeObject(forKey: healthSyncedKey)
+        AppGroup.defaults.removeObject(forKey: workoutDaysKey)
         // Sağlık'a daha önce yazılmış sular orada kalır; o veri kullanıcının
         // Sağlık kaydı, oradan Sağlık uygulamasıyla silinebilir.
     }
@@ -255,7 +296,9 @@ enum PlusAccess {
     }
 
     static var isTestBuild: Bool { AppGroup.defaults.bool(forKey: testBuildKey) }
-    static var isSimulated: Bool { isTestBuild && AppGroup.defaults.bool(forKey: simulatedKey) }
+    static var isSimulated: Bool {
+        BuildFlags.testPurchaseEnabled && isTestBuild && AppGroup.defaults.bool(forKey: simulatedKey)
+    }
 
     static func setPurchased(_ value: Bool) { AppGroup.defaults.set(value, forKey: purchasedKey) }
     static func setSimulated(_ value: Bool) { AppGroup.defaults.set(value, forKey: simulatedKey) }

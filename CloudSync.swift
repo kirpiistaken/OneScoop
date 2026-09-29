@@ -11,6 +11,10 @@ import Foundation
 /// - Günlük kayıtlar: her gün için en son olay kazanır. Olay ya bir kayıt
 ///   (takenAt) ya da bir geri alma (tombstone) olabilir.
 /// - Ayarlar: en son değiştirilen kazanır (settings.updatedAt).
+/// - Su (2.0): her su kaydı kimliğiyle birleştirilir; silinen kaydın izi
+///   (tombstone) onu geri getirmeyi engeller. Su ayarları en son değiştirilen
+///   kazanır; Apple Sağlık ve antrenman ayarları cihaza özel, senkronlanmıyor.
+///   Sağlık'tan gelen kayıtlar iCloud'a gitmiyor (her cihaz Sağlık'tan okuyor).
 enum CloudSync {
 
     private static let logKey = "ct.log.v1"
@@ -18,6 +22,14 @@ enum CloudSync {
     private static let settingsKey = "ct.settings.v1"
     private static let settingsAtKey = "ct.settings.updatedAt"
     private static let enabledKey = "ct.icloud.enabled"
+
+    // 2.0 — Su. Kayıtlar yer kaplamasın diye "kimlik|zaman|ml" satırları olarak;
+    // iCloud anahtar-değer deposu toplamda 1 MB. Son 3 yıl iCloud'da tutuluyor.
+    private static let waterLogKey = "ct.water.log.v1"
+    private static let waterTombKey = "ct.water.tombstones.v1"
+    private static let waterSettingsKey = "ct.water.settings.v1"
+    private static let waterSettingsAtKey = "ct.water.settings.updatedAt"
+    private static let waterCloudLifetime: TimeInterval = 3 * 365 * 24 * 3600
 
     /// Güncellemeden önceki sürümlerde kaydedilmiş ayarların zaman damgası yok.
     /// Onlara eski bir tarih veriyoruz: iCloud boşsa yüklenirler, başka bir
@@ -111,8 +123,92 @@ enum CloudSync {
             kv.set(localAt, forKey: settingsAtKey)
         }
 
+        if syncWater() { localChanged = true }
+
         kv.synchronize()
         return localChanged
+    }
+
+    // MARK: - Su (2.0)
+
+    private static func syncWater() -> Bool {
+        var changed = false
+        let now = Date()
+
+        // --- Kayıtlar
+        let remoteEntries = decodeWater(kv.data(forKey: waterLogKey))
+        let remoteTomb = decode([String: Date].self, kv.data(forKey: waterTombKey)) ?? [:]
+        let localLog = WaterData.loadLog()
+        let localEntries = localLog.values.flatMap { $0 }
+        let localTomb = WaterData.loadTombstones()
+
+        var tomb = localTomb
+        for (id, date) in remoteTomb { tomb[id] = max(tomb[id] ?? .distantPast, date) }
+        let cutoff = now.addingTimeInterval(-tombstoneLifetime)
+        tomb = tomb.filter { $0.value > cutoff }
+
+        var byID: [String: WaterEntry] = [:]
+        for e in remoteEntries { byID[e.id.uuidString] = e }
+        for e in localEntries { byID[e.id.uuidString] = e }       // yerel kopya öncelikli
+        for id in tomb.keys { byID[id] = nil }
+
+        let mergedIDs = Set(byID.keys)
+        if mergedIDs != Set(localEntries.map(\.id.uuidString)) {
+            var log: [String: [WaterEntry]] = [:]
+            for e in byID.values { log[DayKey.key(for: e.at), default: []].append(e) }
+            WaterData.replaceLog(log)
+            changed = true
+        }
+        if tomb != localTomb { WaterData.saveTombstones(tomb) }
+
+        let cloudCutoff = now.addingTimeInterval(-waterCloudLifetime)
+        let forCloud = byID.values.filter { $0.at > cloudCutoff }
+        if Set(forCloud.map(\.id.uuidString)) != Set(remoteEntries.map(\.id.uuidString)),
+           let data = encodeWater(forCloud) {
+            kv.set(data, forKey: waterLogKey)
+        }
+        if tomb != remoteTomb, let data = encode(tomb) {
+            kv.set(data, forKey: waterTombKey)
+        }
+
+        // --- Ayarlar (en son değişen kazanır)
+        let remoteAt = kv.double(forKey: waterSettingsAtKey)
+        let localAt = WaterData.hasStoredSettings ? WaterData.settingsUpdatedAt?.timeIntervalSince1970 : nil
+
+        if let data = kv.data(forKey: waterSettingsKey),
+           var remote = decode(WaterSettings.self, data),
+           remoteAt > (localAt ?? 0) {
+            // Sağlık izni cihaza özel: bu cihazdaki tercih kalsın.
+            let local = WaterData.loadSettings()
+            remote.healthEnabled = local.healthEnabled
+            remote.workoutBoostEnabled = local.workoutBoostEnabled
+            WaterData.saveSettings(remote, updatedAt: Date(timeIntervalSince1970: remoteAt))
+            changed = true
+        } else if let localAt, localAt > remoteAt,
+                  let data = encode(WaterData.loadSettings()) {
+            kv.set(data, forKey: waterSettingsKey)
+            kv.set(localAt, forKey: waterSettingsAtKey)
+        }
+
+        return changed
+    }
+
+    /// "UUID|saniye|ml" satırları.
+    private static func encodeWater(_ entries: [WaterEntry]) -> Data? {
+        let lines = entries.map { "\($0.id.uuidString)|\(Int($0.at.timeIntervalSince1970))|\($0.ml)" }
+        return encode(lines)
+    }
+
+    private static func decodeWater(_ data: Data?) -> [WaterEntry] {
+        guard let lines = decode([String].self, data) else { return [] }
+        return lines.compactMap { line in
+            let parts = line.split(separator: "|")
+            guard parts.count == 3,
+                  let id = UUID(uuidString: String(parts[0])),
+                  let t = Double(parts[1]),
+                  let ml = Int(parts[2]) else { return nil }
+            return WaterEntry(id: id, ml: ml, at: Date(timeIntervalSince1970: t))
+        }
     }
 
     // MARK: - Birleştirme

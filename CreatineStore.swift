@@ -160,6 +160,7 @@ final class CreatineStore: ObservableObject {
     @discardableResult
     func addWater(_ ml: Int) -> WaterEntry {
         let entry = WaterData.add(ml: ml)
+        CloudSync.sync()
         waterToday = WaterData.entries()
         IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
@@ -185,8 +186,10 @@ final class CreatineStore: ObservableObject {
         updateWater { $0.healthEnabled = on }
         if on {
             await HealthSync.syncAll()
+            HealthSync.startObserving()
         } else {
             HealthSync.forgetHealthCopy()
+            HealthSync.stopObserving()
         }
         waterToday = WaterData.entries()
         IntentRefresh.all()
@@ -216,6 +219,7 @@ final class CreatineStore: ObservableObject {
 
     func removeWater(_ id: UUID) {
         WaterData.remove(id)
+        CloudSync.sync()
         waterToday = WaterData.entries()
         IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
@@ -230,6 +234,7 @@ final class CreatineStore: ObservableObject {
         transform(&copy)
         water = copy
         WaterData.saveSettings(copy)
+        CloudSync.sync()
         IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
         NotificationManager.registerCategories()   // "+250 ml" düğmesi varsayılan kabı izlesin

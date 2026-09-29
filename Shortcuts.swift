@@ -2,8 +2,8 @@ import AppIntents
 
 /// Siri ve Kısayollar. Bu dosya SADECE uygulama target'ında.
 ///
-/// Kısayol kutucuklarının başlıkları çevriliyor. Sesli komut cümleleri
-/// şimdilik İngilizce: onlar ayrı bir AppShortcuts.xcstrings dosyası istiyor.
+/// Cümleler 7 dilde: AppShortcuts.xcstrings (tools/l10n_build.py üretiyor).
+/// Buradaki İngilizce cümleler o dosyadaki anahtarlarla birebir aynı olmalı.
 struct OneScoopShortcuts: AppShortcutsProvider {
 
     static var shortcutTileColor: ShortcutTileColor { .blue }
@@ -15,7 +15,6 @@ struct OneScoopShortcuts: AppShortcutsProvider {
                 "Log my creatine in \(.applicationName)",
                 "Log creatine in \(.applicationName)",
                 "I took my creatine in \(.applicationName)",
-                "Mark creatine as taken in \(.applicationName)",
                 "\(.applicationName) creatine done"
             ],
             shortTitle: "shortcut.log",

@@ -47,6 +47,7 @@ targets:
       - path: CloudSync.swift
       - path: PhoneWatchBridge.swift
       - path: WatchPayload.swift
+      - path: BuildFlags.swift
       - path: Water.swift
       - path: WaterShapes.swift
       - path: WaterGlassView.swift
@@ -57,6 +58,7 @@ targets:
       - path: Insights.swift
       - path: DataExport.swift
       - path: InfoPlist.xcstrings
+      - path: AppShortcuts.xcstrings
       - path: Plus.swift
       - path: ScoopShape.swift
       - path: Assets.xcassets
@@ -99,6 +101,7 @@ targets:
       - path: CreatineWidget.swift
       - path: LogControl.swift
       - path: ScoopShape.swift
+      - path: BuildFlags.swift
       - path: Water.swift
       - path: WaterShapes.swift
       - path: WaterGlassView.swift
@@ -123,6 +126,7 @@ targets:
       - path: L10n.swift
       - path: Localizable.xcstrings
       - path: WatchPayload.swift
+      - path: BuildFlags.swift
       - path: Water.swift
       - path: WaterShapes.swift
       - path: Watch
