@@ -802,10 +802,13 @@ add("insights.no_water",
     "Diese Woche noch kein Wasser eingetragen.", "Pas encore d’eau notée cette semaine.",
     "Nessuna acqua registrata questa settimana.", "Nenhuma água registrada nesta semana ainda.")
 add("plus.bullet_watch",
-    "Apple Watch, with the Digital Crown", "Apple Watch'ta Digital Crown ile",
-    "Apple Watch, con la Digital Crown", "Apple Watch mit Digital Crown",
-    "Apple Watch, avec la Digital Crown", "Apple Watch, con la Digital Crown",
-    "Apple Watch, com a Digital Crown")
+    "Add water from your Apple Watch",
+    "Apple Watch'tan su ekle",
+    "Añade agua desde el Apple Watch",
+    "Wasser über die Apple Watch hinzufügen",
+    "Ajoutez de l’eau depuis l’Apple Watch",
+    "Aggiungi acqua dall’Apple Watch",
+    "Adicione água pelo Apple Watch")
 add("plus.bullet_insights", "Weekly summary", "Haftalık özet", "Resumen semanal", "Wochenübersicht",
     "Résumé de la semaine", "Riepilogo settimanale", "Resumo semanal")
 add("plus.bullet_icons", "Custom app icons", "Özel uygulama ikonları", "Iconos personalizados",

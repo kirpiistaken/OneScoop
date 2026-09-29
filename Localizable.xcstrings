@@ -3112,43 +3112,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Watch mit Digital Crown"
+            "value": "Wasser über die Apple Watch hinzufügen"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Watch, with the Digital Crown"
+            "value": "Add water from your Apple Watch"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Watch, con la Digital Crown"
+            "value": "Añade agua desde el Apple Watch"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Watch, avec la Digital Crown"
+            "value": "Ajoutez de l’eau depuis l’Apple Watch"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Watch, con la Digital Crown"
+            "value": "Aggiungi acqua dall’Apple Watch"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Watch, com a Digital Crown"
+            "value": "Adicione água pelo Apple Watch"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apple Watch'ta Digital Crown ile"
+            "value": "Apple Watch'tan su ekle"
           }
         }
       }
