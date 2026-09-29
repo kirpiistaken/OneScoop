@@ -160,8 +160,11 @@ struct CreatineWidgetView: View {
     private var circularFace: some View {
         ZStack {
             AccessoryWidgetBackground()
-            Image(systemName: entry.status.isTaken ? "checkmark" : "drop.fill")
-                .font(.system(size: 20, weight: .bold))
+            // Uygulama logosundaki kepçe; alındıysa gövdesinde tik.
+            ScoopShape(check: entry.status.isTaken)
+                .fill(.primary)
+                .frame(width: 30, height: 30)
+                .widgetAccentable()
         }
     }
 }
