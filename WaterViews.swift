@@ -53,8 +53,11 @@ struct WaterCard: View {
                 ForEach(plus.isUnlocked ? store.water.cups : [store.water.defaultCup]) { cup in
                     CupButton(cup: cup) { add(cup.ml) }
                 }
+                // Ücretsizde diğer iki kap sarı ve kilitli; dokununca OneScoop+.
                 if !plus.isUnlocked {
-                    moreCupsButton
+                    ForEach(store.water.cups.filter { $0.id != store.water.defaultCup.id }) { cup in
+                        LockedCupButton(cup: cup) { showPaywall = true }
+                    }
                 }
                 Spacer(minLength: 0)
                 undoButton
@@ -64,24 +67,6 @@ struct WaterCard: View {
         .background(CT.surface, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
         .sheet(isPresented: $showEntries) { WaterEntriesSheet() }
         .sheet(isPresented: $showPaywall) { PaywallView() }
-    }
-
-    /// Ücretsizde tek kabın yanında: diğer iki kap OneScoop+ ile.
-    private var moreCupsButton: some View {
-        Button { showPaywall = true } label: {
-            VStack(spacing: 6) {
-                Image(systemName: "crown.fill")
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundStyle(CT.gold)
-                    .frame(width: 58, height: 58)
-                    .background(CT.goldSoft, in: Circle())
-                Text(verbatim: "+2")
-                    .font(.system(.caption, design: .rounded).weight(.semibold))
-                    .foregroundStyle(CT.gold)
-            }
-        }
-        .buttonStyle(PressableStyle())
-        .accessibilityLabel(Text(verbatim: "OneScoop+"))
     }
 
     private var paceText: String {
@@ -114,6 +99,30 @@ struct WaterCard: View {
         store.addWater(ml)
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         withAnimation(.easeInOut(duration: 1.2)) { wavePhase += 2 * .pi }
+    }
+}
+
+/// OneScoop+ olmadan: kap simgesi sarı, altında hacim yerine küçük taç.
+struct LockedCupButton: View {
+    var cup: WaterCup
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 6) {
+                CupIcon(kind: cup.kind)
+                    .fill(CT.gold)
+                    .frame(width: 30, height: 28)
+                    .frame(width: 58, height: 58)
+                    .background(CT.goldSoft, in: Circle())
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(CT.gold)
+                    .frame(height: 16)
+            }
+        }
+        .buttonStyle(PressableStyle())
+        .accessibilityLabel(Text(verbatim: "\(cup.kind.title), OneScoop+"))
     }
 }
 
