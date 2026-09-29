@@ -162,6 +162,7 @@ final class CreatineStore: ObservableObject {
         let entry = WaterData.add(ml: ml)
         waterToday = WaterData.entries()
         IntentRefresh.all()
+        PhoneWatchBridge.shared.pushStatus()
         Task {
             await WaterReminders.reschedule()
             await HealthSync.pushLocalChanges()
@@ -192,6 +193,17 @@ final class CreatineStore: ObservableObject {
         await WaterReminders.reschedule()
     }
 
+    /// Antrenman günü hedefi aç/kapat (Sağlık'tan antrenman okuma izni ister).
+    func setWorkoutBoost(_ on: Bool) async {
+        if on { _ = await HealthSync.requestAccess() }
+        updateWater { $0.workoutBoostEnabled = on }
+        if on { await HealthSync.refreshWorkoutDays() }
+        objectWillChange.send()
+        IntentRefresh.all()
+        PhoneWatchBridge.shared.pushStatus()
+        await WaterReminders.reschedule()
+    }
+
     /// Uygulama öne gelince: widget'tan girilenleri Sağlık'a yaz, Sağlık'taki
     /// diğer uygulamaların sularını al.
     func refreshHealth() async {
@@ -206,6 +218,7 @@ final class CreatineStore: ObservableObject {
         WaterData.remove(id)
         waterToday = WaterData.entries()
         IntentRefresh.all()
+        PhoneWatchBridge.shared.pushStatus()
         Task {
             await WaterReminders.reschedule()
             await HealthSync.pushLocalChanges()
@@ -218,6 +231,7 @@ final class CreatineStore: ObservableObject {
         water = copy
         WaterData.saveSettings(copy)
         IntentRefresh.all()
+        PhoneWatchBridge.shared.pushStatus()
         NotificationManager.registerCategories()   // "+250 ml" düğmesi varsayılan kabı izlesin
         Task { await WaterReminders.reschedule() }
     }

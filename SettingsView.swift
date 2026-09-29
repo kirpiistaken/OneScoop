@@ -5,6 +5,8 @@ struct SettingsView: View {
     @EnvironmentObject private var store: CreatineStore
     @EnvironmentObject private var plus: PlusStore
     @State private var showPaywall = false
+    @State private var showIconPicker = false
+    @State private var exportFile: ExportFile?
     @State private var reminderTime = Date()
     @State private var showResetConfirm = false
     @State private var permissionDenied = false
@@ -185,6 +187,29 @@ struct SettingsView: View {
                             }
                         }
                     }
+
+                        // Antrenman günü hedefi: Sağlık açıkken (OneScoop+).
+                        if store.water.healthEnabled && plus.isUnlocked {
+                            Toggle(isOn: Binding(
+                                get: { store.water.workoutBoostEnabled },
+                                set: { new in Task { await store.setWorkoutBoost(new) } }
+                            )) {
+                                Label(L.settingsWaterWorkout, systemImage: "figure.strengthtraining.traditional")
+                            }
+                            if store.water.workoutBoostEnabled {
+                                Stepper(value: Binding(
+                                    get: { store.water.workoutBoostMl },
+                                    set: { new in store.updateWater { $0.workoutBoostMl = new } }
+                                ), in: 250...1500, step: 250) {
+                                    HStack {
+                                        Text(L.settingsWaterWorkoutExtra)
+                                        Spacer()
+                                        Text(verbatim: "+\(store.water.workoutBoostMl) ml")
+                                            .foregroundStyle(CT.inkSoft)
+                                    }
+                                }
+                            }
+                        }
                 } header: {
                     Text(L.settingsWater)
                 } footer: {
@@ -300,6 +325,20 @@ struct SettingsView: View {
                             }
                         }
                     }
+
+                    // Uygulama ikonu: seçici herkes açabilir, klasik dışındakiler Plus.
+                    Button { showIconPicker = true } label: {
+                        plusRow(L.settingsAppIcon, symbol: "app.badge.fill", locked: false)
+                    }
+
+                    Button {
+                        guard plus.isUnlocked else { showPaywall = true; return }
+                        if let url = DataExport.makeCSV() { exportFile = ExportFile(url: url) }
+                    } label: {
+                        plusRow(L.settingsExport, symbol: "square.and.arrow.up", locked: !plus.isUnlocked)
+                    }
+                } footer: {
+                    Text(L.settingsExportFooter)
                 }
 
                 // MARK: Widget
@@ -363,11 +402,30 @@ struct SettingsView: View {
             permissionDenied = (status == .denied)
         }
         .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showIconPicker) { AppIconPicker() }
+        .sheet(item: $exportFile) { ShareSheet(url: $0.url) }
         .confirmationDialog(L.settingsResetTitle, isPresented: $showResetConfirm, titleVisibility: .visible) {
             Button(L.settingsDeleteAll, role: .destructive) { store.resetEverything() }
             Button(L.commonCancel, role: .cancel) {}
         } message: {
             Text(L.settingsResetMsg)
+        }
+    }
+
+    private func plusRow(_ title: String, symbol: String, locked: Bool) -> some View {
+        HStack {
+            Label(title, systemImage: symbol)
+                .foregroundStyle(CT.ink)
+            Spacer()
+            if locked {
+                Image(systemName: "crown.fill")
+                    .font(.caption)
+                    .foregroundStyle(CT.gold)
+            } else {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(CT.inkSoft.opacity(0.6))
+            }
         }
     }
 

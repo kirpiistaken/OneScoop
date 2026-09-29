@@ -26,7 +26,7 @@ struct WaterTimelineEntry: TimelineEntry {
         return WaterTimelineEntry(
             date: Date(),
             total: today.reduce(0) { $0 + $1.ml },
-            goal: s.goalMl,
+            goal: WaterData.goal(),
             cups: s.cups,
             defaultCup: s.defaultCup,
             hasEntries: undoable,

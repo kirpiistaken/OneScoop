@@ -30,13 +30,20 @@ final class PhoneWatchBridge: NSObject, WCSessionDelegate {
 
     static func currentPayload() -> WatchPayload {
         let status = Persistence.currentStatus()
+        let water = WaterData.loadSettings()
         return WatchPayload(
             dateKey: status.dateKey,
             isTaken: status.isTaken,
             grams: status.grams,
             streak: status.streak,
             onboarded: Persistence.loadSettings().hasCompletedOnboarding,
-            updatedAt: Date()
+            updatedAt: Date(),
+            waterEnabled: water.enabled,
+            waterTotal: WaterData.total(),
+            waterGoal: WaterData.goal(),
+            cupKinds: water.cups.map(\.kind.rawValue),
+            cupMls: water.cups.map(\.ml),
+            plus: PlusAccess.isUnlocked
         )
     }
 
@@ -53,6 +60,9 @@ final class PhoneWatchBridge: NSObject, WCSessionDelegate {
             if !Persistence.isTaken(on: date) { Persistence.markTaken(on: date) }
         case .undo:
             if Persistence.isTaken(on: date) { Persistence.undo(on: date) }
+        case .addWater, .undoWater:
+            applyWater(action, message: message, day: day)
+            return
         }
 
         IntentRefresh.all()
@@ -60,6 +70,27 @@ final class PhoneWatchBridge: NSObject, WCSessionDelegate {
             CloudSync.sync()
             CreatineStore.shared.reload()
             await NotificationManager.reschedule()
+        }
+    }
+
+    /// 2.0 — Saatten su. Sadece OneScoop+ ile ve sadece bugün için
+    /// (dünden kalmış kuyruktaki bir komut bugüne eklenmesin).
+    private func applyWater(_ action: WatchAction, message: [String: Any], day: String) {
+        guard PlusAccess.isUnlocked, WaterData.loadSettings().enabled, day == DayKey.today else { return }
+        switch action {
+        case .addWater:
+            guard let ml = WatchAction.ml(message), ml > 0 else { return }
+            WaterData.add(ml: ml)
+        case .undoWater:
+            WaterData.removeLatestToday()
+        default:
+            return
+        }
+        IntentRefresh.all()
+        Task { @MainActor in
+            CreatineStore.shared.reload()
+            await WaterReminders.reschedule()
+            await HealthSync.pushLocalChanges()
         }
     }
 

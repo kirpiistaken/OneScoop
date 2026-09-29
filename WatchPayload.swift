@@ -10,6 +10,14 @@ struct WatchPayload: Codable, Equatable {
     var onboarded: Bool      // telefonda kurulum yapılmış mı
     var updatedAt: Date
 
+    // 2.0 — Su. Opsiyonel: eski saat/telefon sürümleriyle uyumlu kalsın.
+    var waterEnabled: Bool? = nil
+    var waterTotal: Int? = nil       // dateKey günü için toplam (ml)
+    var waterGoal: Int? = nil        // o günün hedefi (antrenman eki dahil)
+    var cupKinds: [String]? = nil    // WaterCup.Kind rawValue
+    var cupMls: [Int]? = nil
+    var plus: Bool? = nil            // OneScoop+ (saatten su eklemek için)
+
     private static let key = "payload"
 
     var dictionary: [String: Any] {
@@ -17,7 +25,15 @@ struct WatchPayload: Codable, Equatable {
         return [Self.key: data]
     }
 
-    init(dateKey: String, isTaken: Bool, grams: Double, streak: Int, onboarded: Bool, updatedAt: Date) {
+    init(dateKey: String, isTaken: Bool, grams: Double, streak: Int, onboarded: Bool, updatedAt: Date,
+         waterEnabled: Bool? = nil, waterTotal: Int? = nil, waterGoal: Int? = nil,
+         cupKinds: [String]? = nil, cupMls: [Int]? = nil, plus: Bool? = nil) {
+        self.waterEnabled = waterEnabled
+        self.waterTotal = waterTotal
+        self.waterGoal = waterGoal
+        self.cupKinds = cupKinds
+        self.cupMls = cupMls
+        self.plus = plus
         self.dateKey = dateKey
         self.isTaken = isTaken
         self.grams = grams
@@ -36,12 +52,20 @@ struct WatchPayload: Codable, Equatable {
 /// Saatten telefona giden komut.
 enum WatchAction: String {
     case log, undo
+    case addWater, undoWater          // 2.0
 
     static let actionKey = "action"
     static let dayKey = "day"
+    static let mlKey = "ml"
 
-    func message(day: String) -> [String: Any] {
-        [Self.actionKey: rawValue, Self.dayKey: day]
+    func message(day: String, ml: Int? = nil) -> [String: Any] {
+        var m: [String: Any] = [Self.actionKey: rawValue, Self.dayKey: day]
+        if let ml { m[Self.mlKey] = ml }
+        return m
+    }
+
+    static func ml(_ message: [String: Any]) -> Int? {
+        message[mlKey] as? Int
     }
 
     static func parse(_ message: [String: Any]) -> (WatchAction, String)? {

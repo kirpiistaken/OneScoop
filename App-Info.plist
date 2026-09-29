@@ -58,7 +58,7 @@
 		</dict>
 	</array>
 	<key>NSHealthShareUsageDescription</key>
-	<string>OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal.</string>
+	<string>OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal, and reads workouts to raise your goal on training days.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>OneScoop saves the water you log to Apple Health.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>

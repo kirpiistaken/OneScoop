@@ -40,6 +40,78 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
         WatchPayload.state(payload, on: Date())
     }
 
+    // MARK: - Su (2.0)
+
+    struct Water {
+        var enabled: Bool
+        var plus: Bool
+        var total: Int
+        var goal: Int
+        var cups: [WaterCup]
+
+        var fraction: Double { goal > 0 ? min(1, Double(total) / Double(goal)) : 0 }
+    }
+
+    var water: Water {
+        let p = payload
+        let isToday = p?.dateKey == DayKey.key(for: Date())
+        let kinds = p?.cupKinds ?? []
+        let mls = p?.cupMls ?? []
+        let cups = zip(kinds, mls).compactMap { k, ml in
+            WaterCup.Kind(rawValue: k).map { WaterCup(kind: $0, ml: ml) }
+        }
+        return Water(
+            enabled: p?.waterEnabled ?? false,
+            plus: p?.plus ?? false,
+            total: isToday ? (p?.waterTotal ?? 0) : 0,
+            goal: p?.waterGoal ?? 2500,
+            cups: cups.isEmpty ? WaterCup.defaults : cups
+        )
+    }
+
+    /// Bu oturumda saatten eklenenler: geri al'da ekran hemen düzelsin diye.
+    private var recentWaterAdds: [Int] = []
+
+    func addWater(_ ml: Int) {
+        guard ml > 0 else { return }
+        recentWaterAdds.append(ml)
+        mutateLocally { p in
+            let base = p.dateKey == DayKey.key(for: Date()) ? (p.waterTotal ?? 0) : 0
+            p.waterTotal = base + ml
+        }
+        WKInterfaceDevice.current().play(.success)
+        send(.addWater, ml: ml)
+    }
+
+    func undoWater() {
+        guard water.total > 0 else { return }
+        if let last = recentWaterAdds.popLast() {
+            mutateLocally { p in p.waterTotal = max(0, (p.waterTotal ?? 0) - last) }
+        }
+        WKInterfaceDevice.current().play(.click)
+        send(.undoWater)
+    }
+
+    /// Mevcut durumu (su alanları dahil) koruyarak yerelde değiştir.
+    private func mutateLocally(_ change: (inout WatchPayload) -> Void) {
+        let now = Date()
+        lastLocalAction = now
+        UserDefaults.standard.set(now, forKey: actionKey)
+        var p = payload ?? WatchPayload(dateKey: DayKey.key(for: now), isTaken: false, grams: 0,
+                                        streak: 0, onboarded: true, updatedAt: now)
+        if p.dateKey != DayKey.key(for: now) {
+            // Yeni gün: dünkü kreatin ve su taşınmasın.
+            let t = WatchPayload.state(p, on: now)
+            p.dateKey = DayKey.key(for: now)
+            p.isTaken = false
+            p.streak = t.streak
+            p.waterTotal = 0
+        }
+        change(&p)
+        p.updatedAt = now
+        save(p)
+    }
+
     // MARK: - Eylemler
 
     func log() {
@@ -67,23 +139,20 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
     }
 
     private func applyLocally(isTaken: Bool, streak: Int, grams: Double?, onboarded: Bool) {
-        let now = Date()
-        lastLocalAction = now
-        UserDefaults.standard.set(now, forKey: actionKey)
-        save(WatchPayload(
-            dateKey: DayKey.key(for: now),
-            isTaken: isTaken,
-            grams: grams ?? payload?.grams ?? 0,
-            streak: streak,
-            onboarded: onboarded,
-            updatedAt: now
-        ))
+        // Su alanları korunuyor (eskiden payload baştan yazılıyordu).
+        let fallbackGrams = payload?.grams ?? 0
+        mutateLocally { p in
+            p.isTaken = isTaken
+            p.streak = streak
+            p.grams = grams ?? fallbackGrams
+            p.onboarded = onboarded
+        }
     }
 
-    private func send(_ action: WatchAction) {
+    private func send(_ action: WatchAction, ml: Int? = nil) {
         guard WCSession.isSupported() else { return }
         let session = WCSession.default
-        let message = action.message(day: DayKey.key(for: Date()))
+        let message = action.message(day: DayKey.key(for: Date()), ml: ml)
 
         guard session.activationState == .activated else {
             session.transferUserInfo(message)

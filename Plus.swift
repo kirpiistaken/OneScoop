@@ -50,6 +50,7 @@ final class PlusStore: ObservableObject {
         purchased = owned
         PlusAccess.setPurchased(owned)
         IntentRefresh.all()
+        PhoneWatchBridge.shared.pushStatus()
     }
 
     func purchase() async {
@@ -92,12 +93,14 @@ final class PlusStore: ObservableObject {
     func cancelSimulatedPurchase() async {
         PlusAccess.setSimulated(false)
         simulated = false
+        await AppIconOption.apply(.classic)
         await applyChange()
     }
 
     /// Plus açılıp kapanınca: widget'lar, hatırlatmalar, Sağlık kopyası.
     private func applyChange() async {
         IntentRefresh.all()
+        PhoneWatchBridge.shared.pushStatus()
         CreatineStore.shared.reload()
         await WaterReminders.reschedule()
         await CreatineStore.shared.refreshHealth()
@@ -138,8 +141,12 @@ struct PaywallView: View {
                 PlusWidgetFeature()
 
                 VStack(alignment: .leading, spacing: 16) {
+                    bullet("applewatch", L.plusBulletWatch)
                     bullet("bell.badge.fill", L.plusBulletReminders)
                     bullet("heart.fill", L.plusBulletHealth)
+                    bullet("chart.bar.fill", L.plusBulletInsights)
+                    bullet("app.badge.fill", L.plusBulletIcons)
+                    bullet("square.and.arrow.up", L.plusBulletExport)
                 }
                 .padding(20)
                 .frame(maxWidth: .infinity, alignment: .leading)

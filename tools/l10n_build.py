@@ -491,13 +491,13 @@ add("plus.headline",
     "Einmal zahlen, für immer behalten.", "Payez une fois, gardez-le pour toujours.",
     "Paghi una volta, è tuo per sempre.", "Pague uma vez e é seu para sempre.")
 add("plus.bullet_health",
-    "Apple Health sync",
-    "Apple Sağlık eşitlemesi",
-    "Sincronización con Salud",
-    "Abgleich mit Apple Health",
-    "Synchronisation avec Santé",
-    "Sincronizzazione con Salute",
-    "Sincronização com o Saúde")
+    "Apple Health, plus a higher goal on workout days",
+    "Apple Sağlık ve antrenman günü hedefi",
+    "Salud de Apple y más objetivo los días de entreno",
+    "Apple Health und höheres Ziel an Trainingstagen",
+    "Santé d’Apple et objectif rehaussé les jours de séance",
+    "Salute di Apple e obiettivo più alto nei giorni di allenamento",
+    "Saúde da Apple e meta maior nos dias de treino")
 add("plus.widget_title",
     "Add water without opening the app", "Uygulamayı açmadan su ekle",
     "Añade agua sin abrir la app", "Wasser hinzufügen, ohne die App zu öffnen",
@@ -730,6 +730,89 @@ add("settings.test_footer",
     "Visibile solo nelle build TestFlight. Per provare OneScoop+ con e senza acquisto.",
     "Visível só em versões do TestFlight. Para testar o OneScoop+ com e sem compra.")
 
+# ── 2.0: Apple Watch'ta su ─────────────────────────────────
+add("watch.water_add", "Add", "Ekle", "Añadir", "Hinzufügen", "Ajouter", "Aggiungi", "Adicionar")
+add("watch.water_plus",
+    "Add water from your watch with OneScoop+ on your iPhone.",
+    "Saatten su eklemek için iPhone'unda OneScoop+.",
+    "Añade agua desde el reloj con OneScoop+ en tu iPhone.",
+    "Wasser von der Uhr eintragen mit OneScoop+ auf deinem iPhone.",
+    "Ajoutez de l’eau depuis la montre avec OneScoop+ sur votre iPhone.",
+    "Aggiungi acqua dall’orologio con OneScoop+ sul tuo iPhone.",
+    "Adicione água pelo relógio com o OneScoop+ no iPhone.")
+
+# ── 2.0: Antrenman günü hedefi ────────────────────────────
+add("water.workout_boost %@", "+%@ ml · workout", "+%@ ml · antrenman", "+%@ ml · entreno",
+    "+%@ ml · Training", "+%@ ml · séance", "+%@ ml · allenamento", "+%@ ml · treino")
+add("settings.water_workout", "More on workout days", "Antrenman günü daha fazla",
+    "Más en días de entreno", "Mehr an Trainingstagen", "Plus les jours de séance",
+    "Di più nei giorni di allenamento", "Mais nos dias de treino")
+add("settings.water_workout_extra", "Extra", "Ek", "Extra", "Zusätzlich", "En plus", "In più", "Extra")
+
+# ── 2.0: İkonlar, haftalık özet, dışa aktarma ─────────────
+add("settings.app_icon", "App icon", "Uygulama ikonu", "Icono de la app", "App-Symbol",
+    "Icône de l’app", "Icona dell’app", "Ícone do app")
+add("icon.classic", "Classic", "Klasik", "Clásico", "Klassisch", "Classique", "Classica", "Clássico")
+add("icon.gold", "Gold", "Altın", "Oro", "Gold", "Or", "Oro", "Ouro")
+add("icon.night", "Night", "Gece", "Noche", "Nacht", "Nuit", "Notte", "Noite")
+add("icon.light", "Light", "Açık", "Claro", "Hell", "Clair", "Chiaro", "Claro")
+add("settings.export", "Export data (CSV)", "Verini dışa aktar (CSV)", "Exportar datos (CSV)",
+    "Daten exportieren (CSV)", "Exporter les données (CSV)", "Esporta dati (CSV)", "Exportar dados (CSV)")
+add("settings.export_footer",
+    "One file with all your creatine and water entries. Opens in Numbers, Excel and Google Sheets.",
+    "Tüm kreatin ve su kayıtların tek bir dosyada. Numbers, Excel ve Google E-Tablolar'da açılır.",
+    "Un archivo con todos tus registros de creatina y agua. Se abre en Numbers, Excel y Hojas de cálculo de Google.",
+    "Eine Datei mit allen Kreatin- und Wassereinträgen. Öffnet sich in Numbers, Excel und Google Tabellen.",
+    "Un fichier avec toutes vos entrées de créatine et d’eau. S’ouvre dans Numbers, Excel et Google Sheets.",
+    "Un file con tutte le voci di creatina e acqua. Si apre in Numbers, Excel e Fogli Google.",
+    "Um arquivo com todos os registros de creatina e água. Abre no Numbers, Excel e Planilhas Google.")
+add("insights.title", "Weekly summary", "Haftalık özet", "Resumen semanal", "Wochenübersicht",
+    "Résumé de la semaine", "Riepilogo settimanale", "Resumo semanal")
+add("insights.average %@",
+    "%@ L a day on average", "Günde ortalama %@ L", "%@ L al día de media", "Im Schnitt %@ L pro Tag",
+    "%@ L par jour en moyenne", "In media %@ L al giorno", "Média de %@ L por dia")
+add("insights.goal_days %lld %lld",
+    "Goal reached on %1$lld of %2$lld days", "%2$lld günün %1$lld gününde hedefe ulaştın",
+    "Objetivo cumplido %1$lld de %2$lld días", "Ziel an %1$lld von %2$lld Tagen erreicht",
+    "Objectif atteint %1$lld jours sur %2$lld", "Obiettivo raggiunto %1$lld giorni su %2$lld",
+    "Meta atingida em %1$lld de %2$lld dias")
+add("insights.peak %@",
+    "You drink most between %@", "En çok %@ arası içiyorsun", "Bebes más entre las %@",
+    "Am meisten trinkst du zwischen %@", "Vous buvez le plus entre %@", "Bevi di più tra le %@",
+    "Você bebe mais entre %@")
+add("insights.quiet_morning",
+    "Mornings are your quietest time", "En az sabahları içiyorsun", "Las mañanas son cuando menos bebes",
+    "Morgens trinkst du am wenigsten", "C’est le matin que vous buvez le moins",
+    "La mattina è quando bevi di meno", "De manhã é quando você bebe menos")
+add("insights.quiet_afternoon",
+    "Afternoons are your quietest time", "En az öğleden sonraları içiyorsun", "Las tardes son cuando menos bebes",
+    "Nachmittags trinkst du am wenigsten", "C’est l’après-midi que vous buvez le moins",
+    "Il pomeriggio è quando bevi di meno", "À tarde é quando você bebe menos")
+add("insights.quiet_evening",
+    "Evenings are your quietest time", "En az akşamları içiyorsun", "Las noches son cuando menos bebes",
+    "Abends trinkst du am wenigsten", "C’est le soir que vous buvez le moins",
+    "La sera è quando bevi di meno", "À noite é quando você bebe menos")
+add("insights.creatine %lld %lld",
+    "Creatine on %1$lld of %2$lld days", "%2$lld günün %1$lld gününde kreatin",
+    "Creatina %1$lld de %2$lld días", "Kreatin an %1$lld von %2$lld Tagen",
+    "Créatine %1$lld jours sur %2$lld", "Creatina %1$lld giorni su %2$lld",
+    "Creatina em %1$lld de %2$lld dias")
+add("insights.no_water",
+    "No water logged this week yet.", "Bu hafta henüz su kaydı yok.", "Aún no hay agua registrada esta semana.",
+    "Diese Woche noch kein Wasser eingetragen.", "Pas encore d’eau notée cette semaine.",
+    "Nessuna acqua registrata questa settimana.", "Nenhuma água registrada nesta semana ainda.")
+add("plus.bullet_watch",
+    "Apple Watch, with the Digital Crown", "Apple Watch'ta Digital Crown ile",
+    "Apple Watch, con la Digital Crown", "Apple Watch mit Digital Crown",
+    "Apple Watch, avec la Digital Crown", "Apple Watch, con la Digital Crown",
+    "Apple Watch, com a Digital Crown")
+add("plus.bullet_insights", "Weekly summary", "Haftalık özet", "Resumen semanal", "Wochenübersicht",
+    "Résumé de la semaine", "Riepilogo settimanale", "Resumo semanal")
+add("plus.bullet_icons", "Custom app icons", "Özel uygulama ikonları", "Iconos personalizados",
+    "Eigene App-Symbole", "Icônes d’app personnalisées", "Icone personalizzate", "Ícones personalizados")
+add("plus.bullet_export", "Export your data", "Verini dışa aktar", "Exporta tus datos", "Daten exportieren",
+    "Exportez vos données", "Esporta i tuoi dati", "Exporte seus dados")
+
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
@@ -823,13 +906,13 @@ with open(os.path.join(ROOT, "L10n.swift"), "w", encoding="utf-8") as f:
 # ═══════════════════════════════════════════════════════════
 PLIST = {
     "NSHealthShareUsageDescription": [
-        "OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal.",
-        "OneScoop, diğer uygulamalarda girdiğin su da günlük hedefine sayılsın diye Apple Sağlık'tan su verisini okur.",
-        "OneScoop lee el agua de Salud para que el agua que registras en otras apps cuente para tu objetivo diario.",
-        "OneScoop liest Wasser aus Apple Health, damit Wasser aus anderen Apps zu deinem Tagesziel zählt.",
-        "OneScoop lit l’eau dans Santé pour que l’eau notée dans d’autres apps compte dans votre objectif quotidien.",
-        "OneScoop legge l’acqua da Salute così l’acqua registrata in altre app conta per il tuo obiettivo giornaliero.",
-        "O OneScoop lê a água do Saúde para que a água registrada em outros apps conte para sua meta diária.",
+        "OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal, and reads workouts to raise your goal on training days.",
+        "OneScoop, diğer uygulamalarda girdiğin su da günlük hedefine sayılsın diye Apple Sağlık'tan su verisini, antrenman günlerinde hedefini artırmak için de antrenmanlarını okur.",
+        "OneScoop lee el agua de Salud para que el agua de otras apps cuente para tu objetivo diario, y tus entrenamientos para subir el objetivo los días que entrenas.",
+        "OneScoop liest Wasser aus Apple Health, damit Wasser aus anderen Apps zu deinem Tagesziel zählt, und Trainings, um dein Ziel an Trainingstagen zu erhöhen.",
+        "OneScoop lit l’eau dans Santé pour que l’eau notée dans d’autres apps compte dans votre objectif, et vos séances pour augmenter l’objectif les jours d’entraînement.",
+        "OneScoop legge l’acqua da Salute così l’acqua di altre app conta per il tuo obiettivo, e gli allenamenti per alzarlo nei giorni in cui ti alleni.",
+        "O OneScoop lê a água do Saúde para que a água de outros apps conte para sua meta diária, e seus treinos para aumentar a meta nos dias de treino.",
     ],
     "NSHealthUpdateUsageDescription": [
         "OneScoop saves the water you log to Apple Health.",

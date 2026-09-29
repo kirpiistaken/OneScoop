@@ -33,7 +33,10 @@ enum HealthSync {
     static func requestAccess() async -> Bool {
         guard isAvailable else { return false }
         do {
-            try await store.requestAuthorization(toShare: [waterType], read: [waterType])
+            try await store.requestAuthorization(
+                toShare: [waterType],
+                read: [waterType, HKObjectType.workoutType()]   // antrenman günü hedefi
+            )
             return true
         } catch {
             return false
@@ -45,6 +48,28 @@ enum HealthSync {
         guard isActive else { return }
         await pushLocalChanges()
         await refreshFromHealth()
+        await refreshWorkoutDays()
+    }
+
+    // MARK: - Antrenmanlar
+
+    /// Son 180 günde Sağlık'ta antrenman olan günler (herhangi bir uygulamadan,
+    /// Apple Watch dahil). Antrenman günü hedefi bunu kullanıyor.
+    static func refreshWorkoutDays() async {
+        guard isActive, WaterData.loadSettings().workoutBoostEnabled else { return }
+        let start = Date().addingTimeInterval(-Double(readDays) * 86_400)
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: nil)
+        let workouts: [HKSample]? = await withCheckedContinuation { cont in
+            let query = HKSampleQuery(
+                sampleType: HKObjectType.workoutType(), predicate: predicate,
+                limit: HKObjectQueryNoLimit, sortDescriptors: nil
+            ) { _, results, error in
+                cont.resume(returning: error == nil ? (results ?? []) : nil)
+            }
+            store.execute(query)
+        }
+        guard let workouts else { return }       // kilitliyken eldekini koru
+        WaterData.saveWorkoutDays(Set(workouts.map { DayKey.key(for: $0.startDate) }))
     }
 
     // MARK: - Yazma

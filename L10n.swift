@@ -19,12 +19,25 @@ enum L {
     static var historyWaterAverage: String { String(localized: "history.water_average") }
     static var historyWaterGoalDays: String { String(localized: "history.water_goal_days") }
     static var historyWaterHint: String { String(localized: "history.water_hint") }
+    static var iconClassic: String { String(localized: "icon.classic") }
+    static var iconGold: String { String(localized: "icon.gold") }
+    static var iconLight: String { String(localized: "icon.light") }
+    static var iconNight: String { String(localized: "icon.night") }
     static var insightConsistent: String { String(localized: "insight.consistent") }
     static func insightEmpty(_ a0: String) -> String { String(localized: "insight.empty \(a0)") }
     static func insightLoading(_ a0: Int, _ a1: String, _ a2: String) -> String { String(localized: "insight.loading \(a0) \(a1) \(a2)") }
     static var insightMissed: String { String(localized: "insight.missed") }
     static func insightStreak(_ a0: Int) -> String { String(localized: "insight.streak \(a0)") }
     static func insightSummary(_ a0: Int, _ a1: Int, _ a2: String, _ a3: String, _ a4: String) -> String { String(localized: "insight.summary \(a0) \(a1) \(a2) \(a3) \(a4)") }
+    static func insightsAverage(_ a0: String) -> String { String(localized: "insights.average \(a0)") }
+    static func insightsCreatine(_ a0: Int, _ a1: Int) -> String { String(localized: "insights.creatine \(a0) \(a1)") }
+    static func insightsGoalDays(_ a0: Int, _ a1: Int) -> String { String(localized: "insights.goal_days \(a0) \(a1)") }
+    static var insightsNoWater: String { String(localized: "insights.no_water") }
+    static func insightsPeak(_ a0: String) -> String { String(localized: "insights.peak \(a0)") }
+    static var insightsQuietAfternoon: String { String(localized: "insights.quiet_afternoon") }
+    static var insightsQuietEvening: String { String(localized: "insights.quiet_evening") }
+    static var insightsQuietMorning: String { String(localized: "insights.quiet_morning") }
+    static var insightsTitle: String { String(localized: "insights.title") }
     static var notifFirst: String { String(localized: "notif.first") }
     static var notifLogIt: String { String(localized: "notif.log_it") }
     static var notifRepeat: String { String(localized: "notif.repeat") }
@@ -40,8 +53,12 @@ enum L {
     static var onbReminderHint: String { String(localized: "onb.reminder_hint") }
     static var onbStart: String { String(localized: "onb.start") }
     static var onbTagline: String { String(localized: "onb.tagline") }
+    static var plusBulletExport: String { String(localized: "plus.bullet_export") }
     static var plusBulletHealth: String { String(localized: "plus.bullet_health") }
+    static var plusBulletIcons: String { String(localized: "plus.bullet_icons") }
+    static var plusBulletInsights: String { String(localized: "plus.bullet_insights") }
     static var plusBulletReminders: String { String(localized: "plus.bullet_reminders") }
+    static var plusBulletWatch: String { String(localized: "plus.bullet_watch") }
     static var plusBuy: String { String(localized: "plus.buy") }
     static var plusFamily: String { String(localized: "plus.family") }
     static var plusHeadline: String { String(localized: "plus.headline") }
@@ -59,10 +76,13 @@ enum L {
     static var restoreChecking: String { String(localized: "restore.checking") }
     static var settingsAdjust: String { String(localized: "settings.adjust") }
     static var settingsAdjustLoading: String { String(localized: "settings.adjust_loading") }
+    static var settingsAppIcon: String { String(localized: "settings.app_icon") }
     static var settingsDeleteAll: String { String(localized: "settings.delete_all") }
     static var settingsDenied: String { String(localized: "settings.denied") }
     static var settingsDose: String { String(localized: "settings.dose") }
     static var settingsEvery: String { String(localized: "settings.every") }
+    static var settingsExport: String { String(localized: "settings.export") }
+    static var settingsExportFooter: String { String(localized: "settings.export_footer") }
     static func settingsHours(_ a0: Int) -> String { String(localized: "settings.hours \(a0)") }
     static var settingsIcloud: String { String(localized: "settings.icloud") }
     static var settingsIcloudOff: String { String(localized: "settings.icloud_off") }
@@ -113,6 +133,8 @@ enum L {
     static var settingsWaterRemindSmartReady: String { String(localized: "settings.water_remind_smart_ready") }
     static var settingsWaterReminders: String { String(localized: "settings.water_reminders") }
     static var settingsWaterToggle: String { String(localized: "settings.water_toggle") }
+    static var settingsWaterWorkout: String { String(localized: "settings.water_workout") }
+    static var settingsWaterWorkoutExtra: String { String(localized: "settings.water_workout_extra") }
     static var settingsWidget: String { String(localized: "settings.widget") }
     static var settingsWidgetHelp: String { String(localized: "settings.widget_help") }
     static var shortcutLog: String { String(localized: "shortcut.log") }
@@ -149,6 +171,8 @@ enum L {
     static var todayYes: String { String(localized: "today.yes") }
     static var todayYesA11y: String { String(localized: "today.yes_a11y") }
     static var watchSetupFirst: String { String(localized: "watch.setup_first") }
+    static var watchWaterAdd: String { String(localized: "watch.water_add") }
+    static var watchWaterPlus: String { String(localized: "watch.water_plus") }
     static var waterCupBottle: String { String(localized: "water.cup.bottle") }
     static var waterCupGlass: String { String(localized: "water.cup.glass") }
     static var waterCupShaker: String { String(localized: "water.cup.shaker") }
@@ -159,6 +183,7 @@ enum L {
     static var waterPaceOn: String { String(localized: "water.pace_on") }
     static var waterTitle: String { String(localized: "water.title") }
     static var waterTodayEntries: String { String(localized: "water.today_entries") }
+    static func waterWorkoutBoost(_ a0: String) -> String { String(localized: "water.workout_boost \(a0)") }
     static var whatsnewWaterBody: String { String(localized: "whatsnew.water_body") }
     static var whatsnewWaterTitle: String { String(localized: "whatsnew.water_title") }
     static var whatsnewWaterTry: String { String(localized: "whatsnew.water_try") }

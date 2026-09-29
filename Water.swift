@@ -21,6 +21,10 @@ struct WaterCup: Codable, Equatable, Identifiable, Hashable {
     ]
 }
 
+enum WaterReminderMode: String, Codable, CaseIterable {
+    case off, simple, smart
+}
+
 struct WaterSettings: Codable, Equatable {
     var enabled: Bool = false
     var goalMl: Int = 2500
@@ -38,6 +42,10 @@ struct WaterSettings: Codable, Equatable {
     /// Apple Sağlık ile eşitleme (OneScoop+).
     var healthEnabled: Bool = false
 
+    /// Antrenman günü hedefe ek (OneScoop+, Sağlık'tan antrenman okunarak).
+    var workoutBoostEnabled: Bool = false
+    var workoutBoostMl: Int = 500
+
     static let `default` = WaterSettings()
 
     var defaultCup: WaterCup {
@@ -47,7 +55,7 @@ struct WaterSettings: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case enabled, goalMl, cups, defaultCupID, hasSeenIntro
         case reminderMode, wakeHour, sleepHour, simpleIntervalHours
-        case healthEnabled
+        case healthEnabled, workoutBoostEnabled, workoutBoostMl
     }
 
     init() {}
@@ -65,6 +73,8 @@ struct WaterSettings: Codable, Equatable {
         sleepHour = try c.decodeIfPresent(Int.self, forKey: .sleepHour) ?? d.sleepHour
         simpleIntervalHours = try c.decodeIfPresent(Int.self, forKey: .simpleIntervalHours) ?? d.simpleIntervalHours
         healthEnabled = try c.decodeIfPresent(Bool.self, forKey: .healthEnabled) ?? d.healthEnabled
+        workoutBoostEnabled = try c.decodeIfPresent(Bool.self, forKey: .workoutBoostEnabled) ?? d.workoutBoostEnabled
+        workoutBoostMl = try c.decodeIfPresent(Int.self, forKey: .workoutBoostMl) ?? d.workoutBoostMl
     }
 }
 
@@ -90,6 +100,8 @@ enum WaterData {
     private static let healthKey = "ct.water.health.v1"
     /// Sağlık'a yazılmış kendi kayıtlarımızın kimlikleri.
     private static let healthSyncedKey = "ct.water.healthSynced.v1"
+    /// Sağlık'ta antrenman olan günler (son 180 gün).
+    private static let workoutDaysKey = "ct.water.workoutDays.v1"
 
     private static let encoder = JSONEncoder()
     private static let decoder = JSONDecoder()
@@ -143,6 +155,29 @@ enum WaterData {
 
     private static var healthActive: Bool {
         loadSettings().healthEnabled && PlusAccess.isUnlocked
+    }
+
+    // MARK: Günün hedefi
+
+    /// Antrenman günlerinde ek dahil hedef. Her yer (kart, widget, saat,
+    /// hatırlatma, takvim) bunu kullanıyor.
+    static func goal(on date: Date = Date()) -> Int {
+        let s = loadSettings()
+        return s.goalMl + (hasWorkoutBoost(on: date, settings: s) ? s.workoutBoostMl : 0)
+    }
+
+    static func hasWorkoutBoost(on date: Date = Date(), settings: WaterSettings? = nil) -> Bool {
+        let s = settings ?? loadSettings()
+        return s.workoutBoostEnabled && s.healthEnabled && PlusAccess.isUnlocked
+            && workoutDays().contains(DayKey.key(for: date))
+    }
+
+    static func workoutDays() -> Set<String> {
+        Set(AppGroup.defaults.stringArray(forKey: workoutDaysKey) ?? [])
+    }
+
+    static func saveWorkoutDays(_ days: Set<String>) {
+        AppGroup.defaults.set(Array(days), forKey: workoutDaysKey)
     }
 
     // MARK: Sağlık kopyası

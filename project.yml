@@ -49,9 +49,13 @@ targets:
       - path: WatchPayload.swift
       - path: Water.swift
       - path: WaterShapes.swift
+      - path: WaterGlassView.swift
       - path: WaterReminders.swift
       - path: WaterViews.swift
       - path: HealthSync.swift
+      - path: AppIconPicker.swift
+      - path: Insights.swift
+      - path: DataExport.swift
       - path: InfoPlist.xcstrings
       - path: Plus.swift
       - path: ScoopShape.swift
@@ -74,6 +78,9 @@ targets:
         CODE_SIGN_ENTITLEMENTS: App.entitlements
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # 2.0 — OneScoop+ alternatif ikonları
+        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "AppIconGold AppIconNight AppIconLight"
 
   CreatineWidgetExtension:
     type: app-extension
@@ -94,6 +101,7 @@ targets:
       - path: ScoopShape.swift
       - path: Water.swift
       - path: WaterShapes.swift
+      - path: WaterGlassView.swift
       - path: WaterReminders.swift
       - path: WaterWidget.swift
       - path: WidgetSymbols.xcassets
@@ -115,6 +123,8 @@ targets:
       - path: L10n.swift
       - path: Localizable.xcstrings
       - path: WatchPayload.swift
+      - path: Water.swift
+      - path: WaterShapes.swift
       - path: Watch
         excludes:
           - "Watch-Info.plist"

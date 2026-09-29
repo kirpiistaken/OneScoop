@@ -16,10 +16,6 @@ import UserNotifications
 // saate kadar ne kadar içiyorsun" eğrisi çıkarılır (medyan). O saatte bunun
 // belirgin gerisindeysen hatırlatır. Yeterli veri yokken hedefe göre düz tempo.
 
-enum WaterReminderMode: String, Codable, CaseIterable {
-    case off, simple, smart
-}
-
 enum WaterReminders {
     static let prefix = "ct.water."
     static let categoryID = "CT_WATER"
@@ -100,8 +96,8 @@ enum WaterReminders {
         }
         // Akıllıda gün penceresi öğrenilenden, basitte kullanıcının seçtiği.
         return s.reminderMode == .simple
-            ? linearExpected(atMinutes: minutes, start: s.wakeHour, end: s.sleepHour, goal: s.goalMl)
-            : linearExpected(atMinutes: minutes, start: 8, end: 22, goal: s.goalMl)
+            ? linearExpected(atMinutes: minutes, start: s.wakeHour, end: s.sleepHour, goal: WaterData.goal(on: date))
+            : linearExpected(atMinutes: minutes, start: 8, end: 22, goal: WaterData.goal(on: date))
     }
 
     /// Ayarlarda "öğreniliyor 1/3" göstermek için.
@@ -137,7 +133,8 @@ enum WaterReminders {
             // Bugün için gerçek toplam; ileriki günler sıfırdan başlıyor
             // (o gün su girildikçe yeniden hesaplanacak).
             let total = offset == 0 ? (log[key] ?? []).reduce(0) { $0 + $1.ml } : 0
-            if total >= s.goalMl { continue }
+            let dayGoal = WaterData.goal(on: day)
+            if total >= dayGoal { continue }
 
             var index = 0
             var lastFire: Date?
@@ -185,7 +182,7 @@ enum WaterReminders {
                 while m <= (window.1 - 1) * 60 && index < smartMaxPerDay {
                     let expected = usesLearned
                         ? learnedExpected(atMinutes: m, days: learned)
-                        : linearExpected(atMinutes: m, start: window.0, end: window.1, goal: s.goalMl)
+                        : linearExpected(atMinutes: m, start: window.0, end: window.1, goal: dayGoal)
                     let behind = expected - total
                     let fire = cal.date(bySettingHour: m / 60, minute: 0, second: 0, of: day) ?? day
                     let gapOK = lastFire.map { fire.timeIntervalSince($0) >= smartMinGap } ?? true

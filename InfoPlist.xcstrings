@@ -7,43 +7,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "OneScoop liest Wasser aus Apple Health, damit Wasser aus anderen Apps zu deinem Tagesziel zählt."
+            "value": "OneScoop liest Wasser aus Apple Health, damit Wasser aus anderen Apps zu deinem Tagesziel zählt, und Trainings, um dein Ziel an Trainingstagen zu erhöhen."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal."
+            "value": "OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal, and reads workouts to raise your goal on training days."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "OneScoop lee el agua de Salud para que el agua que registras en otras apps cuente para tu objetivo diario."
+            "value": "OneScoop lee el agua de Salud para que el agua de otras apps cuente para tu objetivo diario, y tus entrenamientos para subir el objetivo los días que entrenas."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "OneScoop lit l’eau dans Santé pour que l’eau notée dans d’autres apps compte dans votre objectif quotidien."
+            "value": "OneScoop lit l’eau dans Santé pour que l’eau notée dans d’autres apps compte dans votre objectif, et vos séances pour augmenter l’objectif les jours d’entraînement."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "OneScoop legge l’acqua da Salute così l’acqua registrata in altre app conta per il tuo obiettivo giornaliero."
+            "value": "OneScoop legge l’acqua da Salute così l’acqua di altre app conta per il tuo obiettivo, e gli allenamenti per alzarlo nei giorni in cui ti alleni."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "O OneScoop lê a água do Saúde para que a água registrada em outros apps conte para sua meta diária."
+            "value": "O OneScoop lê a água do Saúde para que a água de outros apps conte para sua meta diária, e seus treinos para aumentar a meta nos dias de treino."
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "OneScoop, diğer uygulamalarda girdiğin su da günlük hedefine sayılsın diye Apple Sağlık'tan su verisini okur."
+            "value": "OneScoop, diğer uygulamalarda girdiğin su da günlük hedefine sayılsın diye Apple Sağlık'tan su verisini, antrenman günlerinde hedefini artırmak için de antrenmanlarını okur."
           }
         }
       }

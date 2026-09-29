@@ -3,6 +3,9 @@ import UIKit
 
 struct HistoryView: View {
     @EnvironmentObject private var store: CreatineStore
+    @EnvironmentObject private var plus: PlusStore
+    @State private var showInsights = false
+    @State private var showPaywall = false
     @State private var month = DayKey.startOfDay(Date())
     /// 2.0 — Takvimin altındaki küçük düğme: kreatin ya da su takvimi.
     @AppStorage("ct.history.showWater") private var showWaterPref = false
@@ -26,6 +29,7 @@ struct HistoryView: View {
                         grid
                     }
                     if store.water.enabled { modeSwitch }
+                    weeklyCard
                     if showWater {
                         waterSummary
                     } else {
@@ -38,6 +42,34 @@ struct HistoryView: View {
             }
         }
         .sheet(item: $waterDay) { WaterEntriesSheet(date: $0.date) }
+        .sheet(isPresented: $showInsights) { InsightsView() }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
+    }
+
+    // MARK: - Haftalık özet (OneScoop+)
+
+    private var weeklyCard: some View {
+        Button {
+            if plus.isUnlocked { showInsights = true } else { showPaywall = true }
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "chart.bar.fill")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(CT.accent)
+                    .frame(width: 36, height: 36)
+                    .background(CT.accent.opacity(0.12), in: Circle())
+                Text(L.insightsTitle)
+                    .font(.system(.headline, design: .rounded))
+                    .foregroundStyle(CT.ink)
+                Spacer()
+                Image(systemName: plus.isUnlocked ? "chevron.right" : "crown.fill")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(plus.isUnlocked ? CT.inkSoft : CT.gold)
+            }
+            .padding(14)
+            .background(CT.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        }
+        .buttonStyle(PressableStyle())
     }
 
     // MARK: - Kreatin / Su düğmesi
@@ -80,7 +112,7 @@ struct HistoryView: View {
                     WaterDayCell(
                         date: day,
                         total: waterTotal(day, in: log),
-                        goal: store.water.goalMl,
+                        goal: WaterData.goal(on: day),
                         isToday: DayKey.key(for: day) == DayKey.today,
                         isFuture: isFuture
                     )
@@ -100,7 +132,7 @@ struct HistoryView: View {
         let days = monthDays.filter { DayKey.startOfDay($0) <= DayKey.startOfDay(Date()) }
         let totals = days.map { waterTotal($0, in: log) }
         let drankDays = totals.filter { $0 > 0 }
-        let goalDays = totals.filter { $0 >= store.water.goalMl }.count
+        let goalDays = zip(days, totals).filter { $1 >= WaterData.goal(on: $0) }.count
         let average = drankDays.isEmpty ? 0 : drankDays.reduce(0, +) / drankDays.count
         let monthTotal = totals.reduce(0, +)
 

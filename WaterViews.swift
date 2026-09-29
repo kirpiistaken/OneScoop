@@ -16,7 +16,8 @@ struct WaterCard: View {
     @State private var showPaywall = false
 
     private var total: Int { store.waterTotalToday }
-    private var goal: Int { store.water.goalMl }
+    /// Antrenman günlerinde ek dahil (OneScoop+).
+    private var goal: Int { _ = store.water; return WaterData.goal() }
     private var fraction: Double { goal > 0 ? Double(total) / Double(goal) : 0 }
 
     var body: some View {
@@ -38,11 +39,21 @@ struct WaterCard: View {
                             .contentTransition(.numericText())
                             .animation(.snappy, value: total)
                     }
-                    Text(paceText)
-                        .font(.system(.footnote, design: .rounded).weight(.medium))
-                        .foregroundStyle(CT.inkSoft)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
+                    HStack(spacing: 8) {
+                        Text(paceText)
+                            .font(.system(.footnote, design: .rounded).weight(.medium))
+                            .foregroundStyle(CT.inkSoft)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        // Antrenman günü: hedefe eklenen miktar (OneScoop+).
+                        if WaterData.hasWorkoutBoost() {
+                            Label(L.waterWorkoutBoost(String(store.water.workoutBoostMl)),
+                                  systemImage: "figure.strengthtraining.traditional")
+                                .font(.system(.caption2, design: .rounded).weight(.semibold))
+                                .foregroundStyle(CT.accent)
+                                .lineLimit(1)
+                        }
+                    }
                 }
             }
             .contentShape(Rectangle())
@@ -145,7 +156,7 @@ struct WaterEntriesSheet: View {
                             row(entry)
                         }
                     } footer: {
-                        Text(verbatim: "\(total.litersString) / \(store.water.goalMl.litersString) L")
+                        Text(verbatim: "\(total.litersString) / \(WaterData.goal(on: date).litersString) L")
                     }
                 }
             }
