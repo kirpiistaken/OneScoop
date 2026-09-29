@@ -211,22 +211,27 @@ struct PlusHero: View {
                 .fill(CT.goldSoft)
                 .frame(width: size * 1.35, height: size * 1.35)
 
-            ScoopShape()
-                .fill(LinearGradient(
-                    colors: [CT.gold.opacity(0.75), CT.gold],
-                    startPoint: .topLeading, endPoint: .bottomTrailing
-                ))
-                .frame(width: size, height: size)
-                .scaleEffect(shown ? 1 : 0.85)
+            // Kepçe + taç birlikte, dairenin optik ortasına kaydırılmış:
+            // kepçenin gövdesi solda ağır, taç üstte; ikisi beraber ortalanıyor.
+            ZStack {
+                ScoopShape()
+                    .fill(LinearGradient(
+                        colors: [CT.gold.opacity(0.75), CT.gold],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    ))
+                    .frame(width: size, height: size)
+                    .scaleEffect(shown ? 1 : 0.85)
 
-            // Tacı kepçenin ağzının üstüne oturt (ScoopShape koordinatlarından).
-            Image(systemName: "crown.fill")
-                .font(.system(size: size * 0.28, weight: .bold))
-                .foregroundStyle(CT.gold)
-                .rotationEffect(.degrees(-10))
-                .offset(x: -165 / 870 * size, y: -195 / 870 * size - size * 0.2)
-                .offset(y: shown ? 0 : -14)
-                .opacity(shown ? 1 : 0)
+                // Tacı kepçenin ağzının üstüne oturt (ScoopShape koordinatlarından).
+                Image(systemName: "crown.fill")
+                    .font(.system(size: size * 0.28, weight: .bold))
+                    .foregroundStyle(CT.gold)
+                    .rotationEffect(.degrees(-10))
+                    .offset(x: -165 / 870 * size, y: -195 / 870 * size - size * 0.2)
+                    .offset(y: shown ? 0 : -14)
+                    .opacity(shown ? 1 : 0)
+            }
+            .offset(x: 50 / 870 * size, y: size * 0.09)
         }
         .frame(height: size * 1.35)
         .accessibilityHidden(true)

@@ -162,8 +162,9 @@ enum PlusAccess {
 }
 
 extension Int {
-    /// 1500 -> "1,5" (dile göre ayraç)
+    /// Yuvarlamadan, gereksiz sıfır olmadan (dile göre ayraç):
+    /// 750 -> "0,75", 700 -> "0,7", 1000 -> "1", 0 -> "0"
     var litersString: String {
-        (Double(self) / 1000).formatted(.number.precision(.fractionLength(1)))
+        (Double(self) / 1000).formatted(.number.precision(.fractionLength(0...2)))
     }
 }

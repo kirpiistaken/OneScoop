@@ -102,7 +102,7 @@ struct WaterWidgetView: View {
             VStack(spacing: 4) {
                 CupIcon(kind: cup.kind)
                     .fill(CT.accent)
-                    .frame(width: circle * 0.5, height: circle * 0.48)
+                    .frame(width: circle * 0.54, height: circle * 0.52)
                     .frame(width: circle, height: circle)
                     .background(CT.accent.opacity(0.14), in: Circle())
                 Text(verbatim: "\(cup.ml)")
@@ -128,14 +128,20 @@ struct WaterWidgetView: View {
         .disabled(!entry.hasEntries)
     }
 
-    /// Üç kap + geri al.
-    private func buttonRow(circle: CGFloat) -> some View {
-        HStack(alignment: .top, spacing: 10) {
+    /// Üç kap + hemen yanında geri al; çağıran yer ortalıyor.
+    private func buttonRow(circle: CGFloat, spacing: CGFloat) -> some View {
+        HStack(alignment: .top, spacing: spacing) {
             ForEach(entry.cups) { cupButton($0, circle: circle) }
-            Spacer(minLength: 0)
             undoButton(circle: circle * 0.8)
                 .padding(.top, circle * 0.1)
         }
+    }
+
+    /// Bastıkça dolan ince çubuk.
+    private var bar: some View {
+        WaterBar(fraction: entry.fraction)
+            .frame(height: 6)
+            .animation(.spring(response: 0.7, dampingFraction: 0.8), value: entry.total)
     }
 
     // MARK: Küçük: bardak + varsayılan kap
@@ -166,25 +172,26 @@ struct WaterWidgetView: View {
         }
     }
 
-    // MARK: Orta: bardak solda, üç kap + geri al sağda
+    // MARK: Orta: bardak ve toplam solda, üç kap + geri al ortada, altta çubuk
 
     private var medium: some View {
-        HStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 8) {
-                glass(width: 44, height: 64)
-                Spacer(minLength: 0)
-                totals(20)
-            }
-            if ready {
-                VStack(alignment: .leading, spacing: 0) {
-                    Spacer(minLength: 0)
-                    buttonRow(circle: 46)
-                    Spacer(minLength: 0)
+        VStack(spacing: 10) {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    glass(width: 38, height: 54)
+                    totals(18)
                 }
-            } else {
-                lockedNote
-                Spacer(minLength: 0)
+                .fixedSize()
+                if ready {
+                    buttonRow(circle: 48, spacing: 8)
+                        .frame(maxWidth: .infinity)
+                } else {
+                    lockedNote
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
+            .frame(maxHeight: .infinity)
+            bar
         }
     }
 
@@ -215,8 +222,11 @@ struct WaterWidgetView: View {
             }
             .frame(maxHeight: .infinity)
 
+            bar
+
             if ready {
-                buttonRow(circle: 60)
+                buttonRow(circle: 62, spacing: 14)
+                    .frame(maxWidth: .infinity)
             } else {
                 lockedNote
             }
@@ -322,5 +332,22 @@ struct WaterTotalProvider: ControlValueProvider {
 
     func currentValue() async throws -> Int {
         WaterData.total()
+    }
+}
+
+/// Hedefe göre dolan yatay çubuk (widget).
+struct WaterBar: View {
+    var fraction: Double
+
+    var body: some View {
+        GeometryReader { geo in
+            ZStack(alignment: .leading) {
+                Capsule().fill(CT.accent.opacity(0.15))
+                Capsule()
+                    .fill(CT.accent)
+                    .frame(width: max(fraction > 0 ? geo.size.height : 0,
+                                      geo.size.width * min(1, max(0, fraction))))
+            }
+        }
     }
 }
