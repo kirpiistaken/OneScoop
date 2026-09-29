@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import BackgroundTasks
 import UserNotifications
 import WidgetKit
 
@@ -31,11 +32,34 @@ struct CreatineTrackerApp: App {
         .onChange(of: scenePhase) { _, phase in
             if phase == .active {
                 store.becameActive()
+                MidnightRefresh.schedule()
                 // Dil değiştiyse bildirim butonu ve metinleri de yenilensin.
                 NotificationManager.registerCategories()
                 Task { await NotificationManager.reschedule() }
             }
         }
+        .backgroundTask(.appRefresh(MidnightRefresh.identifier)) {
+            await MidnightRefresh.run()
+        }
+    }
+}
+
+/// Gece yarısından sonra widget'ları ve Denetim Merkezi düğmesini yeniler.
+/// Uygulama hiç açılmasa ve ekranda widget olmasa bile düğme dünkü
+/// "alındı" durumunda kalmasın diye. Zamanı iOS belirler; gece yarısından
+/// biraz sonra, telefon uygun olduğunda çalışır.
+enum MidnightRefresh {
+    static let identifier = "com.atalay.creatinetracker.midnight"
+
+    static func schedule() {
+        let request = BGAppRefreshTaskRequest(identifier: identifier)
+        request.earliestBeginDate = DayKey.nextMidnight.addingTimeInterval(60)
+        try? BGTaskScheduler.shared.submit(request)
+    }
+
+    static func run() async {
+        schedule()
+        IntentRefresh.all()
     }
 }
 

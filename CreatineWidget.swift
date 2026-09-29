@@ -24,6 +24,13 @@ struct CreatineProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<CreatineEntry>) -> Void) {
         let entry = CreatineEntry(date: Date(), status: Persistence.currentStatus())
         completion(Timeline(entries: [entry], policy: .after(DayKey.nextMidnight)))
+
+        // Denetim Merkezi düğmesinin kendi zaman çizelgesi yok; gece yarısı
+        // kendiliğinden yenilenmiyor ve dünkü "alındı" durumunda kalıyordu.
+        // Widget her gece yarısı yenilendiğinde düğmeyi de yeniliyoruz.
+        if #available(iOS 18.0, *) {
+            ControlCenter.shared.reloadControls(ofKind: LogCreatineControl.kind)
+        }
     }
 }
 

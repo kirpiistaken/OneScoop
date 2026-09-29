@@ -50,6 +50,9 @@ final class CreatineStore: ObservableObject {
         } else {
             reload()
             PhoneWatchBridge.shared.pushStatus()
+            // Gün değişmiş olabilir: widget'lar ve Denetim Merkezi düğmesi
+            // dünkü durumda kalmasın.
+            IntentRefresh.all()
         }
     }
 
