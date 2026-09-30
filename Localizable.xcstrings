@@ -3629,43 +3629,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Käufe sind in diesem Test-Build noch nicht verfügbar."
+            "value": "Käufe sind gerade nicht verfügbar. Bitte versuche es später erneut."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Purchases aren't available yet in this test build."
+            "value": "Purchases aren't available right now. Please try again later."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Las compras aún no están disponibles en esta versión de prueba."
+            "value": "Las compras no están disponibles en este momento. Inténtalo más tarde."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Les achats ne sont pas encore disponibles dans cette version de test."
+            "value": "Les achats ne sont pas disponibles pour le moment. Réessayez plus tard."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gli acquisti non sono ancora disponibili in questa build di prova."
+            "value": "Gli acquisti non sono disponibili al momento. Riprova più tardi."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "As compras ainda não estão disponíveis nesta versão de teste."
+            "value": "As compras não estão disponíveis no momento. Tente novamente mais tarde."
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bu test sürümünde satın alma henüz hazır değil."
+            "value": "Satın alma şu anda kullanılamıyor. Lütfen daha sonra tekrar dene."
           }
         }
       }

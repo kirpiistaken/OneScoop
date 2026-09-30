@@ -538,13 +538,13 @@ add("plus.no_subscription",
 add("plus.buy", "Unlock OneScoop+", "OneScoop+'ı aç", "Desbloquear OneScoop+", "OneScoop+ freischalten",
     "Débloquer OneScoop+", "Sblocca OneScoop+", "Desbloquear OneScoop+")
 add("plus.unavailable",
-    "Purchases aren't available yet in this test build.",
-    "Bu test sürümünde satın alma henüz hazır değil.",
-    "Las compras aún no están disponibles en esta versión de prueba.",
-    "Käufe sind in diesem Test-Build noch nicht verfügbar.",
-    "Les achats ne sont pas encore disponibles dans cette version de test.",
-    "Gli acquisti non sono ancora disponibili in questa build di prova.",
-    "As compras ainda não estão disponíveis nesta versão de teste.")
+    "Purchases aren't available right now. Please try again later.",
+    "Satın alma şu anda kullanılamıyor. Lütfen daha sonra tekrar dene.",
+    "Las compras no están disponibles en este momento. Inténtalo más tarde.",
+    "Käufe sind gerade nicht verfügbar. Bitte versuche es später erneut.",
+    "Les achats ne sont pas disponibles pour le moment. Réessayez plus tard.",
+    "Gli acquisti non sono disponibili al momento. Riprova più tardi.",
+    "As compras não estão disponíveis no momento. Tente novamente mais tarde.")
 add("plus.restore", "Restore purchases", "Satın alımları geri yükle", "Restaurar compras",
     "Käufe wiederherstellen", "Restaurer les achats", "Ripristina acquisti", "Restaurar compras")
 add("plus.family",
