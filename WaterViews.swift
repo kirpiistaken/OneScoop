@@ -39,20 +39,21 @@ struct WaterCard: View {
                             .contentTransition(.numericText())
                             .animation(.snappy, value: total)
                     }
-                    HStack(spacing: 8) {
-                        Text(paceText)
-                            .font(.system(.footnote, design: .rounded).weight(.medium))
-                            .foregroundStyle(CT.inkSoft)
+                    // Tempo cümlesi kendi satırında; sığmazsa ikinci satıra
+                    // geçer, "..." ile kesilmez.
+                    Text(paceText)
+                        .font(.system(.footnote, design: .rounded).weight(.medium))
+                        .foregroundStyle(CT.inkSoft)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                    // Antrenman günü: hedefe eklenen miktar (OneScoop+).
+                    // Tempo cümlesine yer açmak için onun altında.
+                    if WaterData.hasWorkoutBoost() {
+                        Label(L.waterWorkoutBoost(String(store.water.workoutBoostMl)),
+                              systemImage: "figure.strengthtraining.traditional")
+                            .font(.system(.caption2, design: .rounded).weight(.semibold))
+                            .foregroundStyle(CT.accent)
                             .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                        // Antrenman günü: hedefe eklenen miktar (OneScoop+).
-                        if WaterData.hasWorkoutBoost() {
-                            Label(L.waterWorkoutBoost(String(store.water.workoutBoostMl)),
-                                  systemImage: "figure.strengthtraining.traditional")
-                                .font(.system(.caption2, design: .rounded).weight(.semibold))
-                                .foregroundStyle(CT.accent)
-                                .lineLimit(1)
-                        }
                     }
                 }
             }
