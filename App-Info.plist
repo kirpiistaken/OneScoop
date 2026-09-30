@@ -16,6 +16,21 @@
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>OneScoop</string>
+	<key>INAlternativeAppNames</key>
+	<array>
+		<dict>
+			<key>INAlternativeAppName</key>
+			<string>One Scoop</string>
+			<key>INAlternativeAppNamePronunciationHint</key>
+			<string>wan skoop</string>
+		</dict>
+		<dict>
+			<key>INAlternativeAppName</key>
+			<string>Van Skup</string>
+			<key>INAlternativeAppNamePronunciationHint</key>
+			<string>van skup</string>
+		</dict>
+	</array>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

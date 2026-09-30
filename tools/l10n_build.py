@@ -951,7 +951,8 @@ A = "${applicationName}"
 PHRASES = [
     # Kreatin kaydet
     ([f"Log my creatine in {A}", f"Log creatine in {A}", f"I took my creatine in {A}", f"{A} creatine done"],
-     {"tr": [f"{A}'ta kreatinimi kaydet", f"{A}'ta kreatin kaydet", f"{A}'ta kreatinimi aldım", f"{A} kreatin tamam"],
+     # Türkçe: uygulama adına ek yapışmasın ("OneScoop'ta" Siri'de eşleşmiyor), ayrı kelime.
+     {"tr": [f"{A} ile kreatinimi kaydet", f"{A} kreatin kaydet", f"{A} kreatin aldım", f"{A} kreatin tamam"],
       "es": [f"Registra mi creatina en {A}", f"Registrar creatina en {A}", f"Tomé mi creatina en {A}", f"{A} creatina hecha"],
       "de": [f"Trag mein Kreatin in {A} ein", f"Kreatin in {A} eintragen", f"Ich habe mein Kreatin in {A} genommen", f"{A} Kreatin erledigt"],
       "fr": [f"Note ma créatine dans {A}", f"Noter la créatine dans {A}", f"J'ai pris ma créatine dans {A}", f"{A} créatine faite"],
@@ -959,7 +960,7 @@ PHRASES = [
       "pt-BR": [f"Registre minha creatina no {A}", f"Registrar creatina no {A}", f"Tomei minha creatina no {A}", f"{A} creatina feita"]}),
     # Kreatini geri al
     ([f"Undo my creatine in {A}", f"Remove today's creatine in {A}"],
-     {"tr": [f"{A}'ta kreatinimi geri al", f"{A}'ta bugünkü kreatini sil"],
+     {"tr": [f"{A} ile kreatinimi geri al", f"{A} kreatini geri al"],
       "es": [f"Deshacer mi creatina en {A}", f"Quitar la creatina de hoy en {A}"],
       "de": [f"Mein Kreatin in {A} widerrufen", f"Heutiges Kreatin in {A} löschen"],
       "fr": [f"Annule ma créatine dans {A}", f"Supprime la créatine du jour dans {A}"],
@@ -967,7 +968,7 @@ PHRASES = [
       "pt-BR": [f"Desfazer minha creatina no {A}", f"Remover a creatina de hoje no {A}"]}),
     # Su ekle
     ([f"Log water in {A}", f"Add water in {A}", f"I drank water in {A}", f"Add a glass of water in {A}"],
-     {"tr": [f"{A}'ta su kaydet", f"{A}'ta su ekle", f"{A}'ta su içtim", f"{A}'ta bir bardak su ekle"],
+     {"tr": [f"{A} ile su ekle", f"{A} su ekle", f"{A} ile su kaydet", f"{A} bir bardak su ekle"],
       "es": [f"Registra agua en {A}", f"Añade agua en {A}", f"Bebí agua en {A}", f"Añade un vaso de agua en {A}"],
       "de": [f"Wasser in {A} eintragen", f"Wasser in {A} hinzufügen", f"Ich habe Wasser in {A} getrunken", f"Ein Glas Wasser in {A} hinzufügen"],
       "fr": [f"Note de l'eau dans {A}", f"Ajoute de l'eau dans {A}", f"J'ai bu de l'eau dans {A}", f"Ajoute un verre d'eau dans {A}"],
