@@ -30,15 +30,26 @@ struct ScoopShape: Shape {
         let bottom = ellipse(506.5, 800, 250.5, 125)          // yuvarlak dip
         let hole = ellipse(507, 538, 221, 69)                 // ağız iç boşluğu
 
+        // Sap: logodaki gibi gövdeye düz kenarla bağlanıyor, sadece dış ucu
+        // yuvarlak (merkez 1040,395, yarıçap 50). Eskiden uçları yuvarlak kalın
+        // bir çizgiydi; gövde tarafındaki yuvarlak ağız boşluğuna taşıyordu.
         let handle = Path { p in
-            p.move(to: pt(768, 518))
-            p.addLine(to: pt(1040, 395))
+            p.move(to: pt(712, 488.45))            // üst kenar, ağzın dış halkasında
+            p.addLine(to: pt(1019.40, 349.44))     // üst kenar, uca teğet
+            let a0 = atan2(349.44 - 395, 1019.40 - 1040)
+            let a1 = atan2(440.56 - 395, 1060.60 - 1040)
+            for i in 1...24 {                      // dış uçtaki yarım daire
+                let a = a0 + (a1 - a0) * CGFloat(i) / 24
+                p.addLine(to: pt(1040 + 50 * cos(a), 395 + 50 * sin(a)))
+            }
+            p.addLine(to: pt(745, 583.27))         // alt kenar, gövdenin içinde
+            p.addLine(to: pt(750, 540))
+            p.closeSubpath()
         }
-        .strokedPath(StrokeStyle(lineWidth: 100 * s, lineCap: .round))
 
-        var scoop = rim.union(body).union(bottom)
+        // Ağız boşluğu en son kesiliyor: hiçbir parça ağzın içine taşmasın.
+        var scoop = rim.union(body).union(bottom).union(handle)
             .subtracting(hole)
-            .union(handle)
 
         if check {
             let tick = Path { p in

@@ -38,6 +38,18 @@ def silhouette():
 def hole():
     return arc(CX, 538, 221, 69, 0, 2 * math.pi, N)[:-1]
 
+def handle(n=24):
+    """Sap: gövdeye düz kenarla bağlanır, sadece dış ucu yuvarlak (logodaki gibi).
+    Başlangıç noktaları ağız boşluğunun dışında kalıyor, boşlukla örtüşmüyor."""
+    cx, cy, r = 1040.0, 395.0, 50.0
+    a0 = math.atan2(349.44 - cy, 1019.40 - cx)
+    a1 = math.atan2(440.56 - cy, 1060.60 - cx)
+    pts = [(712.0, 488.45)]
+    pts += [(cx + r * math.cos(a0 + (a1 - a0) * i / n), cy + r * math.sin(a0 + (a1 - a0) * i / n))
+            for i in range(n + 1)]
+    pts += [(745.0, 583.27), (750.0, 540.0)]
+    return pts
+
 def capsule(p0, p1, r, n=24):
     (x0, y0), (x1, y1) = p0, p1
     a = math.atan2(y1 - y0, x1 - x0)
@@ -69,7 +81,7 @@ def oriented(p, positive):
     return p if (area(p) > 0) == positive else p[::-1]
 
 def parts(with_check):
-    solid = [silhouette(), capsule((775, 515), (1040, 395), 50)]
+    solid = [silhouette(), handle()]
     holes = [hole()]
     if with_check:
         holes.append(check((418, 742), (492, 816), (618, 676), 24))
