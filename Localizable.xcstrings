@@ -9168,6 +9168,147 @@
         }
       }
     },
+    "water.catch_bottle": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eine Flasche und du bist wieder im Plan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One bottle and you're back on pace"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una botella y vuelves a tu ritmo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une gourde et vous êtes de nouveau dans le rythme"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una borraccia e sei di nuovo in linea"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma garrafa e você volta ao ritmo"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir şişe içersen tempoya yetişirsin"
+          }
+        }
+      }
+    },
+    "water.catch_glass": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein Glas und du bist wieder im Plan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One glass and you're back on pace"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un vaso y vuelves a tu ritmo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un verre et vous êtes de nouveau dans le rythme"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un bicchiere e sei di nuovo in linea"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Um copo e você volta ao ritmo"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir bardak içersen tempoya yetişirsin"
+          }
+        }
+      }
+    },
+    "water.catch_shaker": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ein Shaker und du bist wieder im Plan"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One shaker and you're back on pace"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un shaker y vuelves a tu ritmo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Un shaker et vous êtes de nouveau dans le rythme"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uno shaker e sei di nuovo in linea"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uma coqueteleira e você volta ao ritmo"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bir shaker içersen tempoya yetişirsin"
+          }
+        }
+      }
+    },
     "water.cup.bottle": {
       "extractionState": "manual",
       "localizations": {
@@ -9456,43 +9597,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ ml hinter deinem Plan"
+            "value": "%@ L hinter deinem Plan"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ ml behind your pace"
+            "value": "%@ L behind your pace"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ ml por detrás de tu ritmo"
+            "value": "%@ L por detrás de tu ritmo"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ ml de retard sur votre rythme"
+            "value": "%@ L de retard sur votre rythme"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ ml indietro rispetto al ritmo"
+            "value": "%@ L indietro rispetto al ritmo"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ ml atrás do seu ritmo"
+            "value": "%@ L atrás do seu ritmo"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Temponun %@ ml gerisindesin"
+            "value": "Temponun %@ L gerisindesin"
           }
         }
       }

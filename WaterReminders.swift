@@ -189,7 +189,7 @@ enum WaterReminders {
                     if gapOK && behind >= max(250, expected / 5) {
                         let body = usesLearned
                             ? L.notifWaterSmart(expected.litersString, total.litersString)
-                            : L.notifWaterPace(String(behind))
+                            : L.notifWaterPace(String(Int((Double(behind) / 50).rounded()) * 50))
                         await add(at: m, body: body)
                     }
                     m += 60

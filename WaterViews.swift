@@ -73,10 +73,23 @@ struct WaterCard: View {
         .sheet(isPresented: $showPaywall) { PaywallView() }
     }
 
+    /// Tempo: saate göre şu ana kadar içilmiş olması gereken miktarla fark.
+    /// Ham ml yerine butonlara bağlı söyleniyor: açığı kapatan en küçük kap
+    /// ("Bir shaker içersen tempoya yetişirsin"); o da yetmiyorsa 50'ye
+    /// yuvarlanmış litre.
     private var paceText: String {
         if total >= goal { return L.waterGoalReached }
         let behind = WaterReminders.expected() - total
-        return behind > 150 ? L.waterPaceBehind(String(behind)) : L.waterPaceOn
+        guard behind > 150 else { return L.waterPaceOn }
+        if let cup = store.water.cups.filter({ $0.ml >= behind }).min(by: { $0.ml < $1.ml }) {
+            switch cup.kind {
+            case .glass: return L.waterCatchGlass
+            case .shaker: return L.waterCatchShaker
+            case .bottle: return L.waterCatchBottle
+            }
+        }
+        let rounded = Int((Double(behind) / 50).rounded()) * 50
+        return L.waterPaceBehind(rounded.litersString)
     }
 
     /// Her basış en son girilen suyu siler; art arda basılabilir.

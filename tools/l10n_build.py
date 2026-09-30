@@ -454,9 +454,24 @@ add("water.pace_on",
     "Right on pace", "Tempondasın", "Vas a buen ritmo", "Du liegst im Plan",
     "Vous êtes dans le rythme", "Sei in linea", "No ritmo certo")
 add("water.pace_behind %@",
-    "%@ ml behind your pace", "Temponun %@ ml gerisindesin", "%@ ml por detrás de tu ritmo",
-    "%@ ml hinter deinem Plan", "%@ ml de retard sur votre rythme",
-    "%@ ml indietro rispetto al ritmo", "%@ ml atrás do seu ritmo")
+    "%@ L behind your pace", "Temponun %@ L gerisindesin", "%@ L por detrás de tu ritmo",
+    "%@ L hinter deinem Plan", "%@ L de retard sur votre rythme",
+    "%@ L indietro rispetto al ritmo", "%@ L atrás do seu ritmo")
+add("water.catch_glass",
+    "One glass and you're back on pace", "Bir bardak içersen tempoya yetişirsin",
+    "Un vaso y vuelves a tu ritmo", "Ein Glas und du bist wieder im Plan",
+    "Un verre et vous êtes de nouveau dans le rythme", "Un bicchiere e sei di nuovo in linea",
+    "Um copo e você volta ao ritmo")
+add("water.catch_shaker",
+    "One shaker and you're back on pace", "Bir shaker içersen tempoya yetişirsin",
+    "Un shaker y vuelves a tu ritmo", "Ein Shaker und du bist wieder im Plan",
+    "Un shaker et vous êtes de nouveau dans le rythme", "Uno shaker e sei di nuovo in linea",
+    "Uma coqueteleira e você volta ao ritmo")
+add("water.catch_bottle",
+    "One bottle and you're back on pace", "Bir şişe içersen tempoya yetişirsin",
+    "Una botella y vuelves a tu ritmo", "Eine Flasche und du bist wieder im Plan",
+    "Une gourde et vous êtes de nouveau dans le rythme", "Una borraccia e sei di nuovo in linea",
+    "Uma garrafa e você volta ao ritmo")
 add("water.cup.glass", "Glass", "Bardak", "Vaso", "Glas", "Verre", "Bicchiere", "Copo")
 add("water.cup.shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Shaker", "Coqueteleira")
 add("water.cup.bottle", "Bottle", "Şişe", "Botella", "Flasche", "Gourde", "Borraccia", "Garrafa")

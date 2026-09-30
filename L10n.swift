@@ -175,6 +175,9 @@ enum L {
     static var watchSetupFirst: String { String(localized: "watch.setup_first") }
     static var watchWaterAdd: String { String(localized: "watch.water_add") }
     static var watchWaterPlus: String { String(localized: "watch.water_plus") }
+    static var waterCatchBottle: String { String(localized: "water.catch_bottle") }
+    static var waterCatchGlass: String { String(localized: "water.catch_glass") }
+    static var waterCatchShaker: String { String(localized: "water.catch_shaker") }
     static var waterCupBottle: String { String(localized: "water.cup.bottle") }
     static var waterCupGlass: String { String(localized: "water.cup.glass") }
     static var waterCupShaker: String { String(localized: "water.cup.shaker") }
