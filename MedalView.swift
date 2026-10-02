@@ -105,21 +105,28 @@ struct MedalView: View {
         }
     }
 
-    /// Beyaz sayı, hafif parlama, seviye renginde ince kontur.
+    /// Beyaz sayı, hafif parlama, seviye renginde ince kontur. Kontur 8 yöne
+    /// kaydırılmış keskin kopyalarla, parlama bulanık bir kopyayla çiziliyor;
+    /// gölge tabanlı çizim görsele çevrilirken pikselleşiyordu.
     private var ribbonText: some View {
-        let outline = p.c3
-        let o = max(0.6, 1.1 * s)
-        return Text(verbatim: ribbon)
+        let o = max(0.7, 1.1 * s)
+        let base = Text(verbatim: ribbon)
             .font(.system(size: 26 * s, weight: .black, design: .rounded))
-            .foregroundStyle(.white)
-            .lineLimit(1)
-            .minimumScaleFactor(0.5)
-            .shadow(color: outline, radius: 0, x: o, y: 0)
-            .shadow(color: outline, radius: 0, x: -o, y: 0)
-            .shadow(color: outline, radius: 0, x: 0, y: o)
-            .shadow(color: outline, radius: 0, x: 0, y: -o)
-            .shadow(color: .white.opacity(locked ? 0 : 0.85), radius: 5 * s)
-            .padding(.horizontal, 30 * s)
+        return ZStack {
+            if !locked {
+                base.foregroundStyle(.white.opacity(0.85)).blur(radius: 5 * s)
+                base.foregroundStyle(.white.opacity(0.5)).blur(radius: 12 * s)
+            }
+            ForEach(0..<8, id: \.self) { i in
+                let a = Double(i) * .pi / 4
+                base.foregroundStyle(p.c3)
+                    .offset(x: CGFloat(cos(a)) * o, y: CGFloat(sin(a)) * o)
+            }
+            base.foregroundStyle(.white)
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.5)
+        .padding(.horizontal, 30 * s)
     }
 
     // MARK: Şekiller (200×220 alanında)

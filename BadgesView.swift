@@ -195,48 +195,69 @@ struct BadgeCelebrationView: View {
     @State private var appeared = false
 
     private var badge: Badge { badges[min(index, badges.count - 1)] }
+    private var palette: MedalPalette { MedalPalette.of(badge.tier) }
 
     var body: some View {
-        VStack(spacing: 14) {
-            Text(badges.count > 1 ? L.celebrateMany(badges.count) : L.celebrateOne)
-                .font(.system(.subheadline, design: .rounded).weight(.heavy))
-                .tracking(2)
-                .foregroundStyle(CT.accent)
-                .padding(.top, 30)
+        ZStack {
+            // Sahne: koyu zemin, seviye renginde ışık, dönen ışınlar, pırıltılar
+            Color(hex: 0x0A0F1F).ignoresSafeArea()
+            CelebrationStage(color: palette.c1, glow: palette.glow, appeared: appeared)
+                .ignoresSafeArea()
+                .animation(.easeInOut(duration: 0.5), value: badge.id)
 
-            TabView(selection: $index) {
-                ForEach(Array(badges.enumerated()), id: \.offset) { i, b in
-                    VStack(spacing: 14) {
-                        MedalView(badge: b, ribbon: progress.ribbon(for: b), width: 200)
-                            .scaleEffect(appeared ? 1 : 0.4)
-                            .rotationEffect(.degrees(appeared ? 0 : -12))
-                        Text(verbatim: b.name)
-                            .font(CT.display(32, .heavy))
-                            .foregroundStyle(CT.ink)
-                        Text(verbatim: b.detail)
-                            .font(.system(.body, design: .rounded))
-                            .foregroundStyle(CT.inkSoft)
-                            .multilineTextAlignment(.center)
+            VStack(spacing: 0) {
+                Text(badges.count > 1 ? L.celebrateMany(badges.count) : L.celebrateOne)
+                    .font(.system(size: 15, weight: .black, design: .rounded))
+                    .tracking(4)
+                    .foregroundStyle(palette.c1)
+                    .padding(.top, 36)
+                    .opacity(appeared ? 1 : 0)
+
+                TabView(selection: $index) {
+                    ForEach(Array(badges.enumerated()), id: \.offset) { i, b in
+                        VStack(spacing: 0) {
+                            Spacer(minLength: 0)
+                            MedalView(badge: b, ribbon: progress.ribbon(for: b), width: 250)
+                                .scaleEffect(appeared ? 1 : 0.3)
+                                .rotationEffect(.degrees(appeared ? 0 : -18))
+                                .opacity(appeared ? 1 : 0)
+                            Text(verbatim: b.name)
+                                .font(CT.display(38, .black))
+                                .foregroundStyle(.white)
+                                .padding(.top, 26)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.6)
+                            Text(verbatim: b.detail)
+                                .font(.system(.body, design: .rounded).weight(.semibold))
+                                .foregroundStyle(Color(hex: 0xB9C3D8))
+                                .multilineTextAlignment(.center)
+                                .padding(.top, 8)
+                            Spacer(minLength: 0)
+                        }
+                        .padding(.horizontal, 24)
+                        .tag(i)
                     }
-                    .tag(i)
                 }
-            }
-            .tabViewStyle(.page(indexDisplayMode: badges.count > 1 ? .always : .never))
-            .indexViewStyle(.page(backgroundDisplayMode: .always))
+                .tabViewStyle(.page(indexDisplayMode: badges.count > 1 ? .always : .never))
+                .indexViewStyle(.page(backgroundDisplayMode: .always))
 
-            ShareCardButton(kind: .badge(badge, ribbon: progress.ribbon(for: badge)))
-                .id(badge.id)
-            Button(L.commonDone) { dismiss() }
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .foregroundStyle(CT.inkSoft)
-                .padding(.bottom, 8)
+                VStack(spacing: 12) {
+                    ShareCardButton(kind: .badge(badge, ribbon: progress.ribbon(for: badge)))
+                        .id(badge.id)
+                    Button(L.commonDone) { dismiss() }
+                        .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                        .foregroundStyle(Color(hex: 0x8A92A3))
+                }
+                .padding(.horizontal, 24)
+                .padding(.bottom, 12)
+            }
         }
-        .padding(.horizontal, 24)
-        .background(CT.bg.ignoresSafeArea())
+        .environment(\.colorScheme, .dark)
         .presentationDetents([.large])
+        .presentationBackground(Color(hex: 0x0A0F1F))
         .onAppear {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
-            withAnimation(.spring(response: 0.6, dampingFraction: 0.55).delay(0.1)) { appeared = true }
+            withAnimation(.spring(response: 0.7, dampingFraction: 0.55).delay(0.15)) { appeared = true }
             maybeAskForReview()
         }
     }
@@ -253,5 +274,109 @@ struct BadgeCelebrationView: View {
             try? await Task.sleep(for: .seconds(2))
             requestReview()
         }
+    }
+}
+
+// MARK: - Kutlama sahnesi
+
+/// Rozetin arkasındaki ışık: yumuşak bloom, yavaş dönen ışınlar, yanıp sönen
+/// pırıltılar ve rozet gelince bir kez açılan ışık halkası.
+private struct CelebrationStage: View {
+    var color: Color
+    var glow: Color
+    var appeared: Bool
+
+    @State private var spin = false
+    @State private var pulse = false
+    @State private var burst = false
+
+    // Pırıltıların yerleri (ekranın oranı), boyutları ve gecikmeleri sabit.
+    private let sparkles: [(CGFloat, CGFloat, CGFloat, Double)] = [
+        (0.18, 0.22, 14, 0.0), (0.82, 0.18, 10, 0.6), (0.12, 0.48, 9, 1.1),
+        (0.88, 0.44, 16, 0.3), (0.26, 0.66, 8, 0.9), (0.76, 0.68, 12, 1.4),
+        (0.5, 0.14, 9, 1.8), (0.62, 0.30, 7, 0.4), (0.36, 0.30, 7, 1.6),
+        (0.93, 0.58, 8, 2.1), (0.07, 0.34, 11, 2.4), (0.55, 0.74, 7, 0.7),
+    ]
+
+    var body: some View {
+        GeometryReader { geo in
+            let center = CGPoint(x: geo.size.width / 2, y: geo.size.height * 0.42)
+            ZStack {
+                // Geniş ve yumuşak bloom
+                RadialGradient(colors: [glow.opacity(0.9), glow.opacity(0.25), .clear],
+                               center: .center, startRadius: 0, endRadius: geo.size.width * 0.75)
+                    .frame(width: geo.size.width * 1.6, height: geo.size.width * 1.6)
+                    .scaleEffect(pulse ? 1.06 : 0.94)
+                    .position(center)
+
+                // Dönen ışınlar
+                Rays(count: 18)
+                    .fill(AngularGradient(colors: [color.opacity(0.16), color.opacity(0.02), color.opacity(0.16)],
+                                          center: .center))
+                    .frame(width: geo.size.width * 1.9, height: geo.size.width * 1.9)
+                    .mask(RadialGradient(colors: [.white, .white.opacity(0.4), .clear],
+                                         center: .center, startRadius: 40, endRadius: geo.size.width * 0.9))
+                    .rotationEffect(.degrees(spin ? 360 : 0))
+                    .position(center)
+                    .opacity(appeared ? 1 : 0)
+
+                // Rozet gelince açılan ışık halkası
+                Circle()
+                    .stroke(color.opacity(burst ? 0 : 0.7), lineWidth: burst ? 1 : 6)
+                    .frame(width: 120, height: 120)
+                    .scaleEffect(burst ? 4.5 : 0.6)
+                    .position(center)
+
+                // Pırıltılar
+                ForEach(sparkles.indices, id: \.self) { i in
+                    let sp = sparkles[i]
+                    Sparkle(color: color, size: sp.2, delay: sp.3)
+                        .position(x: geo.size.width * sp.0, y: geo.size.height * sp.1)
+                }
+            }
+        }
+        .allowsHitTesting(false)
+        .onAppear {
+            withAnimation(.linear(duration: 40).repeatForever(autoreverses: false)) { spin = true }
+            withAnimation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true)) { pulse = true }
+            withAnimation(.easeOut(duration: 1.1).delay(0.25)) { burst = true }
+        }
+    }
+}
+
+private struct Rays: Shape {
+    var count: Int
+    func path(in rect: CGRect) -> Path {
+        var p = Path()
+        let c = CGPoint(x: rect.midX, y: rect.midY)
+        let r = max(rect.width, rect.height) / 2
+        let half = CGFloat.pi / CGFloat(count) * 0.45
+        for i in 0..<count {
+            let a = CGFloat(i) / CGFloat(count) * 2 * .pi
+            p.move(to: c)
+            p.addLine(to: CGPoint(x: c.x + r * cos(a - half), y: c.y + r * sin(a - half)))
+            p.addLine(to: CGPoint(x: c.x + r * cos(a + half), y: c.y + r * sin(a + half)))
+            p.closeSubpath()
+        }
+        return p
+    }
+}
+
+private struct Sparkle: View {
+    var color: Color
+    var size: CGFloat
+    var delay: Double
+    @State private var on = false
+
+    var body: some View {
+        Image(systemName: "sparkle")
+            .font(.system(size: size, weight: .bold))
+            .foregroundStyle(.white)
+            .shadow(color: color, radius: 6)
+            .scaleEffect(on ? 1 : 0.2)
+            .opacity(on ? 0.95 : 0)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.3).repeatForever(autoreverses: true).delay(delay)) { on = true }
+            }
     }
 }
