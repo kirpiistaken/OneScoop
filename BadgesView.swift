@@ -264,7 +264,9 @@ struct BadgeCelebrationView: View {
         .presentationBackground(Color(hex: 0x0A0F1F))
         .onAppear {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
-            withAnimation(.spring(response: 0.7, dampingFraction: 0.55).delay(0.15)) { appeared = true }
+            // Sayfa yukarı kayarken başlarsa ikisi üst üste binip takılıyordu;
+            // madalya, sayfa yerine oturduktan sonra geliyor.
+            withAnimation(.spring(response: 0.7, dampingFraction: 0.55).delay(0.45)) { appeared = true }
             if !preview { maybeAskForReview() }
         }
     }
@@ -342,11 +344,14 @@ private struct CelebrationStage: View {
                 }
             }
         }
+        // Işınlar, maske, parlama ve pırıltılar tek katmanda GPU ile çiziliyor;
+        // ayrı ayrı çizilince her karede pahalı ara katmanlar oluşuyordu.
+        .drawingGroup()
         .allowsHitTesting(false)
         .onAppear {
             withAnimation(.linear(duration: 40).repeatForever(autoreverses: false)) { spin = true }
             withAnimation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true)) { pulse = true }
-            withAnimation(.easeOut(duration: 1.1).delay(0.25)) { burst = true }
+            withAnimation(.easeOut(duration: 1.1).delay(0.5)) { burst = true }
         }
     }
 }
