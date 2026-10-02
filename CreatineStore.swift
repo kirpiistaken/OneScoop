@@ -84,6 +84,8 @@ final class CreatineStore: ObservableObject {
                 _ = await NotificationManager.requestAuthorization()
             }
             await NotificationManager.reschedule()
+            // Kreatin saati değişince su bildirimleri ona göre kaysın.
+            await WaterReminders.reschedule()
         }
     }
 

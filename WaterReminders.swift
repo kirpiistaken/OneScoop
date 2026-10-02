@@ -12,9 +12,15 @@ import UserNotifications
 // Böylece bildirim sadece gerçekten geride kalındığında geliyor.
 //
 // Basit (ücretsiz): gün içinde sabit aralıklarla; hedefe ulaşınca susar.
-// Akıllı (OneScoop+): son 14 günün kayıtlarından her saat için "normalde bu
-// saate kadar ne kadar içiyorsun" eğrisi çıkarılır (medyan). O saatte bunun
-// belirgin gerisindeysen hatırlatır. Yeterli veri yokken hedefe göre düz tempo.
+// Akıllı (OneScoop+): son 4 haftanın kayıtlarından "normalde bu saate kadar
+// ne kadar içiyorsun" eğrisi çıkarılır (medyan). Pencere her gün kayar, yani
+// algoritma her gün yeni günü öğrenip en eskisini bırakır; hafta içi ve
+// hafta sonu düzeni ayrı öğrenilir. Hatırlatma saatleri de kullanıcının
+// genelde su içtiği saatlere göre seçilir: o saat geçtiği halde belirgin
+// gerideyse hatırlatır. Yeterli veri yokken hedefe göre düz tempo.
+//
+// Her iki modda da kreatin hatırlatmasının 45 dk yakınına su bildirimi
+// konmaz; çakışan bildirim kreatinden sonraya kaydırılır.
 
 enum WaterReminders {
     static let prefix = "ct.water."
@@ -23,14 +29,14 @@ enum WaterReminders {
 
     /// Kişisel eğri için gereken en az gün sayısı.
     static let daysToLearn = 3
-    private static let historyDays = 14
+    private static let historyDays = 28
     private static let horizonDays = 2          // bugün + yarın
     private static let smartMaxPerDay = 4
     private static let smartMinGap: TimeInterval = 2 * 3600
 
     // MARK: - Öğrenilen düzen
 
-    /// Öğrenmede sayılan günler: bugünden önceki 14 gün içinde en az 3 kayıt
+    /// Öğrenmede sayılan günler: bugünden önceki 28 gün içinde en az 3 kayıt
     /// girilmiş ya da hedefin %30'una ulaşılmış günler. Kaydetmeyi unuttuğun
     /// günler ortalamayı aşağı çekmesin diye.
     static func learningDays(log: [String: [WaterEntry]], goal: Int, now: Date = Date()) -> [[WaterEntry]] {
@@ -41,6 +47,57 @@ enum WaterReminders {
             let total = list.reduce(0) { $0 + $1.ml }
             return (list.count >= 3 || total >= goal * 3 / 10) ? list : nil
         }
+    }
+
+    /// Hafta içi / hafta sonu ayrı: o güne benzeyen günlerden yeterince
+    /// varsa sadece onlar, yoksa hepsi.
+    static func days(like day: Date, from all: [[WaterEntry]]) -> [[WaterEntry]] {
+        let cal = DayKey.calendar
+        let weekend = cal.isDateInWeekend(day)
+        let same = all.filter { list in list.first.map { cal.isDateInWeekend($0.at) } == weekend }
+        return same.count >= daysToLearn ? same : all
+    }
+
+    /// Kullanıcının genelde su içtiği yarım saatler (günün dakikası olarak).
+    /// Öğrenilen günlerin en az %30'unda (en az 2 gün) su girilen dilimler.
+    static func usualSlots(days: [[WaterEntry]]) -> [Int] {
+        let cal = DayKey.calendar
+        var counts: [Int: Int] = [:]
+        for list in days {
+            let slots = Set(list.map { e -> Int in
+                let c = cal.dateComponents([.hour, .minute], from: e.at)
+                return ((c.hour ?? 0) * 60 + (c.minute ?? 0)) / 30 * 30
+            })
+            for slot in slots { counts[slot, default: 0] += 1 }
+        }
+        let need = max(2, Int((Double(days.count) * 0.3).rounded()))
+        return counts.filter { $0.value >= need }.map(\.key).sorted()
+    }
+
+    // MARK: Kreatinle çakışmama
+
+    /// Su bildirimi kreatin bildiriminin bu kadar dakika yakınına düşmez.
+    static let creatineGap = 45
+
+    /// O gün kurulacak kreatin hatırlatmalarının saatleri (günün dakikası).
+    /// Kreatin o gün zaten alındıysa hatırlatma yok, çakışma da yok.
+    static func creatineTimes(on day: Date) -> [Int] {
+        let s = Persistence.loadSettings()
+        guard s.reminderEnabled, s.hasCompletedOnboarding,
+              Persistence.loadLog()[DayKey.key(for: day)] == nil else { return [] }
+        let first = s.reminderHour * 60 + s.reminderMinute
+        return (0..<max(1, s.notificationsPerDay))
+            .map { first + $0 * s.repeatIntervalMinutes }
+            .filter { $0 < 24 * 60 }
+    }
+
+    /// Kreatin bildirimine yakın düşen saati kreatinden sonraya kaydırır.
+    static func avoiding(_ minutes: Int, _ creatine: [Int]) -> Int {
+        var m = minutes
+        for c in creatine.sorted() where abs(m - c) < creatineGap {
+            m = c + creatineGap
+        }
+        return m
     }
 
     /// Bu günlerde, günün `minutes`'ına kadar içilen miktarın medyanı.
@@ -89,7 +146,8 @@ enum WaterReminders {
         let c = DayKey.calendar.dateComponents([.hour, .minute], from: date)
         let minutes = (c.hour ?? 0) * 60 + (c.minute ?? 0)
         if PlusAccess.isUnlocked {
-            let days = learningDays(log: WaterData.mergedLog(), goal: s.goalMl, now: date)
+            let all = learningDays(log: WaterData.mergedLog(), goal: s.goalMl, now: date)
+            let days = Self.days(like: date, from: all)
             if days.count >= daysToLearn {
                 return learnedExpected(atMinutes: minutes, days: days)
             }
@@ -122,8 +180,7 @@ enum WaterReminders {
 
         let mode: WaterReminderMode = (s.reminderMode == .smart && PlusAccess.isUnlocked) ? .smart : .simple
         let log = WaterData.mergedLog()
-        let learned = learningDays(log: log, goal: s.goalMl)
-        let usesLearned = mode == .smart && learned.count >= daysToLearn
+        let allLearned = learningDays(log: log, goal: s.goalMl)
         let cal = DayKey.calendar
         let now = Date()
 
@@ -136,11 +193,17 @@ enum WaterReminders {
             let dayGoal = WaterData.goal(on: day)
             if total >= dayGoal { continue }
 
+            let learned = days(like: day, from: allLearned)
+            let usesLearned = mode == .smart && learned.count >= daysToLearn
+            let creatine = creatineTimes(on: day)
+
             var index = 0
             var lastFire: Date?
 
-            func add(at minutes: Int, body: String) async {
-                guard let fire = cal.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: day),
+            func add(at requested: Int, body: String) async {
+                let minutes = avoiding(requested, creatine)
+                guard minutes < 24 * 60,
+                      let fire = cal.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: day),
                       fire > now else { return }
                 let content = UNMutableNotificationContent()
                 content.title = L.waterTitle
@@ -173,18 +236,27 @@ enum WaterReminders {
                 }
 
             case .smart:
-                // Her saat başı kontrol noktası. Gün penceresi kullanıcıya
-                // sorulmuyor: öğrenilen günlerden (ilk ve son su saati) çıkıyor,
-                // veri yoksa 08–22. O saatte beklenenin belirgin gerisindeysen
-                // bildirim; arada en az 2 saat, günde en fazla 4.
+                // Kontrol noktaları: kullanıcının genelde su içtiği yarım
+                // saatlerin 45 dk sonrası ("normalde şu an içmiş olurdun").
+                // Böyle en az 2 dilim yoksa saat başları. Gün penceresi
+                // öğrenilen günlerden, veri yoksa 08–22. O noktada beklenenin
+                // belirgin gerisindeysen bildirim; arada en az 2 saat, günde
+                // en fazla 4.
                 let window = usesLearned ? learnedWindow(days: learned) : (8, 22)
-                var m = (window.0 + 2) * 60
-                while m <= (window.1 - 1) * 60 && index < smartMaxPerDay {
+                let lo = (window.0 + 1) * 60, hi = (window.1 - 1) * 60
+                let slots = usesLearned
+                    ? usualSlots(days: learned).map { $0 + 45 }.filter { $0 >= lo && $0 <= hi }
+                    : []
+                let checkpoints = slots.count >= 2
+                    ? slots
+                    : Array(stride(from: (window.0 + 2) * 60, through: hi, by: 60))
+                for m in checkpoints where index < smartMaxPerDay {
                     let expected = usesLearned
                         ? learnedExpected(atMinutes: m, days: learned)
                         : linearExpected(atMinutes: m, start: window.0, end: window.1, goal: dayGoal)
                     let behind = expected - total
-                    let fire = cal.date(bySettingHour: m / 60, minute: 0, second: 0, of: day) ?? day
+                    let at = avoiding(m, creatine)
+                    let fire = cal.date(bySettingHour: min(at, 24 * 60 - 1) / 60, minute: min(at, 24 * 60 - 1) % 60, second: 0, of: day) ?? day
                     let gapOK = lastFire.map { fire.timeIntervalSince($0) >= smartMinGap } ?? true
                     if gapOK && behind >= max(250, expected / 5) {
                         let body = usesLearned
@@ -192,7 +264,6 @@ enum WaterReminders {
                             : L.notifWaterPace(String(Int((Double(behind) / 50).rounded()) * 50))
                         await add(at: m, body: body)
                     }
-                    m += 60
                 }
             }
         }
