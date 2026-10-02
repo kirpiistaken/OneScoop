@@ -408,6 +408,7 @@ struct WaterSettingsView: View {
                             }
                         )) {
                             HStack(spacing: 6) {
+                                Image(systemName: "heart.fill").foregroundStyle(.pink)
                                 Text(L.settingsWaterHealth)
                                 if !plus.isUnlocked { crown }
                             }
