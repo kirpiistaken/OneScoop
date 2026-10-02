@@ -141,7 +141,13 @@ private struct ShareLinkCompact: View {
                 }
             }
         }
-        .task { image = ShareCardView.render(kind) }
+        .task {
+            // Paylaşım görseli ana iş parçacığında çiziliyor (1080×1920, parlamalı).
+            // Ekran açılırken çizilirse açılış animasyonu takılıyordu; animasyonlar
+            // bitince hazırla.
+            try? await Task.sleep(for: .seconds(1.6))
+            image = ShareCardView.render(kind)
+        }
     }
 }
 
