@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Rozetler · Madalya</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0E15}
+a{color:#6E93FF}a:hover{color:#9DB5FF}
+</style>
+</helmet>
+<div style="width: 1240px; height: 1240px; box-sizing: border-box; padding: 56px 64px; background: #0F1219; font-family: Nunito, ui-rounded, system-ui, sans-serif; color: #E9ECF2; display: flex; flex-direction: column; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="font-size: 14px; font-weight: 800; letter-spacing: 3px; color: #6E93FF">TASLAK A</div>
+<h1 style="margin: 0; font-size: 44px; font-weight: 900">Madalya ve kurdele</h1>
+</div>
+<sc-for list="{{rows}}" as="row" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 14px">
+<div style="font-size: 18px; font-weight: 800; color: #A9B1C2">{{row.title}}</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+<sc-for list="{{row.items}}" as="it" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: {{it.opacity}}">
+<div style="position: relative; width: 180px; height: 198px">
+<svg width="180" height="198" viewBox="0 0 200 220" role="img" aria-label="{{it.name}}" style="overflow: visible; filter: drop-shadow(0 10px 24px {{it.glow}})">
+<defs>
+<linearGradient id="m{{it.id}}" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="{{it.c1}}"></stop>
+<stop offset="1" stop-color="{{it.c2}}"></stop>
+</linearGradient>
+<linearGradient id="i{{it.id}}" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="{{it.i1}}"></stop>
+<stop offset="1" stop-color="{{it.i2}}"></stop>
+</linearGradient>
+</defs>
+<polygon points="64,128 46,214 66,202 82,216 96,140" fill="{{it.c3}}"></polygon>
+<polygon points="136,128 154,214 134,202 118,216 104,140" fill="{{it.c3}}"></polygon>
+<polygon points="{{it.scallop}}" fill="url(#m{{it.id}})"></polygon>
+<circle cx="100" cy="96" r="70" fill="none" stroke="{{it.c3}}" stroke-width="3" opacity="0.6"></circle>
+<circle cx="100" cy="96" r="62" fill="#131722"></circle>
+<g transform="translate(62 50) scale(3.15)">
+<path d="{{it.fill}}" fill="url(#i{{it.id}})"></path>
+<path d="{{it.line}}" fill="none" stroke="url(#i{{it.id}})" stroke-width="2.6" stroke-linecap="round"></path>
+<path d="{{it.detail}}" fill="none" stroke="#131722" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<path d="M14 134h172l-13 17 13 17H14l13-17z" fill="url(#m{{it.id}})"></path>
+<path d="M14 134h172" stroke="#FFFFFF" stroke-opacity="0.4" stroke-width="1.5"></path>
+
+</svg>
+<div style="position: absolute; left: 0; right: 0; top: 121px; height: 30px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-size: 27px; font-weight: 900; line-height: 1; letter-spacing: 0.5px; text-shadow: 0 0 6px rgba(255,255,255,0.9), 0 0 16px rgba(255,255,255,0.55), 0 1px 2px rgba(0,0,0,0.35); -webkit-text-stroke: 1.2px {{it.c3}}; paint-order: stroke fill; pointer-events: none">{{it.num}}</div>
+</div>
+<div style="font-size: 17px; font-weight: 800">{{it.name}}</div>
+<div style="font-size: 13px; color: #8A92A3; text-align: center">{{it.desc}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1240,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = {
+      bronze: { c1: '#F0B88A', c2: '#9A5A34', c3: '#6E3C20', i1: '#FFD7B5', i2: '#D08A58', glow: 'rgba(232,160,110,0.28)' },
+      silver: { c1: '#F6F8FB', c2: '#9AA2B3', c3: '#5F6778', i1: '#FFFFFF', i2: '#AEB6C6', glow: 'rgba(220,226,236,0.25)' },
+      gold:   { c1: '#FFE79A', c2: '#C88E1C', c3: '#8A5E0E', i1: '#FFF0B8', i2: '#E8B033', glow: 'rgba(255,205,80,0.38)' },
+      plat:   { c1: '#C9E6FF', c2: '#4F78F0', c3: '#2C4BB8', i1: '#E6F3FF', i2: '#7FA4FF', glow: 'rgba(92,134,255,0.5)' },
+      locked: { c1: '#4A505D', c2: '#2A2F3A', c3: '#22262F', i1: '#6A7080', i2: '#4A505D', glow: 'rgba(0,0,0,0)' }
+    };
+    const G = {
+      scoop: { fill: 'M2.5 9h13.5v3.2a6.75 6.75 0 0 1-13.5 0z', line: 'M15.6 10.4L21.6 7.2', detail: '' },
+      drop:  { fill: 'M12 2c-3.4 4.9-6.8 8.4-6.8 12.3a6.8 6.8 0 0 0 13.6 0C18.8 10.4 15.4 6.9 12 2z', line: '', detail: 'M8.8 14.8a3.3 3.3 0 0 0 2.7 3.1' },
+      star:  { fill: 'M12 2.2l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.1l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z', line: '', detail: '' },
+      bolt:  { fill: 'M13.8 2L4.5 13.6h6.3L9.2 22l10.3-12.3h-6.4z', line: '', detail: '' },
+      box:   { fill: 'M12 2.6l8.8 4.5v9.8L12 21.4l-8.8-4.5V7.1z', line: '', detail: 'M3.2 7.1L12 11.6l8.8-4.5 M12 11.6v9.8' },
+      cal:   { fill: 'M4.5 5h15A1.5 1.5 0 0 1 21 6.5V19a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 19V6.5A1.5 1.5 0 0 1 4.5 5z', line: '', detail: 'M3 9.5h18 M8 3v4 M16 3v4 M7 13.5h2.5 M11 13.5h2.5 M15 13.5h2 M7 17h2.5 M11 17h2.5' }
+    };
+    const scallop = (() => {
+      const pts = [], n = 32, cx = 100, cy = 96;
+      for (let k = 0; k < n * 2; k++) {
+        const r = k % 2 === 0 ? 86 : 79;
+        const a = (Math.PI * k) / n - Math.PI / 2;
+        pts.push(`${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`);
+      }
+      return pts.join(' ');
+    })();
+    const raw = [
+      { title: 'Kreatin serisi', items: [
+        { num: '7', unit: 'GÜN', alt: ['1', 'HAFTA'], name: 'İlk Hafta', desc: '7 gün üst üste kreatin', tier: 'bronze', g: 'scoop' },
+        { num: '30', unit: 'GÜN', alt: ['1', 'AY'], name: 'Alışkanlık', desc: '30 gün üst üste', tier: 'silver', g: 'scoop' },
+        { num: '100', unit: 'GÜN', name: 'Yüzlük', desc: '100 gün üst üste', tier: 'gold', g: 'scoop' },
+        { num: '365', unit: 'GÜN', alt: ['1', 'YIL'], name: 'Bir Yıl', desc: '365 gün üst üste', tier: 'plat', g: 'scoop' }
+      ]},
+      { title: 'Su hedefi serisi', items: [
+        { num: '7', unit: 'GÜN', alt: ['1', 'HAFTA'], name: 'Damla', desc: '7 gün su hedefine ulaş', tier: 'bronze', g: 'drop' },
+        { num: '30', unit: 'GÜN', alt: ['1', 'AY'], name: 'Akıntı', desc: '30 gün üst üste hedef', tier: 'silver', g: 'drop' },
+        { num: '100', unit: 'GÜN', name: 'Nehir', desc: '100 gün üst üste hedef', tier: 'gold', g: 'drop' },
+        { num: '42/365', unit: '', name: 'Okyanus', desc: 'Kilitli · 323 gün kaldı', tier: 'plat', g: 'drop', locked: true }
+      ]},
+      { title: 'Özel rozetler', items: [
+        { num: '1.', unit: 'KAYIT', name: 'İlk Scoop', desc: 'İlk kreatin kaydı', tier: 'bronze', g: 'star' },
+        { num: '7', unit: 'GÜN YÜKLEME', name: 'Yükleme Tamam', desc: 'Yükleme fazını bitir', tier: 'silver', g: 'bolt' },
+        { num: '%100', unit: 'KUTU', name: 'Kutu Bitti', desc: 'Bir kutuyu bitir', tier: 'gold', g: 'box' },
+        { num: '30/30', unit: 'GÜN', name: 'Kusursuz Ay', desc: 'Ayın her günü kreatin', tier: 'plat', g: 'cal' }
+      ]}
+    ];
+    // Kurdele: 'sayi' = 7 · 30 · 100 · 365 GÜN, 'sure' = 1 HAFTA · 1 AY · 100 GÜN · 1 YIL
+    const mode = this.props.label ?? 'sayi';
+    const rows = raw.map((r, ri) => ({
+      title: r.title,
+      items: r.items.map((it, ii) => {
+        const useAlt = mode === 'sure' && it.alt;
+        return {
+          ...it, ...T[it.locked ? 'locked' : it.tier], ...G[it.g],
+          num: useAlt ? it.alt[0] : it.num,
+          unit: useAlt ? it.alt[1] : it.unit,
+          id: `${ri}${ii}`, scallop, opacity: it.locked ? 0.7 : 1
+        };
+      })
+    }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Haftalık rapor</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0B0E15}
+a{color:#6E93FF}a:hover{color:#9DB5FF}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1560px; box-sizing: border-box; padding: 60px 20px 40px; background: #16181D; font-family: Nunito, ui-rounded, system-ui, sans-serif; color: #F2F4F8; display: flex; flex-direction: column; gap: 16px; font-variant-numeric: tabular-nums">
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 13px; font-weight: 800; letter-spacing: 2px; color: #8A92A3">21 – 27 EYLÜL</div>
+<h1 style="margin: 0; font-size: 32px; font-weight: 900">Haftalık rapor</h1>
+</div>
+<div style="display: flex; background: #1F2229; border-radius: 12px; padding: 3px; gap: 3px">
+<button type="button" style="flex-grow: 1; border: 0; border-radius: 10px; padding: 8px 0; background: #3A3F4B; color: #F4F6FA; font: 800 14px Nunito, sans-serif">Hafta</button>
+<button type="button" style="flex-grow: 1; border: 0; border-radius: 10px; padding: 8px 0; background: transparent; color: #A9B1C2; font: 700 14px Nunito, sans-serif">Ay</button>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{rings}}" as="r" hint-placeholder-count="2">
+<div style="background: #1F2229; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+<div style="position: relative; width: 96px; height: 96px">
+<svg width="96" height="96" viewBox="0 0 96 96" aria-hidden="true">
+<circle cx="48" cy="48" r="40" fill="none" stroke="#2C313C" stroke-width="9"></circle>
+<circle cx="48" cy="48" r="40" fill="none" stroke="{{r.color}}" stroke-width="9" stroke-linecap="round" stroke-dasharray="{{r.dash}} 251.3" transform="rotate(-90 48 48)"></circle>
+</svg>
+<div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center">
+<div style="font-size: 24px; font-weight: 900; line-height: 1">{{r.value}}</div>
+<div style="font-size: 11px; font-weight: 700; color: #8A92A3">{{r.of}}</div>
+</div>
+</div>
+<div style="font-size: 14px; font-weight: 800">{{r.title}}</div>
+<div style="font-size: 12px; font-weight: 700; color: {{r.deltaColor}}">{{r.delta}}</div>
+</div>
+</sc-for>
+</div>
+
+<div style="background: #1F2229; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: baseline">
+<div style="font-size: 15px; font-weight: 800">Kreatin</div>
+<div style="font-size: 12px; color: #8A92A3">5 g · idame</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px">
+<sc-for list="{{week}}" as="d" hint-placeholder-count="7">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="font-size: 11px; font-weight: 800; color: #8A92A3">{{d.day}}</div>
+<div style="width: 34px; height: 34px; border-radius: 17px; background: {{d.bg}}; border: 2px solid {{d.border}}; box-sizing: border-box; display: flex; align-items: center; justify-content: center">
+<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="{{d.check}}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</div>
+<div style="font-size: 10px; font-weight: 700; color: #A9B1C2">{{d.time}}</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="background: #1F2229; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 15px; font-weight: 800">Kas kreatin doygunluğu</div>
+<div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #8A92A3">TAHMİNİ MODEL · SON 30 GÜN</div>
+</div>
+<div style="font-size: 28px; font-weight: 900; color: #F2F4F8">{{satNow}}</div>
+</div>
+<div style="display: flex; gap: 6px">
+<div style="width: 34px; height: 120px; display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: #8A92A3; text-align: right">
+<div>%100</div><div>%50</div><div>%0</div>
+</div>
+<div style="position: relative; width: 278px; height: 120px">
+<svg width="278" height="120" viewBox="0 0 278 120" aria-label="Doygunluk eğrisi">
+<defs>
+<linearGradient id="satfill" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#5C86FF" stop-opacity="0.35"></stop>
+<stop offset="1" stop-color="#5C86FF" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<line x1="0" y1="60" x2="278" y2="60" stroke="#2C313C" stroke-width="1"></line>
+<line x1="0" y1="119.5" x2="278" y2="119.5" stroke="#3A3F4B" stroke-width="1"></line>
+<line x1="0" y1="1" x2="278" y2="1" stroke="#8A92A3" stroke-width="1" stroke-dasharray="3 4"></line>
+<path d="{{satArea}}" fill="url(#satfill)"></path>
+<path d="{{satLine}}" fill="none" stroke="#5C86FF" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+<circle cx="{{satX}}" cy="{{satY}}" r="5" fill="#5C86FF" stroke="#1F2229" stroke-width="2"></circle>
+</svg>
+<div style="position: absolute; left: {{loadX}}px; top: 0; height: 120px; border-left: 1px dashed #C98419"></div>
+<div style="position: absolute; left: {{loadLabelX}}px; top: 4px; font-size: 10px; font-weight: 800; color: #E3A64A">Başlangıç</div>
+</div>
+</div>
+<div style="display: flex; justify-content: space-between; padding-left: 40px; font-size: 10px; color: #8A92A3">
+<div>29 Ağu</div><div>13 Eyl</div><div>27 Eyl</div>
+</div>
+<div style="font-size: 12px; color: #A9B1C2">Kesintisiz 5 g ile yaklaşık 10 gün içinde tam doygunluğa ulaşırsın.</div>
+</div>
+
+<div style="background: #1F2229; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 15px; font-weight: 800">Su</div>
+<div style="font-size: 12px; color: #8A92A3">Ortalama {{waterAvg}} L · hedefin {{waterPct}}</div>
+</div>
+<div style="display: flex; gap: 10px; font-size: 11px; color: #A9B1C2; align-items: center">
+<div style="display: flex; align-items: center; gap: 4px"><div style="width: 10px; height: 10px; border-radius: 3px; background: #5C86FF"></div>Günlük</div>
+<div style="display: flex; align-items: center; gap: 4px"><div style="width: 12px; height: 2px; background: #C98419"></div>Ort.</div>
+<div style="display: flex; align-items: center; gap: 4px"><div style="width: 12px; height: 0; border-top: 2px dashed #8A92A3"></div>Hedef</div>
+</div>
+</div>
+<div style="display: flex; gap: 6px">
+<div style="width: 34px; height: 150px; display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: #8A92A3; text-align: right">
+<div>4 L</div><div>2 L</div><div>0</div>
+</div>
+<div style="position: relative; width: 278px; height: 150px">
+<svg width="278" height="150" viewBox="0 0 278 150" aria-label="Haftalık su grafiği">
+<line x1="0" y1="75" x2="278" y2="75" stroke="#2C313C" stroke-width="1"></line>
+<sc-for list="{{bars}}" as="b" hint-placeholder-count="7">
+<path d="{{b.path}}" fill="#5C86FF" fill-opacity="{{b.op}}"></path>
+</sc-for>
+<line x1="0" y1="149.5" x2="278" y2="149.5" stroke="#3A3F4B" stroke-width="1"></line>
+<line x1="0" y1="{{goalY}}" x2="278" y2="{{goalY}}" stroke="#8A92A3" stroke-width="1.5" stroke-dasharray="4 4"></line>
+<line x1="0" y1="{{avgY}}" x2="278" y2="{{avgY}}" stroke="#C98419" stroke-width="2"></line>
+</svg>
+<div style="position: absolute; left: {{bestX}}px; top: {{bestTop}}px; transform: translateX(-50%); font-size: 11px; font-weight: 900; color: #F2F4F8">{{bestLabel}}</div>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); padding-left: 40px; font-size: 11px; font-weight: 800; color: #8A92A3; text-align: center">
+<sc-for list="{{week}}" as="d" hint-placeholder-count="7"><div>{{d.day}}</div></sc-for>
+</div>
+<div style="font-size: 12px; color: #A9B1C2">En iyi gün <b style="color: #F2F4F8">Cuma</b> · Hedefe 2 gün ulaştın</div>
+</div>
+
+<div style="background: #1F2229; border-radius: 22px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 15px; font-weight: 800">Alım saati dağılımı</div>
+<div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #8A92A3">SON 30 GÜN · 20 KAYIT</div>
+</div>
+<div style="text-align: right">
+<div style="font-size: 18px; font-weight: 900">08:00</div>
+<div style="font-size: 11px; color: #8A92A3">en sık saat</div>
+</div>
+</div>
+<svg width="318" height="70" viewBox="0 0 318 70" aria-label="Saatlere göre kreatin alımı">
+<sc-for list="{{hours}}" as="h" hint-placeholder-count="24">
+<path d="{{h.path}}" fill="{{h.color}}"></path>
+</sc-for>
+<line x1="0" y1="69.5" x2="318" y2="69.5" stroke="#3A3F4B" stroke-width="1"></line>
+</svg>
+<div style="display: flex; justify-content: space-between; font-size: 10px; color: #8A92A3">
+<div>00</div><div>06</div><div>12</div><div>18</div><div>24</div>
+</div>
+<div style="font-size: 12px; color: #A9B1C2">Kayıtlarının %85'i 07:00–10:00 arasında. Düzenli saat, alışkanlığı kalıcı yapar.</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // Hafta: 21–27 Eylül (Pzt–Paz)
+    const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+    const times = ['08:10', '08:42', '07:55', '09:20', '08:05', '10:30', '08:15'];
+    const taken = [1, 1, 1, 1, 1, 1, 1];
+    const week = days.map((d, i) => ({
+      day: d,
+      time: taken[i] ? times[i] : '—',
+      bg: taken[i] ? '#5C86FF' : 'transparent',
+      border: taken[i] ? '#5C86FF' : '#3A3F4B',
+      check: taken[i] ? '#FFFFFF' : 'transparent'
+    }));
+
+    const C = 251.3;
+    const rings = [
+      { title: 'Kreatin', value: '7', of: '/ 7 gün', dash: (C * 7 / 7).toFixed(1), color: '#5C86FF', delta: '▲ geçen haftayla aynı', deltaColor: '#A9B1C2' },
+      { title: 'Su hedefi', value: '2', of: '/ 7 gün', dash: (C * 2 / 7).toFixed(1), color: '#5C86FF', delta: '▲ 1 gün daha fazla', deltaColor: '#7FD39A' }
+    ];
+
+    // Doygunluk modeli: alınan gün +%10 kalan farkın, alınmayan gün −%2,5.
+    const satW = 278, satH = 120;
+    const takenDays = Array.from({ length: 30 }, (_, i) => i >= 12); // 10 Eylül'den itibaren
+    let s = 0.04;
+    const sat = takenDays.map((t) => { s = t ? s + (1 - s) * 0.1 : s * 0.975; return s; });
+    const px = (i) => (i * (satW - 6)) / 29;
+    const py = (v) => satH - v * (satH - 2);
+    const pts = sat.map((v, i) => `${px(i).toFixed(1)} ${py(v).toFixed(1)}`);
+    const satLine = 'M' + pts.join(' L');
+    const satArea = satLine + ` L${satW - 6} ${satH} L0 ${satH} Z`;
+
+    // Su: 21–27 Eylül
+    const water = [2.7, 3.5, 3.0, 2.9, 3.6, 2.3, 2.6];
+    const goal = 3.5, maxY = 4, H = 150, W = 278;
+    const y = (v) => H - (v / maxY) * H;
+    const slot = W / 7, bw = 22;
+    const bars = water.map((v, i) => {
+      const x = i * slot + (slot - bw) / 2, top = y(v), r = 4;
+      return {
+        path: `M${x.toFixed(1)} ${H} V${(top + r).toFixed(1)} Q${x.toFixed(1)} ${top.toFixed(1)} ${(x + r).toFixed(1)} ${top.toFixed(1)} H${(x + bw - r).toFixed(1)} Q${(x + bw).toFixed(1)} ${top.toFixed(1)} ${(x + bw).toFixed(1)} ${(top + r).toFixed(1)} V${H} Z`,
+        op: v >= goal ? 1 : 0.55
+      };
+    });
+    const avg = water.reduce((a, b) => a + b, 0) / water.length;
+    const best = water.indexOf(Math.max(...water));
+    const fmt = (v) => v.toFixed(1).replace('.', ',');
+
+    // Saat dağılımı (son 30 gün)
+    const counts = Array(24).fill(0);
+    counts[7] = 3; counts[8] = 9; counts[9] = 5; counts[10] = 2; counts[21] = 1;
+    const hW = 318, hH = 70, hs = hW / 24, hb = 9, cmax = 9;
+    const hours = counts.map((c, i) => {
+      const hgt = c ? Math.max(4, (c / cmax) * (hH - 4)) : 2;
+      const x = i * hs + (hs - hb) / 2, top = hH - hgt, r = Math.min(3, hgt / 2);
+      return {
+        path: `M${x.toFixed(1)} ${hH} V${(top + r).toFixed(1)} Q${x.toFixed(1)} ${top.toFixed(1)} ${(x + r).toFixed(1)} ${top.toFixed(1)} H${(x + hb - r).toFixed(1)} Q${(x + hb).toFixed(1)} ${top.toFixed(1)} ${(x + hb).toFixed(1)} ${(top + r).toFixed(1)} V${hH} Z`,
+        color: c ? (i === 8 ? '#5C86FF' : '#3E5BAE') : '#2C313C'
+      };
+    });
+
+    return {
+      week, rings, hours, bars,
+      satLine, satArea,
+      satX: satW - 6,
+      satY: py(sat[29]).toFixed(1),
+      satNow: '%' + Math.round(sat[29] * 100),
+      loadX: px(12).toFixed(1), loadLabelX: (px(12) + 4).toFixed(1),
+      goalY: y(goal).toFixed(1), avgY: y(avg).toFixed(1),
+      waterAvg: fmt(avg), waterPct: '%' + Math.round((avg / goal) * 100),
+      bestX: (best * slot + slot / 2).toFixed(1), bestTop: (y(water[best]) - 18).toFixed(1), bestLabel: fmt(water[best]) + ' L'
+    };
+  }
+}
+</script>
+</body>
+</html>
