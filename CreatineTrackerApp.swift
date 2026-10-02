@@ -142,7 +142,7 @@ struct RootView: View {
         }
         // 2.1 — Yeni rozet kazanılınca kutlama.
         .sheet(item: $store.celebration) { batch in
-            BadgeCelebrationView(badges: batch.badges, progress: store.badgeProgress)
+            BadgeCelebrationView(badges: batch.badges, progress: store.badgeProgress, preview: batch.preview)
         }
     }
 }

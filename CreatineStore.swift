@@ -22,6 +22,8 @@ final class CreatineStore: ObservableObject {
     struct BadgeBatch: Identifiable {
         let id = UUID()
         let badges: [Badge]
+        /// Test menüsünden açılan önizleme: puan isteme yok.
+        var preview = false
     }
     @Published private(set) var badgeProgress: BadgeProgress
     /// Yeni kazanılan rozetler; doluyken kutlama ekranı açılır.
@@ -124,6 +126,11 @@ final class CreatineStore: ObservableObject {
             CloudSync.sync()      // kazanılan rozet diğer cihazlara da gitsin
             celebration = BadgeBatch(badges: result.new)
         }
+    }
+
+    /// Sadece test build'i: rozeti yeni kazanılmış gibi göster.
+    func previewCelebration(_ badges: [Badge]) {
+        celebration = BadgeBatch(badges: badges, preview: true)
     }
 
     // MARK: - Eylemler

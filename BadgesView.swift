@@ -189,6 +189,7 @@ struct BadgeDetailSheet: View {
 struct BadgeCelebrationView: View {
     var badges: [Badge]
     var progress: BadgeProgress
+    var preview = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
     @State private var index = 0
@@ -217,7 +218,7 @@ struct BadgeCelebrationView: View {
                     ForEach(Array(badges.enumerated()), id: \.offset) { i, b in
                         VStack(spacing: 0) {
                             Spacer(minLength: 0)
-                            MedalView(badge: b, ribbon: progress.ribbon(for: b), width: 250)
+                            MedalView(badge: b, ribbon: progress.earnedRibbon(for: b), width: 250)
                                 .scaleEffect(appeared ? 1 : 0.3)
                                 .rotationEffect(.degrees(appeared ? 0 : -18))
                                 .opacity(appeared ? 1 : 0)
@@ -242,7 +243,7 @@ struct BadgeCelebrationView: View {
                 .indexViewStyle(.page(backgroundDisplayMode: .always))
 
                 VStack(spacing: 12) {
-                    ShareCardButton(kind: .badge(badge, ribbon: progress.ribbon(for: badge)))
+                    ShareCardButton(kind: .badge(badge, ribbon: progress.earnedRibbon(for: badge)))
                         .id(badge.id)
                     Button(L.commonDone) { dismiss() }
                         .font(.system(.subheadline, design: .rounded).weight(.semibold))
@@ -258,7 +259,7 @@ struct BadgeCelebrationView: View {
         .onAppear {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
             withAnimation(.spring(response: 0.7, dampingFraction: 0.55).delay(0.15)) { appeared = true }
-            maybeAskForReview()
+            if !preview { maybeAskForReview() }
         }
     }
 

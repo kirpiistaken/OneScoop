@@ -107,6 +107,15 @@ struct BadgeProgress {
         }
     }
 
+    /// Kazanılmış haliyle kurdele (kutlama ve paylaşım için).
+    func earnedRibbon(for b: Badge) -> String {
+        switch b.id {
+        case "loading": return "\(loadingDays)"
+        case "month": return "\(monthDays)/\(monthDays)"
+        default: return b.ribbon
+        }
+    }
+
     /// Bir sonraki kreatin/su seri rozeti ve kalan gün.
     func next(in group: Badge.Group) -> (badge: Badge, remaining: Int)? {
         let current = group == .creatine ? creatineStreak : waterStreak

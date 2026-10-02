@@ -185,6 +185,8 @@ enum L {
     static var settingsResetTitle: String { String(localized: "settings.reset_title") }
     static var settingsStartedOn: String { String(localized: "settings.started_on") }
     static var settingsTest: String { String(localized: "settings.test") }
+    static var settingsTestBadge: String { String(localized: "settings.test_badge") }
+    static var settingsTestBadgeAll: String { String(localized: "settings.test_badge_all") }
     static var settingsTestCancel: String { String(localized: "settings.test_cancel") }
     static var settingsTestFooter: String { String(localized: "settings.test_footer") }
     static var settingsTestOpenPaywall: String { String(localized: "settings.test_open_paywall") }
