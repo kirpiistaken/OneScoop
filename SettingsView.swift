@@ -117,18 +117,6 @@ struct SettingsView: View {
                             Text(plus.isUnlocked ? L.settingsTestPlusOn : L.settingsTestPlusOff)
                                 .foregroundStyle(plus.isUnlocked ? CT.gold : CT.inkSoft)
                         }
-                        // 2.1 — Rozet kutlamasını önizle
-                        Menu {
-                            ForEach(Badge.all) { b in
-                                Button(b.name) { store.previewCelebration([b]) }
-                            }
-                            Divider()
-                            Button(L.settingsTestBadgeAll) {
-                                store.previewCelebration(Array(Badge.all.prefix(3)))
-                            }
-                        } label: {
-                            Text(L.settingsTestBadge)
-                        }
                         if plus.simulated {
                             Button(L.settingsTestCancel, role: .destructive) {
                                 Task { await plus.cancelSimulatedPurchase() }

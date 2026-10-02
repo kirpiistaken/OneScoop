@@ -195,7 +195,6 @@ struct BadgeDetailSheet: View {
 struct BadgeCelebrationView: View {
     var badges: [Badge]
     var progress: BadgeProgress
-    var preview = false
     @Environment(\.dismiss) private var dismiss
     @Environment(\.requestReview) private var requestReview
     @State private var index = 0
@@ -267,7 +266,7 @@ struct BadgeCelebrationView: View {
             // Sayfa yukarı kayarken başlarsa ikisi üst üste binip takılıyordu;
             // madalya, sayfa yerine oturduktan sonra geliyor.
             withAnimation(.spring(response: 0.7, dampingFraction: 0.55).delay(0.45)) { appeared = true }
-            if !preview { maybeAskForReview() }
+            maybeAskForReview()
         }
     }
 

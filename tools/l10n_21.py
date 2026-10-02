@@ -215,12 +215,6 @@ add("calc.disclaimer",
     "Stima basata su una regola pratica comune (35 ml per kg, più 100 ml per grammo di creatina). Non è un consiglio medico.",
     "Estimativa baseada em uma regra prática comum (35 ml por kg, mais 100 ml por grama de creatina). Não é conselho médico.")
 
-# ── Test (sadece TestFlight) ───────────────────────────────
-add("settings.test_badge", "Show badge celebration", "Rozet kutlamasını göster", "Mostrar celebración de insignia",
-    "Abzeichen-Feier zeigen", "Afficher la célébration de badge", "Mostra celebrazione badge", "Mostrar celebração de medalha")
-add("settings.test_badge_all", "Several at once", "Birkaç tane birden", "Varias a la vez", "Mehrere auf einmal",
-    "Plusieurs à la fois", "Più insieme", "Várias de uma vez")
-
 # ── Porsiyonlar / ayarlar / bildirimler ────────────────────
 add("today.portion %lld %lld %@", "Portion %1$lld of %2$lld · %3$@ g", "Porsiyon %1$lld/%2$lld · %3$@ g",
     "Porción %1$lld de %2$lld · %3$@ g", "Portion %1$lld von %2$lld · %3$@ g", "Portion %1$lld sur %2$lld · %3$@ g",
