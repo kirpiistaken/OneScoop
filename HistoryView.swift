@@ -5,6 +5,7 @@ struct HistoryView: View {
     @EnvironmentObject private var store: CreatineStore
     @EnvironmentObject private var plus: PlusStore
     @State private var showInsights = false
+    @State private var showBadges = false
     @State private var showPaywall = false
     @State private var month = DayKey.startOfDay(Date())
     /// 2.0 — Takvimin altındaki küçük düğme: kreatin ya da su takvimi.
@@ -29,6 +30,7 @@ struct HistoryView: View {
                         grid
                     }
                     if store.water.enabled { modeSwitch }
+                    badgesCard
                     weeklyCard
                     if showWater {
                         waterSummary
@@ -42,15 +44,54 @@ struct HistoryView: View {
             }
         }
         .sheet(item: $waterDay) { WaterEntriesSheet(date: $0.date) }
-        .sheet(isPresented: $showInsights) { InsightsView() }
+        .sheet(isPresented: $showInsights) { ReportsView() }
+        .sheet(isPresented: $showBadges) { BadgesView() }
         .sheet(isPresented: $showPaywall) { PaywallView() }
     }
 
-    // MARK: - Haftalık özet (OneScoop+)
+    // MARK: - Rozetler (2.1, ücretsiz)
+
+    private var badgesCard: some View {
+        let progress = store.badgeProgress
+        let recent = Badge.all
+            .filter { progress.isEarned($0) }
+            .sorted { (progress.earned[$0.id] ?? .distantPast) > (progress.earned[$1.id] ?? .distantPast) }
+            .prefix(3)
+        return Button { showBadges = true } label: {
+            HStack(spacing: 12) {
+                if recent.isEmpty {
+                    MedalView(badge: Badge.all[0], ribbon: Badge.all[0].ribbon, locked: true, width: 34, glows: false)
+                } else {
+                    HStack(spacing: -10) {
+                        ForEach(Array(recent)) { b in
+                            MedalView(badge: b, ribbon: progress.ribbon(for: b), width: 34, glows: false)
+                        }
+                    }
+                }
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(L.badgesTitle)
+                        .font(.system(.headline, design: .rounded))
+                        .foregroundStyle(CT.ink)
+                    Text(L.badgesEarned(progress.earnedCount, Badge.all.count))
+                        .font(.caption)
+                        .foregroundStyle(CT.inkSoft)
+                }
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .bold))
+                    .foregroundStyle(CT.inkSoft)
+            }
+            .padding(14)
+            .background(CT.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        }
+        .buttonStyle(PressableStyle())
+    }
+
+    // MARK: - Haftalık / aylık rapor (özet ücretsiz, grafikler OneScoop+)
 
     private var weeklyCard: some View {
         Button {
-            if plus.isUnlocked { showInsights = true } else { showPaywall = true }
+            showInsights = true
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: "chart.bar.fill")
@@ -58,13 +99,18 @@ struct HistoryView: View {
                     .foregroundStyle(CT.accent)
                     .frame(width: 36, height: 36)
                     .background(CT.accent.opacity(0.12), in: Circle())
-                Text(L.insightsTitle)
+                Text(L.reportsTitle)
                     .font(.system(.headline, design: .rounded))
                     .foregroundStyle(CT.ink)
                 Spacer()
-                Image(systemName: plus.isUnlocked ? "chevron.right" : "crown.fill")
+                if !plus.isUnlocked {
+                    Image(systemName: "crown.fill")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(CT.gold)
+                }
+                Image(systemName: "chevron.right")
                     .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(plus.isUnlocked ? CT.inkSoft : CT.gold)
+                    .foregroundStyle(CT.inkSoft)
             }
             .padding(14)
             .background(CT.surface, in: RoundedRectangle(cornerRadius: 18, style: .continuous))

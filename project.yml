@@ -11,7 +11,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "2.0.1"
+    MARKETING_VERSION: "2.1"
     CURRENT_PROJECT_VERSION: "1"
     VERSIONING_SYSTEM: apple-generic
     CODE_SIGN_STYLE: Manual
@@ -55,7 +55,12 @@ targets:
       - path: WaterViews.swift
       - path: HealthSync.swift
       - path: AppIconPicker.swift
-      - path: Insights.swift
+      - path: Reports.swift
+      - path: Badges.swift
+      - path: BadgesView.swift
+      - path: MedalView.swift
+      - path: ShareCard.swift
+      - path: Calculator.swift
       - path: DataExport.swift
       - path: InfoPlist.xcstrings
       - path: AppShortcuts.xcstrings

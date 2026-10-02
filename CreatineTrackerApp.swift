@@ -19,6 +19,7 @@ struct CreatineTrackerApp: App {
 
         // Sağlık'a başka uygulamadan su/antrenman gelince arka planda haber al.
         HealthSync.startObserving()
+        HealthSync.startWorkoutObserver()   // 2.1 — antrenman sonrası hatırlatma
 
         // iCloud'dan başka bir cihazın değişikliği gelince ekranı yenile.
         CloudSync.start {
@@ -115,7 +116,6 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
 struct RootView: View {
     @EnvironmentObject private var store: CreatineStore
     @Environment(\.scenePhase) private var scenePhase
-    @Environment(\.requestReview) private var requestReview
     @State private var countedThisLaunch = false
 
     var body: some View {
@@ -137,23 +137,12 @@ struct RootView: View {
             guard new == .active else { return }
             guard old == .background || !countedThisLaunch else { return }
             countedThisLaunch = true
-            maybeAskForReview(opens: OpenCounter.registerOpen())
+            // 2.1 — Puan isteme artık rozet kutlamasında (BadgeCelebrationView).
+            _ = OpenCounter.registerOpen()
         }
-    }
-
-    /// Ömürde bir kez, 3. açılışta App Store puanlama penceresini ister.
-    /// Kurulum henüz bitmediyse bir sonraki açılışa kalır.
-    private func maybeAskForReview(opens: Int) {
-        guard opens >= 3,
-              store.settings.hasCompletedOnboarding,
-              !store.settings.hasAskedForReview else { return }
-
-        // Bayrağı istekten ÖNCE yazıyoruz: iOS pencereyi göstermeyebilir,
-        // yine de bir daha denemiyoruz.
-        store.update { $0.hasAskedForReview = true }
-        Task {
-            try? await Task.sleep(for: .seconds(1.5))
-            requestReview()
+        // 2.1 — Yeni rozet kazanılınca kutlama.
+        .sheet(item: $store.celebration) { batch in
+            BadgeCelebrationView(badges: batch.badges, progress: store.badgeProgress)
         }
     }
 }

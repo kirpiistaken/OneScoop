@@ -5,6 +5,8 @@ struct DoseSettings: Codable, Equatable {
     var usesLoadingPhase: Bool = false
     var loadingDose: Double = 20         // g/gün
     var loadingDays: Int = 7
+    /// 2.1 — Yükleme günündeki dozu kaç porsiyona bölerek işaretleyeceği (1 = tek seferde).
+    var loadingPortions: Int = 1
     var startDate: Date = Date()
 
     var reminderEnabled: Bool = true
@@ -14,6 +16,9 @@ struct DoseSettings: Codable, Equatable {
     var repeatEnabled: Bool = false
     var repeatIntervalMinutes: Int = 60
     var repeatCount: Int = 2
+
+    /// 2.1 — Antrenman bitince, kreatin alınmadıysa hatırlat (OneScoop+).
+    var workoutReminder: Bool = false
 
     // YENİ: stok takibi
     var trackSupply: Bool = false
@@ -30,9 +35,9 @@ struct DoseSettings: Codable, Equatable {
     // kullanıcının kayıtlı ayarları bozulmadan açılmaya devam ediyor.
 
     enum CodingKeys: String, CodingKey {
-        case maintenanceDose, usesLoadingPhase, loadingDose, loadingDays, startDate
+        case maintenanceDose, usesLoadingPhase, loadingDose, loadingDays, loadingPortions, startDate
         case reminderEnabled, reminderHour, reminderMinute
-        case repeatEnabled, repeatIntervalMinutes, repeatCount
+        case repeatEnabled, repeatIntervalMinutes, repeatCount, workoutReminder
         case trackSupply, containerGrams, supplyRemaining
         case hasAskedForReview, hasCompletedOnboarding
     }
@@ -46,6 +51,7 @@ struct DoseSettings: Codable, Equatable {
         usesLoadingPhase = try c.decodeIfPresent(Bool.self, forKey: .usesLoadingPhase) ?? d.usesLoadingPhase
         loadingDose = try c.decodeIfPresent(Double.self, forKey: .loadingDose) ?? d.loadingDose
         loadingDays = try c.decodeIfPresent(Int.self, forKey: .loadingDays) ?? d.loadingDays
+        loadingPortions = try c.decodeIfPresent(Int.self, forKey: .loadingPortions) ?? d.loadingPortions
         startDate = try c.decodeIfPresent(Date.self, forKey: .startDate) ?? d.startDate
         reminderEnabled = try c.decodeIfPresent(Bool.self, forKey: .reminderEnabled) ?? d.reminderEnabled
         reminderHour = try c.decodeIfPresent(Int.self, forKey: .reminderHour) ?? d.reminderHour
@@ -53,6 +59,7 @@ struct DoseSettings: Codable, Equatable {
         repeatEnabled = try c.decodeIfPresent(Bool.self, forKey: .repeatEnabled) ?? d.repeatEnabled
         repeatIntervalMinutes = try c.decodeIfPresent(Int.self, forKey: .repeatIntervalMinutes) ?? d.repeatIntervalMinutes
         repeatCount = try c.decodeIfPresent(Int.self, forKey: .repeatCount) ?? d.repeatCount
+        workoutReminder = try c.decodeIfPresent(Bool.self, forKey: .workoutReminder) ?? d.workoutReminder
         trackSupply = try c.decodeIfPresent(Bool.self, forKey: .trackSupply) ?? d.trackSupply
         containerGrams = try c.decodeIfPresent(Double.self, forKey: .containerGrams) ?? d.containerGrams
         supplyRemaining = try c.decodeIfPresent(Double.self, forKey: .supplyRemaining) ?? d.supplyRemaining
@@ -70,6 +77,11 @@ struct DoseSettings: Codable, Equatable {
 
     func dose(on date: Date) -> Double {
         isLoadingDay(date) ? loadingDose : maintenanceDose
+    }
+
+    /// 2.1 — Bugün kaç porsiyonda işaretleniyor (yükleme günü değilse 1).
+    func portions(on date: Date) -> Int {
+        isLoadingDay(date) ? max(1, loadingPortions) : 1
     }
 
     var loadingDaysRemaining: Int {

@@ -3,6 +3,47 @@
 import Foundation
 
 enum L {
+    static var badgeC100: String { String(localized: "badge.c100") }
+    static var badgeC30: String { String(localized: "badge.c30") }
+    static var badgeC365: String { String(localized: "badge.c365") }
+    static var badgeC7: String { String(localized: "badge.c7") }
+    static var badgeContainer: String { String(localized: "badge.container") }
+    static var badgeContainerDetail: String { String(localized: "badge.container_detail") }
+    static func badgeCreatineDetail(_ a0: Int) -> String { String(localized: "badge.creatine_detail \(a0)") }
+    static var badgeFirst: String { String(localized: "badge.first") }
+    static var badgeFirstDetail: String { String(localized: "badge.first_detail") }
+    static var badgeLoading: String { String(localized: "badge.loading") }
+    static var badgeLoadingDetail: String { String(localized: "badge.loading_detail") }
+    static var badgeMonth: String { String(localized: "badge.month") }
+    static var badgeMonthDetail: String { String(localized: "badge.month_detail") }
+    static var badgeW100: String { String(localized: "badge.w100") }
+    static var badgeW30: String { String(localized: "badge.w30") }
+    static var badgeW365: String { String(localized: "badge.w365") }
+    static var badgeW7: String { String(localized: "badge.w7") }
+    static func badgeWaterDetail(_ a0: Int) -> String { String(localized: "badge.water_detail \(a0)") }
+    static var badgesAll: String { String(localized: "badges.all") }
+    static var badgesAllStreaks: String { String(localized: "badges.all_streaks") }
+    static func badgesDaysLeft(_ a0: Int) -> String { String(localized: "badges.days_left \(a0)") }
+    static func badgesEarned(_ a0: Int, _ a1: Int) -> String { String(localized: "badges.earned \(a0) \(a1)") }
+    static func badgesEarnedOn(_ a0: String) -> String { String(localized: "badges.earned_on \(a0)") }
+    static func badgesNext(_ a0: String) -> String { String(localized: "badges.next \(a0)") }
+    static var badgesRuleNote: String { String(localized: "badges.rule_note") }
+    static var badgesTitle: String { String(localized: "badges.title") }
+    static var calcApplied: String { String(localized: "calc.applied") }
+    static var calcApply: String { String(localized: "calc.apply") }
+    static var calcBase: String { String(localized: "calc.base") }
+    static func calcCreatine(_ a0: String) -> String { String(localized: "calc.creatine \(a0)") }
+    static var calcDisclaimer: String { String(localized: "calc.disclaimer") }
+    static var calcDose: String { String(localized: "calc.dose") }
+    static var calcFromHealth: String { String(localized: "calc.from_health") }
+    static func calcGlasses(_ a0: Int) -> String { String(localized: "calc.glasses \(a0)") }
+    static func calcMyDose(_ a0: String) -> String { String(localized: "calc.my_dose \(a0)") }
+    static var calcResultLabel: String { String(localized: "calc.result_label") }
+    static var calcTitle: String { String(localized: "calc.title") }
+    static var calcWeight: String { String(localized: "calc.weight") }
+    static var calcWorkout: String { String(localized: "calc.workout") }
+    static func celebrateMany(_ a0: Int) -> String { String(localized: "celebrate.many \(a0)") }
+    static var celebrateOne: String { String(localized: "celebrate.one") }
     static var commonCancel: String { String(localized: "common.cancel") }
     static var commonDone: String { String(localized: "common.done") }
     static var complicationDescription: String { String(localized: "complication.description") }
@@ -38,9 +79,11 @@ enum L {
     static var insightsQuietEvening: String { String(localized: "insights.quiet_evening") }
     static var insightsQuietMorning: String { String(localized: "insights.quiet_morning") }
     static var insightsTitle: String { String(localized: "insights.title") }
+    static var notifAfterWorkout: String { String(localized: "notif.after_workout") }
     static var notifFirst: String { String(localized: "notif.first") }
     static var notifLogIt: String { String(localized: "notif.log_it") }
     static var notifRepeat: String { String(localized: "notif.repeat") }
+    static var notifSupplyLow: String { String(localized: "notif.supply_low") }
     static func notifWaterPace(_ a0: String) -> String { String(localized: "notif.water_pace \(a0)") }
     static var notifWaterSimple: String { String(localized: "notif.water_simple") }
     static func notifWaterSmart(_ a0: String, _ a1: String) -> String { String(localized: "notif.water_smart \(a0) \(a1)") }
@@ -73,9 +116,41 @@ enum L {
     static var plusUnlocked: String { String(localized: "plus.unlocked") }
     static var plusWidgetSubtitle: String { String(localized: "plus.widget_subtitle") }
     static var plusWidgetTitle: String { String(localized: "plus.widget_title") }
+    static var reportsAverage: String { String(localized: "reports.average") }
+    static func reportsAverageL(_ a0: String) -> String { String(localized: "reports.average_l \(a0)") }
+    static var reportsConsistency: String { String(localized: "reports.consistency") }
+    static var reportsCreatineCalendar: String { String(localized: "reports.creatine_calendar") }
+    static var reportsDaily: String { String(localized: "reports.daily") }
+    static func reportsDays(_ a0: Int) -> String { String(localized: "reports.days \(a0)") }
+    static var reportsGoal: String { String(localized: "reports.goal") }
+    static func reportsGoalDays(_ a0: Int) -> String { String(localized: "reports.goal_days \(a0)") }
+    static var reportsHours: String { String(localized: "reports.hours") }
+    static func reportsHoursNote(_ a0: String, _ a1: String) -> String { String(localized: "reports.hours_note \(a0) \(a1)") }
+    static func reportsHoursSub(_ a0: Int) -> String { String(localized: "reports.hours_sub \(a0)") }
+    static var reportsLess: String { String(localized: "reports.less") }
+    static var reportsLockedButton: String { String(localized: "reports.locked_button") }
+    static var reportsLockedTitle: String { String(localized: "reports.locked_title") }
+    static var reportsMonth: String { String(localized: "reports.month") }
+    static var reportsRolling: String { String(localized: "reports.rolling") }
+    static var reportsSameAsBefore: String { String(localized: "reports.same_as_before") }
+    static var reportsSaturation: String { String(localized: "reports.saturation") }
+    static var reportsSaturationFull: String { String(localized: "reports.saturation_full") }
+    static var reportsSaturationSub: String { String(localized: "reports.saturation_sub") }
+    static func reportsSaturationToFull(_ a0: Int) -> String { String(localized: "reports.saturation_to_full \(a0)") }
+    static var reportsTitle: String { String(localized: "reports.title") }
+    static var reportsTotalCreatine: String { String(localized: "reports.total_creatine") }
+    static var reportsWaterGoal: String { String(localized: "reports.water_goal") }
+    static var reportsWaterHeatmap: String { String(localized: "reports.water_heatmap") }
+    static func reportsWaterSub(_ a0: String, _ a1: String) -> String { String(localized: "reports.water_sub \(a0) \(a1)") }
+    static var reportsWaterTrend: String { String(localized: "reports.water_trend") }
+    static var reportsWeek: String { String(localized: "reports.week") }
+    static var reportsWeekday: String { String(localized: "reports.weekday") }
+    static func reportsWeekdayNote(_ a0: String, _ a1: String) -> String { String(localized: "reports.weekday_note \(a0) \(a1)") }
     static var restoreChecking: String { String(localized: "restore.checking") }
     static var settingsAdjust: String { String(localized: "settings.adjust") }
     static var settingsAdjustLoading: String { String(localized: "settings.adjust_loading") }
+    static var settingsAfterWorkout: String { String(localized: "settings.after_workout") }
+    static var settingsAfterWorkoutFooter: String { String(localized: "settings.after_workout_footer") }
     static var settingsAppIcon: String { String(localized: "settings.app_icon") }
     static var settingsData: String { String(localized: "settings.data") }
     static var settingsDeleteAll: String { String(localized: "settings.delete_all") }
@@ -98,6 +173,8 @@ enum L {
     static var settingsNotifications: String { String(localized: "settings.notifications") }
     static var settingsOnlyUnlogged: String { String(localized: "settings.only_unlogged") }
     static var settingsPlusSubtitle: String { String(localized: "settings.plus_subtitle") }
+    static var settingsPortions: String { String(localized: "settings.portions") }
+    static var settingsPortionsOff: String { String(localized: "settings.portions_off") }
     static var settingsRemindAgain: String { String(localized: "settings.remind_again") }
     static var settingsRepeat: String { String(localized: "settings.repeat") }
     static var settingsRepeatFooterOff: String { String(localized: "settings.repeat_footer_off") }
@@ -139,6 +216,14 @@ enum L {
     static var settingsWaterWorkoutExtra: String { String(localized: "settings.water_workout_extra") }
     static var settingsWidget: String { String(localized: "settings.widget") }
     static var settingsWidgetHelp: String { String(localized: "settings.widget_help") }
+    static var shareButton: String { String(localized: "share.button") }
+    static var shareFooter: String { String(localized: "share.footer") }
+    static var shareLast4Weeks: String { String(localized: "share.last_4_weeks") }
+    static var shareNewBadge: String { String(localized: "share.new_badge") }
+    static var shareStreakButton: String { String(localized: "share.streak_button") }
+    static var shareStreakDays: String { String(localized: "share.streak_days") }
+    static var shareStreakTagline: String { String(localized: "share.streak_tagline") }
+    static var shareStreakTitle: String { String(localized: "share.streak_title") }
     static var shortcutLog: String { String(localized: "shortcut.log") }
     static var supplyCorrect: String { String(localized: "supply.correct") }
     static var supplyDaysLeft: String { String(localized: "supply.days_left") }
@@ -165,6 +250,7 @@ enum L {
     static func todayDose(_ a0: String) -> String { String(localized: "today.dose \(a0)") }
     static func todayLoadingLeft(_ a0: Int) -> String { String(localized: "today.loading_left \(a0)") }
     static func todayLoggedAt(_ a0: String, _ a1: String) -> String { String(localized: "today.logged_at \(a0) \(a1)") }
+    static func todayPortion(_ a0: Int, _ a1: Int, _ a2: String) -> String { String(localized: "today.portion \(a0) \(a1) \(a2)") }
     static var todayQuestion: String { String(localized: "today.question") }
     static func todayReminderSet(_ a0: String) -> String { String(localized: "today.reminder_set \(a0)") }
     static var todaySeeYou: String { String(localized: "today.see_you") }

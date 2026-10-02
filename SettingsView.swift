@@ -16,6 +16,7 @@ struct SettingsView: View {
     @EnvironmentObject private var plus: PlusStore
     @State private var showPaywall = false
     @State private var showIconPicker = false
+    @State private var showCalculator = false
 
     var body: some View {
         NavigationStack {
@@ -61,6 +62,15 @@ struct SettingsView: View {
                     } label: {
                         row(L.settingsWater, detail: waterDetail) {
                             CupIcon(kind: .glass).fill(CT.accent).frame(width: 18, height: 18)
+                        }
+                    }
+                    // 2.1 — Kreatin-su hesaplayıcı (ücretsiz)
+                    Button { showCalculator = true } label: {
+                        HStack {
+                            row(L.calcTitle, detail: nil) {
+                                Image(systemName: "plus.forwardslash.minus").foregroundStyle(CT.accent)
+                            }
+                            chevron
                         }
                     }
                 }
@@ -127,6 +137,7 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showPaywall) { PaywallView() }
         .sheet(isPresented: $showIconPicker) { AppIconPicker() }
+        .fullScreenCover(isPresented: $showCalculator) { CalculatorView() }
     }
 
     private var creatineDetail: String {
@@ -178,6 +189,8 @@ enum NotificationPermission {
 
 struct CreatineSettingsView: View {
     @EnvironmentObject private var store: CreatineStore
+    @EnvironmentObject private var plus: PlusStore
+    @State private var showPaywall = false
     @State private var reminderTime = Date()
     @State private var permissionDenied = false
 
@@ -215,6 +228,16 @@ struct CreatineSettingsView: View {
                         set: { new in store.update { $0.loadingDays = new } }
                     ), in: 3...14) {
                         Text(L.settingsLength(store.settings.loadingDays))
+                    }
+                    // 2.1 — Yükleme dozunu porsiyonlara böl (örn. 4 × 5 g)
+                    Stepper(value: Binding(
+                        get: { store.settings.loadingPortions },
+                        set: { new in store.update { $0.loadingPortions = new } }
+                    ), in: 1...4) {
+                        let n = store.settings.loadingPortions
+                        valueRow(L.settingsPortions,
+                                 n <= 1 ? L.settingsPortionsOff
+                                        : "\(n) × \((store.settings.loadingDose / Double(n)).gramString) g")
                     }
                     DatePicker(L.settingsStartedOn, selection: Binding(
                         get: { store.settings.startDate },
@@ -271,16 +294,45 @@ struct CreatineSettingsView: View {
                         }
                     }
                 }
+                // 2.1 — Antrenman bitince hatırlat (OneScoop+, Apple Sağlık'tan)
+                if HealthSync.isAvailable {
+                    Toggle(isOn: Binding(
+                        get: { store.settings.workoutReminder && plus.isUnlocked },
+                        set: { new in
+                            guard plus.isUnlocked else { showPaywall = true; return }
+                            store.update { $0.workoutReminder = new }
+                            Task {
+                                if new {
+                                    _ = await HealthSync.requestWorkoutAccess()
+                                    askPermission()
+                                }
+                                HealthSync.startWorkoutObserver()
+                            }
+                        }
+                    )) {
+                        HStack(spacing: 6) {
+                            Text(L.settingsAfterWorkout)
+                            if !plus.isUnlocked {
+                                Image(systemName: "crown.fill")
+                                    .font(.caption)
+                                    .foregroundStyle(CT.gold)
+                            }
+                        }
+                    }
+                }
             } header: {
                 Text(L.settingsNotifications)
             } footer: {
                 if permissionDenied {
                     Text(L.settingsDenied)
+                } else if store.settings.workoutReminder && plus.isUnlocked {
+                    Text(L.settingsAfterWorkoutFooter)
                 } else if store.settings.reminderEnabled {
                     Text(L.settingsOnlyUnlogged)
                 }
             }
         }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
         .navigationTitle(L.historyCreatine)
         .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)

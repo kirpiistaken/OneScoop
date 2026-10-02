@@ -841,6 +841,9 @@ add("settings.plus_subtitle",
 
 # App Intents / AppShortcut metinleri koddan doğrudan literal ile okunuyor,
 # erişimci üretmeye gerek yok.
+# ── 2.1 ────────────────────────────────────────────────────
+exec(open(os.path.join(ROOT, "tools", "l10n_21.py"), encoding="utf-8").read())
+
 NO_ACCESSOR = {"intent.log.title", "intent.log.desc", "intent.undo.title",
                "intent.undo.desc", "shortcut.undo",
                "intent.water.title", "intent.water.desc", "intent.water.amount",
@@ -932,13 +935,13 @@ with open(os.path.join(ROOT, "L10n.swift"), "w", encoding="utf-8") as f:
 # ═══════════════════════════════════════════════════════════
 PLIST = {
     "NSHealthShareUsageDescription": [
-        "OneScoop reads water from Apple Health so water you log in other apps counts toward your daily goal, and reads workouts to raise your goal on training days.",
-        "OneScoop, diğer uygulamalarda girdiğin su da günlük hedefine sayılsın diye Apple Sağlık'tan su verisini, antrenman günlerinde hedefini artırmak için de antrenmanlarını okur.",
-        "OneScoop lee el agua de Salud para que el agua de otras apps cuente para tu objetivo diario, y tus entrenamientos para subir el objetivo los días que entrenas.",
-        "OneScoop liest Wasser aus Apple Health, damit Wasser aus anderen Apps zu deinem Tagesziel zählt, und Trainings, um dein Ziel an Trainingstagen zu erhöhen.",
-        "OneScoop lit l’eau dans Santé pour que l’eau notée dans d’autres apps compte dans votre objectif, et vos séances pour augmenter l’objectif les jours d’entraînement.",
-        "OneScoop legge l’acqua da Salute così l’acqua di altre app conta per il tuo obiettivo, e gli allenamenti per alzarlo nei giorni in cui ti alleni.",
-        "O OneScoop lê a água do Saúde para que a água de outros apps conte para sua meta diária, e seus treinos para aumentar a meta nos dias de treino.",
+        "OneScoop reads water from Apple Health so water you log in other apps counts toward your goal, reads workouts to raise your goal on training days and remind you about creatine after a workout, and reads your weight for the water calculator.",
+        "OneScoop, diğer uygulamalarda girdiğin su da hedefine sayılsın diye Apple Sağlık'tan su verisini; antrenman günlerinde hedefini artırmak ve antrenmandan sonra kreatini hatırlatmak için antrenmanlarını; su hesaplayıcısı için de kilonu okur.",
+        "OneScoop lee el agua de Salud para que cuente para tu objetivo, tus entrenamientos para subir el objetivo y recordarte la creatina después de entrenar, y tu peso para la calculadora de agua.",
+        "OneScoop liest Wasser aus Apple Health für dein Ziel, Trainings, um das Ziel an Trainingstagen zu erhöhen und dich danach ans Kreatin zu erinnern, und dein Gewicht für den Wasserrechner.",
+        "OneScoop lit l’eau dans Santé pour votre objectif, vos séances pour augmenter l’objectif et vous rappeler la créatine après l’entraînement, et votre poids pour le calculateur d’eau.",
+        "OneScoop legge l’acqua da Salute per il tuo obiettivo, gli allenamenti per alzarlo e ricordarti la creatina dopo l’allenamento, e il tuo peso per il calcolatore d’acqua.",
+        "O OneScoop lê a água do Saúde para sua meta, seus treinos para aumentar a meta e lembrar da creatina depois do treino, e seu peso para a calculadora de água.",
     ],
     "NSHealthUpdateUsageDescription": [
         "OneScoop saves the water you log to Apple Health.",

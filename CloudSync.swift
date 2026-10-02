@@ -22,6 +22,8 @@ enum CloudSync {
     private static let settingsKey = "ct.settings.v1"
     private static let settingsAtKey = "ct.settings.updatedAt"
     private static let enabledKey = "ct.icloud.enabled"
+    // 2.1 — Kazanılan rozetler (rozet → ilk kazanıldığı tarih).
+    private static let badgesKey = "ct.badges.earned.v1"
 
     // 2.0 — Su. Kayıtlar yer kaplamasın diye "kimlik|zaman|ml" satırları olarak;
     // iCloud anahtar-değer deposu toplamda 1 MB. Son 3 yıl iCloud'da tutuluyor.
@@ -124,6 +126,15 @@ enum CloudSync {
         }
 
         if syncWater() { localChanged = true }
+
+        // --- Rozetler (2.1): iki taraf birleşir, en erken tarih kalır.
+        let remoteBadges = decode([String: Date].self, kv.data(forKey: badgesKey)) ?? [:]
+        let localBadges = Badges.loadEarned()
+        let mergedBadges = Badges.merge(localBadges, remoteBadges)
+        if mergedBadges != localBadges { Badges.saveEarned(mergedBadges) }
+        if mergedBadges != remoteBadges, let data = encode(mergedBadges) {
+            kv.set(data, forKey: badgesKey)
+        }
 
         kv.synchronize()
         return localChanged

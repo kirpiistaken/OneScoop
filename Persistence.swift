@@ -92,8 +92,13 @@ enum Persistence {
 
         // Stoktan düş — aynı günü ikinci kez işaretlemek iki kez düşmesin.
         if settings.trackSupply && !alreadyLogged {
+            let before = settings.supplyRemaining
             settings.supplyRemaining = max(0, settings.supplyRemaining - grams)
             saveSettings(settings)
+            // 2.1 — "Kutu Bitti" rozeti: kutu bu kayıtla bittiyse (widget'tan da).
+            if before > 0 && settings.supplyRemaining <= 0 {
+                AppGroup.defaults.set(Date(), forKey: "ct.event.containerEmptied")
+            }
         }
         return log
     }
@@ -128,6 +133,20 @@ enum Persistence {
         var settings = loadSettings()
         settings.supplyRemaining = grams ?? settings.containerGrams
         saveSettings(settings)
+    }
+
+    // MARK: - Porsiyonlar (2.1, yükleme fazında bölünmüş doz)
+
+    private static let portionsKey = "ct.portions.v1"
+
+    /// O gün işaretlenen porsiyon sayısı. Sadece son gün tutuluyor.
+    static func portions(on date: Date = Date()) -> Int {
+        let dict = AppGroup.defaults.dictionary(forKey: portionsKey) as? [String: Int] ?? [:]
+        return dict[DayKey.key(for: date)] ?? 0
+    }
+
+    static func setPortions(_ n: Int, on date: Date = Date()) {
+        AppGroup.defaults.set([DayKey.key(for: date): max(0, n)], forKey: portionsKey)
     }
 
     static func isTaken(on date: Date = Date()) -> Bool {

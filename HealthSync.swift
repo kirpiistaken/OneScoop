@@ -54,6 +54,7 @@ enum HealthSync {
     // MARK: - Arka planda haber alma
 
     private static var observing = false
+    private static var waterQueries: [HKObserverQuery] = []
 
     /// Başka bir uygulama (ya da Apple Watch) Sağlık'a su veya antrenman
     /// yazınca iOS uygulamayı arka planda uyandırıyor: bugünkü toplam, widget'lar,
@@ -82,13 +83,95 @@ enum HealthSync {
                 }
             }
             store.execute(query)
+            waterQueries.append(query)
             store.enableBackgroundDelivery(for: type, frequency: .immediate) { _, _ in }
         }
     }
 
     /// Sağlık kapatılınca arka planda uyandırmayı durdur.
     static func stopObserving() {
-        store.disableAllBackgroundDelivery { _, _ in }
+        waterQueries.forEach { store.stop($0) }
+        waterQueries = []
+        observing = false
+        store.disableBackgroundDelivery(for: waterType) { _, _ in }
+        // Antrenman sonrası hatırlatma açıksa antrenman uyandırması sürsün.
+        if !(Persistence.loadSettings().workoutReminder && PlusAccess.isUnlocked) {
+            store.disableBackgroundDelivery(for: HKObjectType.workoutType()) { _, _ in }
+        }
+    }
+
+    // MARK: - Antrenman sonrası kreatin hatırlatması (2.1, OneScoop+)
+
+    private static var workoutObserving = false
+    private static let notifiedWorkoutKey = "ct.workout.notified"
+
+    static func requestWorkoutAccess() async -> Bool {
+        guard isAvailable else { return false }
+        do {
+            try await store.requestAuthorization(toShare: [], read: [HKObjectType.workoutType()])
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    /// Antrenman Sağlık'a yazılınca (Apple Watch, Fitness, başka uygulama)
+    /// iOS uygulamayı uyandırıyor. O gün kreatin alınmadıysa hatırlatıyoruz.
+    /// Uygulama açılışında ve ayar açılınca çağrılıyor.
+    static func startWorkoutObserver() {
+        guard isAvailable, PlusAccess.isUnlocked,
+              Persistence.loadSettings().workoutReminder, !workoutObserving else { return }
+        workoutObserving = true
+        let type = HKObjectType.workoutType()
+        let query = HKObserverQuery(sampleType: type, predicate: nil) { _, completion, error in
+            guard error == nil else { completion(); return }
+            Task {
+                await remindAfterWorkoutIfNeeded()
+                completion()
+            }
+        }
+        store.execute(query)
+        store.enableBackgroundDelivery(for: type, frequency: .immediate) { _, _ in }
+    }
+
+    private static func remindAfterWorkoutIfNeeded() async {
+        let settings = Persistence.loadSettings()
+        guard settings.workoutReminder, PlusAccess.isUnlocked,
+              settings.hasCompletedOnboarding, !Persistence.isTaken() else { return }
+
+        // Son 2 saatte biten en yeni antrenman.
+        let since = Date().addingTimeInterval(-2 * 3600)
+        let predicate = HKQuery.predicateForSamples(withStart: since, end: nil)
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let latest: HKSample? = await withCheckedContinuation { cont in
+            let q = HKSampleQuery(sampleType: HKObjectType.workoutType(), predicate: predicate,
+                                  limit: 1, sortDescriptors: [sort]) { _, results, _ in
+                cont.resume(returning: results?.first)
+            }
+            store.execute(q)
+        }
+        guard let workout = latest,
+              DayKey.key(for: workout.endDate) == DayKey.today,
+              AppGroup.defaults.string(forKey: notifiedWorkoutKey) != workout.uuid.uuidString else { return }
+        AppGroup.defaults.set(workout.uuid.uuidString, forKey: notifiedWorkoutKey)
+        await NotificationManager.notifyAfterWorkout()
+    }
+
+    // MARK: - Kilo (2.1, hesaplayıcı)
+
+    /// Sağlık'taki en son kilo (kg). Okuma izni ilk seferde burada istenir.
+    static func latestBodyMassKg() async -> Double? {
+        guard isAvailable else { return nil }
+        let type = HKQuantityType(.bodyMass)
+        try? await store.requestAuthorization(toShare: [], read: [type])
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        return await withCheckedContinuation { cont in
+            let query = HKSampleQuery(sampleType: type, predicate: nil, limit: 1, sortDescriptors: [sort]) { _, results, _ in
+                let kg = (results?.first as? HKQuantitySample)?.quantity.doubleValue(for: .gramUnit(with: .kilo))
+                cont.resume(returning: kg)
+            }
+            store.execute(query)
+        }
     }
 
     // MARK: - Antrenmanlar

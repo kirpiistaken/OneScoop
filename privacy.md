@@ -34,7 +34,7 @@ If you use the OneScoop Apple Watch app, your iPhone and Apple Watch exchange to
 
 ## Apple Health
 
-If you turn on Apple Health in the water settings, OneScoop saves the water you log to Apple Health and reads water from Apple Health that other apps have saved, so it can count toward your daily goal, appear in your history and shape your reminders. If you turn on the workout-day goal, OneScoop also reads whether you worked out on a given day, to raise that day's water goal. OneScoop only asks for water and workouts. This data is read and written on your device; it is not sent to the developer or to anyone else, and it is not used for advertising. You can change or revoke this access at any time in the Health app or in your iPhone's Settings.
+If you turn on Apple Health in the water settings, OneScoop saves the water you log to Apple Health and reads water from Apple Health that other apps have saved, so it can count toward your daily goal, appear in your history and shape your reminders. If you turn on the workout-day goal, OneScoop also reads whether you worked out on a given day, to raise that day's water goal. If you turn on the after-workout reminder, OneScoop reads your workouts to remind you about creatine when one ends. If you tap "Get from Apple Health" in the water calculator, OneScoop reads your most recent body weight once, only to fill in the calculator. OneScoop only asks for water, workouts and body weight. This data is read and written on your device; it is not sent to the developer or to anyone else, and it is not used for advertising. You can change or revoke this access at any time in the Health app or in your iPhone's Settings.
 
 ## Purchases
 
@@ -45,7 +45,7 @@ OneScoop+ is a one-time in-app purchase handled by Apple. The developer does not
 - No user accounts, no sign-in
 - No analytics, crash reporting, tracking, or advertising SDKs
 - No servers operated by the developer
-- No access to contacts, location, photos, or any other personal information; Apple Health is used only for water and workouts, only if you turn it on
+- No access to contacts, location, photos, or any other personal information; Apple Health is used only for water, workouts and body weight, only if you turn it on
 - Nothing is shared with the developer or with third parties
 
 ## Notifications

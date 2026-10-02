@@ -18,6 +18,15 @@ final class CreatineStore: ObservableObject {
     /// böylece geri dönen kullanıcı kurulumu görmeden kaldığı yerden devam ediyor.
     @Published private(set) var isRestoring: Bool
 
+    // 2.1 — Rozetler
+    struct BadgeBatch: Identifiable {
+        let id = UUID()
+        let badges: [Badge]
+    }
+    @Published private(set) var badgeProgress: BadgeProgress
+    /// Yeni kazanılan rozetler; doluyken kutlama ekranı açılır.
+    @Published var celebration: BadgeBatch?
+
     /// iCloud verisi yeni kurulumda genelde birkaç saniyede gelir. Bu süre
     /// dolarsa (gerçekten yeni kullanıcıysa) kurulum ekranına geçilir.
     private static let restoreTimeout: Duration = .seconds(6)
@@ -28,6 +37,10 @@ final class CreatineStore: ObservableObject {
         iCloudEnabled = CloudSync.isEnabled
         water = WaterData.loadSettings()
         waterToday = WaterData.entries()
+        badgeProgress = BadgeProgress(
+            earned: Badges.loadEarned(), creatineStreak: 0, waterStreak: 0,
+            loadingDays: 7, monthDays: 30
+        )
 
         // Sadece: hiç ayar kaydı yok (yeni kurulum), iCloud açık ve iPhone'da
         // iCloud hesabı var. Aksi halde beklemenin anlamı yok.
@@ -57,6 +70,7 @@ final class CreatineStore: ObservableObject {
             applyRemoteChange()
         } else {
             reload()
+            checkBadges()
             PhoneWatchBridge.shared.pushStatus()
             // Gün değişmiş olabilir: widget'lar ve Denetim Merkezi düğmesi
             // dünkü durumda kalmasın.
@@ -69,6 +83,7 @@ final class CreatineStore: ObservableObject {
         let wasOnboarded = settings.hasCompletedOnboarding
         reload()
         if settings.hasCompletedOnboarding { isRestoring = false }
+        checkBadges()
 
         IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
@@ -98,6 +113,19 @@ final class CreatineStore: ObservableObject {
 
     func entry(for date: Date) -> DoseEntry? { log[DayKey.key(for: date)] }
 
+    // MARK: - Rozetler (2.1)
+
+    /// Kayıtlara bakıp rozetleri günceller; yeni kazanılan varsa kutlama açar.
+    func checkBadges() {
+        guard settings.hasCompletedOnboarding else { return }
+        let result = Badges.evaluate()
+        badgeProgress = result.progress
+        if !result.new.isEmpty {
+            CloudSync.sync()      // kazanılan rozet diğer cihazlara da gitsin
+            celebration = BadgeBatch(badges: result.new)
+        }
+    }
+
     // MARK: - Eylemler
 
     func markTaken(on date: Date = Date()) {
@@ -106,7 +134,35 @@ final class CreatineStore: ObservableObject {
         syncSideEffects()
     }
 
+    // MARK: Porsiyonlar (2.1)
+
+    /// Bugün kaç porsiyon gerekiyor (yükleme günü ve bölünmüşse >1).
+    var portionsNeeded: Int { settings.portions(on: Date()) }
+    var portionsToday: Int { _ = log; return Persistence.portions() }
+
+    /// Bir porsiyon işaretle; sonuncusuysa gün tamamlanır.
+    func takePortion() {
+        let needed = portionsNeeded
+        guard needed > 1 else { markTaken(); return }
+        let done = min(needed, Persistence.portions() + 1)
+        Persistence.setPortions(done)
+        if done >= needed {
+            markTaken()
+        } else {
+            objectWillChange.send()
+        }
+    }
+
+    func undoPortion() {
+        Persistence.setPortions(Persistence.portions() - 1)
+        objectWillChange.send()
+    }
+
     func undo(on date: Date = Date()) {
+        // Bölünmüş günde geri alınca son porsiyon geri gelir.
+        if DayKey.key(for: date) == DayKey.today, portionsNeeded > 1 {
+            Persistence.setPortions(portionsNeeded - 1)
+        }
         log = Persistence.undo(on: date)
         settings = Persistence.loadSettings()   // stok geri eklenmiş olabilir
         syncSideEffects()
@@ -164,6 +220,7 @@ final class CreatineStore: ObservableObject {
         let entry = WaterData.add(ml: ml)
         CloudSync.sync()
         waterToday = WaterData.entries()
+        checkBadges()
         IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
         Task {
@@ -215,6 +272,7 @@ final class CreatineStore: ObservableObject {
         guard HealthSync.isActive else { return }
         await HealthSync.syncAll()
         waterToday = WaterData.entries()
+        checkBadges()
         IntentRefresh.all()
         await WaterReminders.reschedule()
     }
@@ -245,6 +303,7 @@ final class CreatineStore: ObservableObject {
 
     private func syncSideEffects() {
         if CloudSync.sync() { reload() }
+        checkBadges()
         IntentRefresh.all()
         PhoneWatchBridge.shared.pushStatus()
         Task { await NotificationManager.reschedule() }

@@ -77,19 +77,25 @@ struct TodayView: View {
                     .lineSpacing(-2)
                     .minimumScaleFactor(0.7)
 
-                Text(L.todayDose(store.todayDose.gramString))
+                Text(doseLine)
                     .font(.system(.title3, design: .rounded).weight(.medium))
                     .foregroundStyle(CT.inkSoft)
+                    .contentTransition(.numericText())
             }
 
             Button {
+                let completes = store.portionsToday + 1 >= store.portionsNeeded
                 withAnimation(.snappy) {
-                    checkScale = 0.6
-                    store.markTaken()
+                    if completes { checkScale = 0.6 }
+                    store.takePortion()
                 }
-                UINotificationFeedbackGenerator().notificationOccurred(.success)
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.55).delay(0.05)) {
-                    checkScale = 1
+                if completes {
+                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    withAnimation(.spring(response: 0.45, dampingFraction: 0.55).delay(0.05)) {
+                        checkScale = 1
+                    }
+                } else {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 }
             } label: {
                 Text(L.todayYes)
@@ -101,10 +107,40 @@ struct TodayView: View {
                     .frame(width: compact ? 164 : 200, height: compact ? 164 : 200)
                     .background(CT.accent, in: Circle())
                     .shadow(color: CT.accent.opacity(0.35), radius: 24, y: 10)
+                    .overlay {
+                        // 2.1 — Bölünmüş doz: porsiyon ilerlemesi
+                        if store.portionsNeeded > 1 {
+                            Circle()
+                                .trim(from: 0, to: CGFloat(store.portionsToday) / CGFloat(store.portionsNeeded))
+                                .stroke(CT.loading, style: StrokeStyle(lineWidth: 6, lineCap: .round))
+                                .rotationEffect(.degrees(-90))
+                                .padding(-12)
+                                .animation(.snappy, value: store.portionsToday)
+                        }
+                    }
             }
             .buttonStyle(PressableStyle())
             .accessibilityLabel(L.todayYesA11y)
+
+            if store.portionsNeeded > 1 && store.portionsToday > 0 {
+                Button {
+                    withAnimation(.snappy) { store.undoPortion() }
+                } label: {
+                    Label(L.todayUndo, systemImage: "arrow.uturn.backward")
+                        .font(.system(.footnote, design: .rounded).weight(.semibold))
+                        .foregroundStyle(CT.inkSoft)
+                }
+                .buttonStyle(.plain)
+            }
         }
+    }
+
+    /// "Bugünkü doz: 5 g" ya da bölünmüşse "Porsiyon 2/4 · 5 g".
+    private var doseLine: String {
+        let needed = store.portionsNeeded
+        guard needed > 1 else { return L.todayDose(store.todayDose.gramString) }
+        let portion = store.todayDose / Double(needed)
+        return L.todayPortion(min(store.portionsToday + 1, needed), needed, portion.gramString)
     }
 
     private var takenState: some View {

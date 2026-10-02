@@ -5,7 +5,7 @@ enum NotificationManager {
 
     static let prefix = "ct.reminder."
     /// iOS en fazla 64 bekleyen bildirim tutuyor; ~16'sı su hatırlatmalarına.
-    static let maxPending = 48
+    static let maxPending = 47   // +1: kutu bitiyor bildirimi (2.1)
     static let maxHorizonDays = 30
 
     static let categoryID = "CT_REMINDER"
@@ -49,10 +49,13 @@ enum NotificationManager {
         )
 
         let settings = Persistence.loadSettings()
-        guard settings.reminderEnabled, settings.hasCompletedOnboarding else { return }
-
         let status = await authorizationStatus()
         guard status == .authorized || status == .provisional else { return }
+
+        // 2.1 — Kutu bitmeden 7 gün önce tek bildirim (hatırlatma kapalı olsa da).
+        await scheduleSupplyAlert(center, settings)
+
+        guard settings.reminderEnabled, settings.hasCompletedOnboarding else { return }
 
         let log = Persistence.loadLog()
         let now = Date()
@@ -107,6 +110,47 @@ enum NotificationManager {
                 )
             }
         }
+    }
+
+    // MARK: - 2.1
+
+    private static func scheduleSupplyAlert(_ center: UNUserNotificationCenter, _ s: DoseSettings) async {
+        let cal = DayKey.calendar
+        guard s.hasCompletedOnboarding, s.trackSupply, s.supplyRemaining > 0,
+              let runOut = s.supplyRunOutDate,
+              let day = cal.date(byAdding: .day, value: -7, to: runOut) else { return }
+        var comps = cal.dateComponents([.year, .month, .day], from: day)
+        comps.hour = 10
+        comps.minute = 0
+        guard let fire = cal.date(from: comps), fire > Date() else { return }
+
+        let content = UNMutableNotificationContent()
+        content.title = "OneScoop"
+        content.body = L.notifSupplyLow
+        content.sound = .default
+        content.interruptionLevel = .active
+        try? await center.add(UNNotificationRequest(
+            identifier: "\(prefix)supply",
+            content: content,
+            trigger: UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+        ))
+    }
+
+    /// Antrenman bitti, kreatin alınmadı (HealthSync çağırıyor).
+    static func notifyAfterWorkout() async {
+        let status = await authorizationStatus()
+        guard status == .authorized || status == .provisional else { return }
+        let content = UNMutableNotificationContent()
+        content.title = "OneScoop"
+        content.body = L.notifAfterWorkout
+        content.sound = .default
+        content.interruptionLevel = .active
+        content.categoryIdentifier = categoryID
+        try? await UNUserNotificationCenter.current().add(UNNotificationRequest(
+            identifier: "ct.workout.\(DayKey.today)",
+            content: content,
+            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        ))
     }
 
     static func cancelAll() async {
