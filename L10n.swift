@@ -191,6 +191,7 @@ enum L {
     static var settingsTestOpenPaywall: String { String(localized: "settings.test_open_paywall") }
     static var settingsTestPlusOff: String { String(localized: "settings.test_plus_off") }
     static var settingsTestPlusOn: String { String(localized: "settings.test_plus_on") }
+    static var settingsTestReportDemo: String { String(localized: "settings.test_report_demo") }
     static var settingsTime: String { String(localized: "settings.time") }
     static func settingsUpTo(_ a0: Int) -> String { String(localized: "settings.up_to \(a0)") }
     static var settingsWater: String { String(localized: "settings.water") }

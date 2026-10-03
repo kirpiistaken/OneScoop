@@ -249,3 +249,8 @@ add("plus.bullet_workout", "Creatine reminder after workouts", "Antrenmandan son
     "Recordatorio de creatina tras entrenar", "Kreatin-Erinnerung nach dem Training",
     "Rappel de créatine après la séance", "Promemoria creatina dopo l’allenamento",
     "Lembrete de creatina depois do treino")
+
+# ── Test (sadece TestFlight) ───────────────────────────────
+add("settings.test_report_demo", "Sample data in reports", "Raporlarda örnek veri", "Datos de ejemplo en informes",
+    "Beispieldaten in Berichten", "Données d’exemple dans les rapports", "Dati di esempio nei report",
+    "Dados de exemplo nos relatórios")

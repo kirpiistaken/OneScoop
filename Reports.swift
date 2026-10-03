@@ -77,9 +77,9 @@ struct ReportsView: View {
                     .pickerStyle(.segmented)
 
                     if monthly {
-                        MonthlyReport(locked: !plus.isUnlocked, unlock: { showPaywall = true })
+                        MonthlyReport(locked: !plus.isUnlocked && !RD.isDemo, unlock: { showPaywall = true })
                     } else {
-                        WeeklyReport(locked: !plus.isUnlocked, unlock: { showPaywall = true })
+                        WeeklyReport(locked: !plus.isUnlocked && !RD.isDemo, unlock: { showPaywall = true })
                     }
                 }
                 .padding(18)
@@ -228,12 +228,12 @@ struct WeeklyReport: View {
     var body: some View {
         let days = ReportMath.days(endingAt: Date(), count: 7)
         let prev = ReportMath.days(endingAt: days[0].addingTimeInterval(-86_400), count: 7)
-        let log = store.log
-        let water = WaterData.mergedLog()
+        let log = RD.creatine(store.log)
+        let water = RD.water()
         let creatineNow = days.filter { log[DayKey.key(for: $0)] != nil }.count
         let creatineBefore = prev.filter { log[DayKey.key(for: $0)] != nil }.count
-        let goalNow = days.filter { ReportMath.waterTotal($0, water) >= WaterData.goal(on: $0) }.count
-        let goalBefore = prev.filter { ReportMath.waterTotal($0, water) >= WaterData.goal(on: $0) }.count
+        let goalNow = days.filter { ReportMath.waterTotal($0, water) >= RD.goal(on: $0) }.count
+        let goalBefore = prev.filter { ReportMath.waterTotal($0, water) >= RD.goal(on: $0) }.count
 
         VStack(spacing: 14) {
             Text(verbatim: rangeText(days))
@@ -304,7 +304,7 @@ struct SaturationCard: View {
     @EnvironmentObject private var store: CreatineStore
 
     var body: some View {
-        let points = ReportMath.saturation(log: store.log, endingAt: Date(), count: 30)
+        let points = ReportMath.saturation(log: RD.creatine(store.log), endingAt: Date(), count: 30)
         let now = points.last?.1 ?? 0
         let toFull = ReportMath.daysToFull(from: now, dose: store.settings.maintenanceDose)
         ReportCard(
@@ -365,8 +365,8 @@ struct WeekWaterCard: View {
         let totals = days.map { ReportMath.waterTotal($0, water) }
         let drank = totals.filter { $0 > 0 }
         let avg = drank.isEmpty ? 0 : Double(drank.reduce(0, +)) / Double(drank.count)
-        let goal = WaterData.goal()
-        let goalDays = zip(days, totals).filter { $1 >= WaterData.goal(on: $0) }.count
+        let goal = RD.goal(on: Date())
+        let goalDays = zip(days, totals).filter { $1 >= RD.goal(on: $0) }.count
         let best = totals.max() ?? 0
 
         ReportCard(
@@ -378,7 +378,7 @@ struct WeekWaterCard: View {
                 ForEach(days.indices, id: \.self) { i in
                     let d = days[i], t = totals[i]
                     BarMark(x: .value("Day", d, unit: .day), y: .value("ml", Double(t)), width: .ratio(0.55))
-                        .foregroundStyle(CT.accent.opacity(t >= WaterData.goal(on: d) ? 1 : 0.5))
+                        .foregroundStyle(CT.accent.opacity(t >= RD.goal(on: d) ? 1 : 0.5))
                         .cornerRadius(4)
                         .annotation(position: .top) {
                             if t == best && t > 0 {
@@ -441,7 +441,7 @@ struct HourCard: View {
 
     var body: some View {
         let days = ReportMath.days(endingAt: Date(), count: 30)
-        let entries = days.compactMap { store.log[DayKey.key(for: $0)] }
+        let entries = days.compactMap { RD.creatine(store.log)[DayKey.key(for: $0)] }
         var counts = [Int](repeating: 0, count: 24)
         for e in entries { counts[DayKey.calendar.component(.hour, from: e.takenAt)] += 1 }
         let peak = counts.indices.max { counts[$0] < counts[$1] } ?? 0
@@ -491,21 +491,24 @@ struct MonthlyReport: View {
     @EnvironmentObject private var store: CreatineStore
     var locked: Bool
     var unlock: () -> Void
-    @State private var month = DayKey.startOfDay(Date())
+    // Örnek veride geçen ay (dolu bir ay) açılsın.
+    @State private var month = RD.isDemo
+        ? (DayKey.calendar.date(byAdding: .month, value: -1, to: Date()) ?? Date())
+        : DayKey.startOfDay(Date())
 
     var body: some View {
         let all = ReportMath.monthDays(month)
         let today = DayKey.startOfDay(Date())
         let past = all.filter { $0 <= today }
-        let log = store.log
-        let water = WaterData.mergedLog()
+        let log = RD.creatine(store.log)
+        let water = RD.water()
         let taken = past.filter { log[DayKey.key(for: $0)] != nil }
         let grams = taken.reduce(0.0) { $0 + (log[DayKey.key(for: $1)]?.grams ?? 0) }
         let rate = past.isEmpty ? 0 : Double(taken.count) / Double(past.count)
         let waterDays = past.filter { ReportMath.waterTotal($0, water) > 0 }
         let waterAvg = waterDays.isEmpty ? 0
             : Double(waterDays.reduce(0) { $0 + ReportMath.waterTotal($1, water) }) / Double(waterDays.count)
-        let goalDays = past.filter { ReportMath.waterTotal($0, water) >= WaterData.goal(on: $0) && ReportMath.waterTotal($0, water) > 0 }.count
+        let goalDays = past.filter { ReportMath.waterTotal($0, water) >= RD.goal(on: $0) && ReportMath.waterTotal($0, water) > 0 }.count
 
         VStack(spacing: 14) {
             HStack {
@@ -540,7 +543,7 @@ struct MonthlyReport: View {
                         heatmap(all) { d in
                             guard d <= today else { return nil }
                             let t = ReportMath.waterTotal(d, water)
-                            let r = Double(t) / Double(max(WaterData.goal(on: d), 1))
+                            let r = Double(t) / Double(max(RD.goal(on: d), 1))
                             return t == 0 ? -1 : r < 0.5 ? 0 : r < 0.75 ? 1 : r < 1 ? 2 : 3
                         }
                         HStack(spacing: 5) {
@@ -621,7 +624,7 @@ struct MonthWaterTrend: View {
             let window = totals[max(0, i - 6)...i]
             return Double(window.reduce(0, +)) / Double(window.count)
         }
-        let goal = WaterData.goal()
+        let goal = RD.goal(on: Date())
 
         ReportCard(title: L.reportsWaterTrend, subtitle: L.reportsAverageL(ReportMath.liters(average))) {
             Chart {
@@ -630,7 +633,7 @@ struct MonthWaterTrend: View {
                     LineMark(x: .value("Day", d), y: .value("ml", Double(t)), series: .value("S", "daily"))
                         .foregroundStyle(CT.accent.opacity(0.7))
                         .lineStyle(StrokeStyle(lineWidth: 2))
-                    if t >= WaterData.goal(on: d) && t > 0 {
+                    if t >= RD.goal(on: d) && t > 0 {
                         PointMark(x: .value("Day", d), y: .value("ml", Double(t)))
                             .foregroundStyle(CT.accent)
                             .symbolSize(40)
@@ -727,4 +730,74 @@ struct WeekdayCard: View {
             }
         }
     }
+}
+
+// MARK: - Örnek veri (sadece TestFlight, mağaza görselleri için)
+
+/// Raporların veri kaynağı. TestFlight'ta Ayarlar → Test'ten "örnek veri"
+/// açılırsa raporlar gerçek kayıtlar yerine bellekte üretilen dolu bir
+/// geçmişle çizilir. Hiçbir şey kaydedilmez, iCloud'a ve Sağlık'a gitmez.
+enum RD {
+    static let demoKey = "ct.reports.demo"
+
+    static var isDemo: Bool {
+        BuildFlags.testPurchaseEnabled && UserDefaults.standard.bool(forKey: demoKey)
+    }
+
+    static func creatine(_ real: [String: DoseEntry]) -> [String: DoseEntry] {
+        isDemo ? demoCreatine : real
+    }
+
+    static func water() -> [String: [WaterEntry]] {
+        isDemo ? demoWater : WaterData.mergedLog()
+    }
+
+    static func goal(on date: Date) -> Int {
+        isDemo ? 3000 : WaterData.goal(on: date)
+    }
+
+    // Sabit tohumlu üretim: her açılışta aynı görünür.
+    private static func noise(_ i: Int, _ salt: Int) -> Double {
+        let x = sin(Double(i * 127 + salt * 311)) * 43758.5453
+        return x - floor(x)
+    }
+
+    private static var days: [Date] {
+        let today = DayKey.startOfDay(Date())
+        return (0..<120).reversed().compactMap { DayKey.calendar.date(byAdding: .day, value: -$0, to: today) }
+    }
+
+    static let demoCreatine: [String: DoseEntry] = {
+        var log: [String: DoseEntry] = [:]
+        for (i, d) in days.enumerated() {
+            // ~%93 gün alınmış; saatler çoğunlukla 07:30–09:30
+            guard noise(i, 1) > 0.07 else { continue }
+            let minutes = 450 + Int(noise(i, 2) * 120) + (noise(i, 3) > 0.9 ? 180 : 0)
+            let at = DayKey.calendar.date(byAdding: .minute, value: minutes, to: d) ?? d
+            log[DayKey.key(for: d)] = DoseEntry(day: DayKey.key(for: d), grams: 5, takenAt: at)
+        }
+        return log
+    }()
+
+    static let demoWater: [String: [WaterEntry]] = {
+        var log: [String: [WaterEntry]] = [:]
+        let cups = [250, 500, 750]
+        for (i, d) in days.enumerated() {
+            let wd = DayKey.calendar.component(.weekday, from: d)          // 1 = Pazar
+            let weekend = wd == 1 || wd == 7
+            // Hafif yükselen trend, hafta sonu biraz fazla
+            let target = 2500 + Double(i) * 4.5 + (weekend ? 250 : 0) + (noise(i, 4) - 0.5) * 900
+            var total = 0, k = 0
+            var list: [WaterEntry] = []
+            while Double(total) < target && k < 12 {
+                let ml = cups[Int(noise(i * 13 + k, 5) * 3) % 3]
+                let minute = 480 + k * 75 + Int(noise(i * 7 + k, 6) * 40)
+                let at = DayKey.calendar.date(byAdding: .minute, value: minute, to: d) ?? d
+                list.append(WaterEntry(ml: ml, at: at))
+                total += ml; k += 1
+            }
+            log[DayKey.key(for: d)] = list
+        }
+        return log
+    }()
 }

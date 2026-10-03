@@ -17,6 +17,8 @@ struct SettingsView: View {
     @State private var showPaywall = false
     @State private var showIconPicker = false
     @State private var showCalculator = false
+    /// Sadece TestFlight: raporlar örnek veriyle (mağaza görselleri için).
+    @AppStorage(RD.demoKey) private var reportDemo = false
 
     var body: some View {
         NavigationStack {
@@ -117,6 +119,7 @@ struct SettingsView: View {
                             Text(plus.isUnlocked ? L.settingsTestPlusOn : L.settingsTestPlusOff)
                                 .foregroundStyle(plus.isUnlocked ? CT.gold : CT.inkSoft)
                         }
+                        Toggle(L.settingsTestReportDemo, isOn: $reportDemo)
                         if plus.simulated {
                             Button(L.settingsTestCancel, role: .destructive) {
                                 Task { await plus.cancelSimulatedPurchase() }
