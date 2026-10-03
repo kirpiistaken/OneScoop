@@ -254,3 +254,32 @@ add("plus.bullet_workout", "Creatine reminder after workouts", "Antrenmandan son
 add("settings.test_report_demo", "Sample data in reports", "Raporlarda örnek veri", "Datos de ejemplo en informes",
     "Beispieldaten in Berichten", "Données d’exemple dans les rapports", "Dati di esempio nei report",
     "Dados de exemplo nos relatórios")
+
+# ── OneScoop+ yıllık / tek seferlik ────────────────────────
+add("plus.plan_yearly", "Yearly", "Yıllık", "Anual", "Jährlich", "Annuel", "Annuale", "Anual")
+add("plus.plan_yearly_note", "Renews every year · cancel anytime", "Her yıl yenilenir · istediğin zaman iptal",
+    "Se renueva cada año · cancela cuando quieras", "Verlängert sich jährlich · jederzeit kündbar",
+    "Renouvelé chaque année · résiliable à tout moment", "Si rinnova ogni anno · disdici quando vuoi",
+    "Renova todo ano · cancele quando quiser")
+add("plus.plan_lifetime", "Lifetime", "Ömür boyu", "De por vida", "Lebenslang", "À vie", "A vita", "Vitalício")
+add("plus.plan_lifetime_note", "Pay once · yours forever", "Bir kez öde · hep senin",
+    "Paga una vez · para siempre", "Einmal zahlen · für immer", "Payez une fois · pour toujours",
+    "Paghi una volta · per sempre", "Pague uma vez · para sempre")
+add("plus.best_value", "Best value", "En avantajlı", "Mejor valor", "Bester Wert", "Meilleur choix",
+    "Più conveniente", "Melhor valor")
+add("plus.subscribe", "Start yearly plan", "Yıllık planı başlat", "Empezar plan anual", "Jahresplan starten",
+    "Démarrer le plan annuel", "Inizia il piano annuale", "Começar plano anual")
+add("plus.legal %@",
+    "The yearly plan is %@ per year and renews automatically unless cancelled at least 24 hours before the end of the current period. Payment is charged to your Apple Account. Manage or cancel anytime in your App Store account settings. Lifetime is a one-time purchase.",
+    "Yıllık plan yılda %@ tutarındadır ve dönem bitmeden en az 24 saat önce iptal edilmezse otomatik olarak yenilenir. Ödeme Apple Hesabından alınır. App Store hesap ayarlarından istediğin zaman yönetebilir veya iptal edebilirsin. Ömür boyu seçeneği tek seferlik bir satın almadır.",
+    "El plan anual cuesta %@ al año y se renueva automáticamente salvo que se cancele al menos 24 horas antes del final del periodo actual. El pago se carga a tu cuenta de Apple. Gestiona o cancela cuando quieras en los ajustes de tu cuenta del App Store. De por vida es una compra única.",
+    "Der Jahresplan kostet %@ pro Jahr und verlängert sich automatisch, wenn er nicht mindestens 24 Stunden vor Ende des aktuellen Zeitraums gekündigt wird. Die Zahlung wird deinem Apple Account belastet. Verwalten oder kündigen jederzeit in deinen App Store-Accounteinstellungen. Lebenslang ist ein Einmalkauf.",
+    "Le plan annuel coûte %@ par an et se renouvelle automatiquement sauf résiliation au moins 24 heures avant la fin de la période en cours. Le paiement est débité de votre compte Apple. Gérez ou résiliez à tout moment dans les réglages de votre compte App Store. L’option À vie est un achat unique.",
+    "Il piano annuale costa %@ all’anno e si rinnova automaticamente se non disdetto almeno 24 ore prima della fine del periodo in corso. Il pagamento viene addebitato sul tuo Account Apple. Gestisci o disdici quando vuoi nelle impostazioni dell’account App Store. A vita è un acquisto unico.",
+    "O plano anual custa %@ por ano e renova automaticamente, a menos que seja cancelado pelo menos 24 horas antes do fim do período atual. O pagamento é cobrado na sua Conta Apple. Gerencie ou cancele quando quiser nos ajustes da sua conta da App Store. Vitalício é uma compra única.")
+add("plus.terms", "Terms of Use", "Kullanım Koşulları", "Términos de uso", "Nutzungsbedingungen",
+    "Conditions d’utilisation", "Termini d’uso", "Termos de Uso")
+add("plus.privacy", "Privacy Policy", "Gizlilik Politikası", "Política de privacidad", "Datenschutzerklärung",
+    "Politique de confidentialité", "Informativa sulla privacy", "Política de Privacidade")
+add("plus.manage", "Manage subscription", "Aboneliği yönet", "Gestionar suscripción", "Abo verwalten",
+    "Gérer l’abonnement", "Gestisci abbonamento", "Gerenciar assinatura")

@@ -96,6 +96,7 @@ enum L {
     static var onbReminderHint: String { String(localized: "onb.reminder_hint") }
     static var onbStart: String { String(localized: "onb.start") }
     static var onbTagline: String { String(localized: "onb.tagline") }
+    static var plusBestValue: String { String(localized: "plus.best_value") }
     static var plusBulletExport: String { String(localized: "plus.bullet_export") }
     static var plusBulletHealth: String { String(localized: "plus.bullet_health") }
     static var plusBulletIcons: String { String(localized: "plus.bullet_icons") }
@@ -106,9 +107,18 @@ enum L {
     static var plusBuy: String { String(localized: "plus.buy") }
     static var plusFamily: String { String(localized: "plus.family") }
     static var plusHeadline: String { String(localized: "plus.headline") }
+    static func plusLegal(_ a0: String) -> String { String(localized: "plus.legal \(a0)") }
+    static var plusManage: String { String(localized: "plus.manage") }
     static var plusNoSubscription: String { String(localized: "plus.no_subscription") }
     static var plusNotNow: String { String(localized: "plus.not_now") }
+    static var plusPlanLifetime: String { String(localized: "plus.plan_lifetime") }
+    static var plusPlanLifetimeNote: String { String(localized: "plus.plan_lifetime_note") }
+    static var plusPlanYearly: String { String(localized: "plus.plan_yearly") }
+    static var plusPlanYearlyNote: String { String(localized: "plus.plan_yearly_note") }
+    static var plusPrivacy: String { String(localized: "plus.privacy") }
     static var plusRestore: String { String(localized: "plus.restore") }
+    static var plusSubscribe: String { String(localized: "plus.subscribe") }
+    static var plusTerms: String { String(localized: "plus.terms") }
     static var plusTestBuy: String { String(localized: "plus.test_buy") }
     static var plusTestMessage: String { String(localized: "plus.test_message") }
     static var plusTestNote: String { String(localized: "plus.test_note") }
