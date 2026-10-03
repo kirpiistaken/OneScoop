@@ -283,3 +283,6 @@ add("plus.privacy", "Privacy Policy", "Gizlilik Politikası", "Política de priv
     "Politique de confidentialité", "Informativa sulla privacy", "Política de Privacidade")
 add("plus.manage", "Manage subscription", "Aboneliği yönet", "Gestionar suscripción", "Abo verwalten",
     "Gérer l’abonnement", "Gestisci abbonamento", "Gerenciar assinatura")
+add("settings.test_paywall_free", "Paywall as free user", "Paywall'ı ücretsiz kullanıcı gibi göster",
+    "Paywall como usuario gratis", "Paywall als Gratisnutzer", "Paywall comme utilisateur gratuit",
+    "Paywall come utente gratuito", "Paywall como usuário gratuito")

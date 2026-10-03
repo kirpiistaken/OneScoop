@@ -11,6 +11,7 @@ final class PlusStore: ObservableObject {
     static let shared = PlusStore()
     static let productID = "com.atalay.creatinetracker.plus"
     static let yearlyID = "com.atalay.creatinetracker.plus.yearly"
+    static let previewFreeKey = "ct.test.paywallPreviewFree"
     static let termsURL = URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!
     static let privacyURL = URL(string: "https://github.com/kirpiistaken/onescoop/blob/main/privacy.md")!
 
@@ -139,6 +140,10 @@ struct PaywallView: View {
     @State private var confirmTestPurchase = false
     @State private var plan: Plan = .yearly
     @State private var manageSubs = false
+    /// Sadece TestFlight: satın alınmış olsa da satın alma seçeneklerini göster (görsel için).
+    @AppStorage(PlusStore.previewFreeKey) private var previewFree = false
+
+    private var showsUnlocked: Bool { plus.isUnlocked && !(plus.isTestBuild && previewFree) }
 
     var body: some View {
         ScrollView {
@@ -172,7 +177,7 @@ struct PaywallView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(CT.surface, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
 
-                if plus.isUnlocked {
+                if showsUnlocked {
                     VStack(spacing: 10) {
                         Label(L.plusUnlocked, systemImage: "checkmark.seal.fill")
                             .font(.system(.headline, design: .rounded))

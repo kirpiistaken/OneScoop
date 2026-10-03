@@ -10465,6 +10465,53 @@
         }
       }
     },
+    "settings.test_paywall_free": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paywall als Gratisnutzer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paywall as free user"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paywall como usuario gratis"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paywall comme utilisateur gratuit"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paywall come utente gratuito"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paywall como usuário gratuito"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paywall'ı ücretsiz kullanıcı gibi göster"
+          }
+        }
+      }
+    },
     "settings.test_plus_off": {
       "extractionState": "manual",
       "localizations": {

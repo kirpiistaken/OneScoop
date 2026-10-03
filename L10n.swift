@@ -199,6 +199,7 @@ enum L {
     static var settingsTestCancel: String { String(localized: "settings.test_cancel") }
     static var settingsTestFooter: String { String(localized: "settings.test_footer") }
     static var settingsTestOpenPaywall: String { String(localized: "settings.test_open_paywall") }
+    static var settingsTestPaywallFree: String { String(localized: "settings.test_paywall_free") }
     static var settingsTestPlusOff: String { String(localized: "settings.test_plus_off") }
     static var settingsTestPlusOn: String { String(localized: "settings.test_plus_on") }
     static var settingsTestReportDemo: String { String(localized: "settings.test_report_demo") }

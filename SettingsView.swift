@@ -19,6 +19,7 @@ struct SettingsView: View {
     @State private var showCalculator = false
     /// Sadece TestFlight: raporlar örnek veriyle (mağaza görselleri için).
     @AppStorage(RD.demoKey) private var reportDemo = false
+    @AppStorage(PlusStore.previewFreeKey) private var paywallPreviewFree = false
 
     var body: some View {
         NavigationStack {
@@ -120,12 +121,12 @@ struct SettingsView: View {
                                 .foregroundStyle(plus.isUnlocked ? CT.gold : CT.inkSoft)
                         }
                         Toggle(L.settingsTestReportDemo, isOn: $reportDemo)
+                        Toggle(L.settingsTestPaywallFree, isOn: $paywallPreviewFree)
+                        Button(L.settingsTestOpenPaywall) { showPaywall = true }
                         if plus.simulated {
                             Button(L.settingsTestCancel, role: .destructive) {
                                 Task { await plus.cancelSimulatedPurchase() }
                             }
-                        } else {
-                            Button(L.settingsTestOpenPaywall) { showPaywall = true }
                         }
                     } header: {
                         Label(L.settingsTest, systemImage: "hammer.fill")
