@@ -142,10 +142,11 @@ struct PaywallView: View {
                 PlusWidgetFeature()
 
                 VStack(alignment: .leading, spacing: 16) {
-                    bullet("applewatch", L.plusBulletWatch)
+                    bullet("chart.xyaxis.line", L.plusBulletInsights)
                     bullet("bell.badge.fill", L.plusBulletReminders)
+                    bullet("figure.strengthtraining.traditional", L.plusBulletWorkout)
                     bullet("heart.fill", L.plusBulletHealth)
-                    bullet("chart.bar.fill", L.plusBulletInsights)
+                    bullet("applewatch", L.plusBulletWatch)
                     bullet("app.badge.fill", L.plusBulletIcons)
                     bullet("square.and.arrow.up", L.plusBulletExport)
                 }

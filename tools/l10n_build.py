@@ -824,8 +824,10 @@ add("plus.bullet_watch",
     "Ajoutez de l’eau depuis l’Apple Watch",
     "Aggiungi acqua dall’Apple Watch",
     "Adicione água pelo Apple Watch")
-add("plus.bullet_insights", "Weekly summary", "Haftalık özet", "Resumen semanal", "Wochenübersicht",
-    "Résumé de la semaine", "Riepilogo settimanale", "Resumo semanal")
+add("plus.bullet_insights", "Detailed weekly & monthly reports", "Ayrıntılı haftalık ve aylık raporlar",
+    "Informes semanales y mensuales detallados", "Detaillierte Wochen- & Monatsberichte",
+    "Rapports hebdo et mensuels détaillés", "Report settimanali e mensili dettagliati",
+    "Relatórios semanais e mensais detalhados")
 add("plus.bullet_icons", "Custom app icons", "Özel uygulama ikonları", "Iconos personalizados",
     "Eigene App-Symbole", "Icônes d’app personnalisées", "Icone personalizzate", "Ícones personalizados")
 add("plus.bullet_export", "Export your data", "Verini dışa aktar", "Exporta tus datos", "Daten exportieren",

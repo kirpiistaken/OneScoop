@@ -243,3 +243,9 @@ add("notif.supply_low", "Your creatine runs out in about a week. Time to restock
     "Votre créatine sera épuisée dans une semaine environ. Pensez à en racheter.",
     "La tua creatina finisce tra circa una settimana. È ora di ricomprarla.",
     "Sua creatina acaba em cerca de uma semana. Hora de repor.")
+
+# ── OneScoop+ ekranı ───────────────────────────────────────
+add("plus.bullet_workout", "Creatine reminder after workouts", "Antrenmandan sonra kreatin hatırlatması",
+    "Recordatorio de creatina tras entrenar", "Kreatin-Erinnerung nach dem Training",
+    "Rappel de créatine après la séance", "Promemoria creatina dopo l’allenamento",
+    "Lembrete de creatina depois do treino")

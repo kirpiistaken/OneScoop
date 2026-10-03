@@ -5327,43 +5327,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wochenübersicht"
+            "value": "Detaillierte Wochen- & Monatsberichte"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Weekly summary"
+            "value": "Detailed weekly & monthly reports"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Resumen semanal"
+            "value": "Informes semanales y mensuales detallados"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Résumé de la semaine"
+            "value": "Rapports hebdo et mensuels détaillés"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Riepilogo settimanale"
+            "value": "Report settimanali e mensili dettagliati"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Resumo semanal"
+            "value": "Relatórios semanais e mensais detalhados"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Haftalık özet"
+            "value": "Ayrıntılı haftalık ve aylık raporlar"
           }
         }
       }
@@ -5458,6 +5458,53 @@
           "stringUnit": {
             "state": "translated",
             "value": "Apple Watch'tan su ekle"
+          }
+        }
+      }
+    },
+    "plus.bullet_workout": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kreatin-Erinnerung nach dem Training"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creatine reminder after workouts"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recordatorio de creatina tras entrenar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rappel de créatine après la séance"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Promemoria creatina dopo l’allenamento"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lembrete de creatina depois do treino"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Antrenmandan sonra kreatin hatırlatması"
           }
         }
       }

@@ -102,6 +102,7 @@ enum L {
     static var plusBulletInsights: String { String(localized: "plus.bullet_insights") }
     static var plusBulletReminders: String { String(localized: "plus.bullet_reminders") }
     static var plusBulletWatch: String { String(localized: "plus.bullet_watch") }
+    static var plusBulletWorkout: String { String(localized: "plus.bullet_workout") }
     static var plusBuy: String { String(localized: "plus.buy") }
     static var plusFamily: String { String(localized: "plus.family") }
     static var plusHeadline: String { String(localized: "plus.headline") }
