@@ -22,6 +22,7 @@ final class PlusStore: ObservableObject {
     /// Plus yıllık abonelikten mi geliyor (Aboneliği yönet düğmesi için).
     @Published private(set) var subscribed = false
     @Published private(set) var isWorking = false
+    @Published private(set) var isLoadingProducts = false
     /// TestFlight / sandbox'ta çalışıyor mu (test satın alması sadece orada).
     @Published private(set) var isTestBuild = BuildFlags.testPurchaseEnabled && PlusAccess.isTestBuild
     @Published private(set) var simulated = PlusAccess.isSimulated
@@ -42,10 +43,18 @@ final class PlusStore: ObservableObject {
 
     func load() async {
         await detectTestBuild()
-        if product == nil || yearly == nil,
-           let products = try? await Product.products(for: [Self.productID, Self.yearlyID]) {
-            product = products.first { $0.id == Self.productID } ?? product
-            yearly = products.first { $0.id == Self.yearlyID } ?? yearly
+        // Ürünler gelmezse (ağ, sandbox gecikmesi) birkaç kez daha dene.
+        if product == nil || yearly == nil {
+            isLoadingProducts = true
+            for attempt in 0..<4 {
+                if attempt > 0 { try? await Task.sleep(for: .seconds(Double(attempt) * 1.5)) }
+                if let products = try? await Product.products(for: [Self.productID, Self.yearlyID]) {
+                    product = products.first { $0.id == Self.productID } ?? product
+                    yearly = products.first { $0.id == Self.yearlyID } ?? yearly
+                }
+                if product != nil && yearly != nil { break }
+            }
+            isLoadingProducts = false
         }
         await refresh()
     }
@@ -230,11 +239,65 @@ struct PaywallView: View {
 
     private var canBuy: Bool { product(plan) != nil || plus.isTestBuild }
 
+    /// Gösterilecek planlar: sadece App Store'dan gelenler (test build'de ikisi de).
+    private var plans: [Plan] {
+        if plus.isTestBuild { return [.yearly, .lifetime] }
+        return [Plan.yearly, .lifetime].filter { product($0) != nil }
+    }
+
+    /// Seçili plan yüklenmediyse yüklenen ilk plana geç; buton hiç gri kalmasın.
+    private func fixSelection() {
+        if !plans.contains(plan), let first = plans.first { plan = first }
+    }
+
     private var buySection: some View {
         VStack(spacing: 12) {
+            if plans.isEmpty {
+                // Ürünler henüz gelmedi: yükleniyor ya da tekrar dene.
+                if plus.isLoadingProducts {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 24)
+                } else {
+                    Text(L.plusUnavailable)
+                        .font(.footnote)
+                        .foregroundStyle(CT.inkSoft)
+                        .multilineTextAlignment(.center)
+                    Button { Task { await plus.load() } } label: {
+                        Text(L.plusRetry)
+                            .font(.system(.headline, design: .rounded))
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(CT.accent, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    }
+                    .buttonStyle(PressableStyle())
+                }
+            } else {
+                purchaseControls
+            }
+
+            Button(L.plusRestore) { Task { await plus.restore() } }
+                .font(.system(.subheadline, design: .rounded).weight(.semibold))
+                .foregroundStyle(CT.accent)
+                .disabled(plus.isWorking)
+
+            legal
+        }
+        .onAppear(perform: fixSelection)
+        .onChange(of: plus.yearly?.id) { fixSelection() }
+        .onChange(of: plus.product?.id) { fixSelection() }
+    }
+
+    @ViewBuilder private var purchaseControls: some View {
             VStack(spacing: 10) {
-                planCard(.yearly, title: L.plusPlanYearly, note: L.plusPlanYearlyNote, tag: nil)
-                planCard(.lifetime, title: L.plusPlanLifetime, note: L.plusPlanLifetimeNote, tag: L.plusBestValue)
+                if plans.contains(.yearly) {
+                    planCard(.yearly, title: L.plusPlanYearly, note: L.plusPlanYearlyNote, tag: nil)
+                }
+                if plans.contains(.lifetime) {
+                    planCard(.lifetime, title: L.plusPlanLifetime, note: L.plusPlanLifetimeNote,
+                             tag: plans.count > 1 ? L.plusBestValue : nil)
+                }
             }
 
             Button {
@@ -273,21 +336,15 @@ struct PaywallView: View {
                 Label(L.plusTestNote, systemImage: "hammer.fill")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(CT.inkSoft)
-            } else if !plus.isTestBuild && plus.product == nil && plus.yearly == nil {
-                Text(L.plusUnavailable)
-                    .font(.footnote)
-                    .foregroundStyle(CT.inkSoft)
-                    .multilineTextAlignment(.center)
             }
+    }
 
-            Button(L.plusRestore) { Task { await plus.restore() } }
-                .font(.system(.subheadline, design: .rounded).weight(.semibold))
-                .foregroundStyle(CT.accent)
-                .disabled(plus.isWorking)
-
-            // Abonelik için Apple'ın istediği bilgiler (3.1.2).
+    /// Abonelik için Apple'ın istediği bilgiler (3.1.2).
+    private var legal: some View {
             VStack(spacing: 8) {
-                Text(L.plusLegal(price(.yearly) ?? "—"))
+                if let yearlyPrice = price(.yearly) {
+                    Text(L.plusLegal(yearlyPrice))
+                }
                 Text(L.plusFamily)
                 HStack(spacing: 16) {
                     Link(L.plusTerms, destination: PlusStore.termsURL)
@@ -300,7 +357,6 @@ struct PaywallView: View {
             .foregroundStyle(CT.inkSoft)
             .multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)
-        }
     }
 
     private func planCard(_ p: Plan, title: String, note: String, tag: String?) -> some View {

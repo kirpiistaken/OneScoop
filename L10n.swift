@@ -117,6 +117,7 @@ enum L {
     static var plusPlanYearlyNote: String { String(localized: "plus.plan_yearly_note") }
     static var plusPrivacy: String { String(localized: "plus.privacy") }
     static var plusRestore: String { String(localized: "plus.restore") }
+    static var plusRetry: String { String(localized: "plus.retry") }
     static var plusSubscribe: String { String(localized: "plus.subscribe") }
     static var plusTerms: String { String(localized: "plus.terms") }
     static var plusTestBuy: String { String(localized: "plus.test_buy") }

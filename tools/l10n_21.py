@@ -286,3 +286,4 @@ add("plus.manage", "Manage subscription", "Aboneliği yönet", "Gestionar suscri
 add("settings.test_paywall_free", "Paywall as free user", "Paywall'ı ücretsiz kullanıcı gibi göster",
     "Paywall como usuario gratis", "Paywall als Gratisnutzer", "Paywall comme utilisateur gratuit",
     "Paywall come utente gratuito", "Paywall como usuário gratuito")
+add("plus.retry", "Try again", "Tekrar dene", "Reintentar", "Erneut versuchen", "Réessayer", "Riprova", "Tentar novamente")
