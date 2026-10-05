@@ -5656,43 +5656,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Einmal zahlen, für immer behalten."
+            "value": "Hol mehr aus jedem Scoop heraus."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pay once, keep it forever."
+            "value": "Get more out of every scoop."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Paga una vez y es tuyo para siempre."
+            "value": "Saca más partido a cada scoop."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Payez une fois, gardez-le pour toujours."
+            "value": "Tirez le meilleur de chaque scoop."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Paghi una volta, è tuo per sempre."
+            "value": "Ottieni di più da ogni scoop."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pague uma vez e é seu para sempre."
+            "value": "Aproveite mais cada scoop."
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bir kez öde, hep senin."
+            "value": "Her scoop'tan daha fazlasını al."
           }
         }
       }

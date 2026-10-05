@@ -502,9 +502,9 @@ add("whatsnew.water_try",
 
 add("plus.not_now", "Not now", "Şimdi değil", "Ahora no", "Nicht jetzt", "Plus tard", "Non ora", "Agora não")
 add("plus.headline",
-    "Pay once, keep it forever.", "Bir kez öde, hep senin.", "Paga una vez y es tuyo para siempre.",
-    "Einmal zahlen, für immer behalten.", "Payez une fois, gardez-le pour toujours.",
-    "Paghi una volta, è tuo per sempre.", "Pague uma vez e é seu para sempre.")
+    "Get more out of every scoop.", "Her scoop'tan daha fazlasını al.", "Saca más partido a cada scoop.",
+    "Hol mehr aus jedem Scoop heraus.", "Tirez le meilleur de chaque scoop.",
+    "Ottieni di più da ogni scoop.", "Aproveite mais cada scoop.")
 add("plus.bullet_health",
     "Apple Health, plus a higher goal on workout days",
     "Apple Sağlık ve antrenman günü hedefi",
