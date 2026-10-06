@@ -43,8 +43,27 @@ final class PhoneWatchBridge: NSObject, WCSessionDelegate {
             waterGoal: WaterData.goal(),
             cupKinds: water.cups.map(\.kind.rawValue),
             cupMls: water.cups.map(\.ml),
-            plus: PlusAccess.isUnlocked
+            plus: PlusAccess.isUnlocked,
+            appliedIds: Self.appliedIds(),
+            lastWaterMl: WaterData.loadLog()[DayKey.today]?.max(by: { $0.at < $1.at })?.ml
         )
+    }
+
+    // MARK: - İşlenen komutlar (2.2)
+
+    private static let appliedKey = "ct.watch.appliedIds.v1"
+
+    static func appliedIds() -> [String] {
+        AppGroup.defaults.stringArray(forKey: appliedKey) ?? []
+    }
+
+    /// Komut daha önce işlendiyse false. İşlenmediyse kaydeder (son 60 komut).
+    private static func markApplied(_ id: String) -> Bool {
+        var ids = appliedIds()
+        guard !ids.contains(id) else { return false }
+        ids.append(id)
+        AppGroup.defaults.set(Array(ids.suffix(60)), forKey: appliedKey)
+        return true
     }
 
     // MARK: - Komutu uygula
@@ -54,6 +73,9 @@ final class PhoneWatchBridge: NSObject, WCSessionDelegate {
     private func apply(_ message: [String: Any]) {
         guard let (action, day) = WatchAction.parse(message),
               let date = DayKey.date(from: day) else { return }
+        // Aynı komut hem anlık mesaj hem kuyruk olarak gelebilir: suyu iki kez ekleme.
+        // Uygulanmasa da (Plus yok, gün geçti) işlendi sayılıyor; saat beklemeyi bırakır.
+        if let id = WatchAction.id(message), !Self.markApplied(id) { return }
 
         switch action {
         case .log:
@@ -119,6 +141,7 @@ final class PhoneWatchBridge: NSObject, WCSessionDelegate {
                  replyHandler: @escaping ([String: Any]) -> Void) {
         apply(message)
         replyHandler(Self.currentPayload().dictionary)
+        pushStatus()
     }
 
     /// Saat telefona ulaşamadığında kuyruğa alınan mesaj.

@@ -18,6 +18,11 @@ struct WatchPayload: Codable, Equatable {
     var cupMls: [Int]? = nil
     var plus: Bool? = nil            // OneScoop+ (saatten su eklemek için)
 
+    // 2.2 — Telefonun işlediği son saat komutları (kimlikleri). Saat, bunlar
+    // gelene kadar kendi eklediklerini telefondan gelen toplamın üstüne koyuyor.
+    var appliedIds: [String]? = nil
+    var lastWaterMl: Int? = nil      // bugünün en son su kaydı (saatten geri al için)
+
     private static let key = "payload"
 
     var dictionary: [String: Any] {
@@ -27,7 +32,10 @@ struct WatchPayload: Codable, Equatable {
 
     init(dateKey: String, isTaken: Bool, grams: Double, streak: Int, onboarded: Bool, updatedAt: Date,
          waterEnabled: Bool? = nil, waterTotal: Int? = nil, waterGoal: Int? = nil,
-         cupKinds: [String]? = nil, cupMls: [Int]? = nil, plus: Bool? = nil) {
+         cupKinds: [String]? = nil, cupMls: [Int]? = nil, plus: Bool? = nil,
+         appliedIds: [String]? = nil, lastWaterMl: Int? = nil) {
+        self.appliedIds = appliedIds
+        self.lastWaterMl = lastWaterMl
         self.waterEnabled = waterEnabled
         self.waterTotal = waterTotal
         self.waterGoal = waterGoal
@@ -57,11 +65,19 @@ enum WatchAction: String {
     static let actionKey = "action"
     static let dayKey = "day"
     static let mlKey = "ml"
+    static let idKey = "id"          // 2.2 — komut kimliği (tekrar uygulanmasın)
+    /// 2.2 — Komut değil: saat güncel durumu istiyor (eski telefon sürümleri yok sayar).
+    static let syncMessage: [String: Any] = [actionKey: "sync"]
 
-    func message(day: String, ml: Int? = nil) -> [String: Any] {
+    func message(day: String, ml: Int? = nil, id: String? = nil) -> [String: Any] {
         var m: [String: Any] = [Self.actionKey: rawValue, Self.dayKey: day]
         if let ml { m[Self.mlKey] = ml }
+        if let id { m[Self.idKey] = id }
         return m
+    }
+
+    static func id(_ message: [String: Any]) -> String? {
+        message[idKey] as? String
     }
 
     static func ml(_ message: [String: Any]) -> Int? {

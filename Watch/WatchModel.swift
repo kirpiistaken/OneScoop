@@ -7,26 +7,48 @@ import WidgetKit
 /// için son bilinen durumu kendi tutuyor ve telefonla WatchConnectivity üzerinden
 /// konuşuyor.
 ///
-/// "Yes"e basınca ekran hemen güncelleniyor (telefonun cevabı beklenmiyor).
-/// Telefon o an ulaşılamıyorsa komut kuyruğa giriyor ve telefon açıldığında uygulanıyor.
+/// 2.2 — İki katman:
+/// - base: telefondan gelen son durum (telefonun gerçeği)
+/// - pending: saatte yapılıp telefonun henüz işlemediği komutlar
+/// Ekranda base'in üstüne pending uygulanmış hali görünüyor (payload). Böylece
+/// saatin elindeki durum eskiyse (ör. sabah telefondan eklenen su henüz gelmemişse)
+/// saatten eklenen su eski toplamın yerine geçmiyor; telefonun durumu geldiğinde
+/// toplam doğru oluyor. Telefon bir komutu işleyince kimliğini geri gönderiyor ve
+/// komut pending'den düşüyor.
 final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
 
     typealias Today = WatchDayState
 
+    /// Ekranda görünen durum: base + bekleyen komutlar.
     @Published private(set) var payload: WatchPayload?
 
-    /// Saatte en son ne zaman işlem yapıldı. Telefondan bundan eski bir durum
-    /// gelirse (işlemden önce gönderilmiş) yok sayılıyor.
-    private var lastLocalAction: Date = .distantPast
+    private var base: WatchPayload?
+    private var pending: [Pending] = []
 
-    private let actionKey = "onescoop.watch.lastAction.v1"
+    struct Pending: Codable {
+        var id: String
+        var action: String
+        var day: String
+        var ml: Int?
+        var at: Date
+    }
+
+    private let baseKey = "onescoop.watch.base.v1"
+    private let pendingKey = "onescoop.watch.pending.v1"
 
     override init() {
         super.init()
-        payload = WatchPayload.loadStored()
-        if let saved = UserDefaults.standard.object(forKey: actionKey) as? Date {
-            lastLocalAction = saved
+        if let data = UserDefaults.standard.data(forKey: baseKey),
+           let b = try? JSONDecoder().decode(WatchPayload.self, from: data) {
+            base = b
+        } else {
+            base = WatchPayload.loadStored()
         }
+        if let data = UserDefaults.standard.data(forKey: pendingKey),
+           let p = try? JSONDecoder().decode([Pending].self, from: data) {
+            pending = p
+        }
+        recompute()
         if WCSession.isSupported() {
             WCSession.default.delegate = self
             WCSession.default.activate()
@@ -69,101 +91,144 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
         )
     }
 
-    /// Bu oturumda saatten eklenenler: geri al'da ekran hemen düzelsin diye.
-    private var recentWaterAdds: [Int] = []
-
     func addWater(_ ml: Int) {
         guard ml > 0 else { return }
-        recentWaterAdds.append(ml)
-        mutateLocally { p in
-            let base = p.dateKey == DayKey.key(for: Date()) ? (p.waterTotal ?? 0) : 0
-            p.waterTotal = base + ml
-        }
+        enqueue(.addWater, ml: ml)
         WKInterfaceDevice.current().play(.success)
-        send(.addWater, ml: ml)
     }
 
     func undoWater() {
         guard water.total > 0 else { return }
-        if let last = recentWaterAdds.popLast() {
-            mutateLocally { p in p.waterTotal = max(0, (p.waterTotal ?? 0) - last) }
-        }
+        enqueue(.undoWater)
         WKInterfaceDevice.current().play(.click)
-        send(.undoWater)
-    }
-
-    /// Mevcut durumu (su alanları dahil) koruyarak yerelde değiştir.
-    private func mutateLocally(_ change: (inout WatchPayload) -> Void) {
-        let now = Date()
-        lastLocalAction = now
-        UserDefaults.standard.set(now, forKey: actionKey)
-        var p = payload ?? WatchPayload(dateKey: DayKey.key(for: now), isTaken: false, grams: 0,
-                                        streak: 0, onboarded: true, updatedAt: now)
-        if p.dateKey != DayKey.key(for: now) {
-            // Yeni gün: dünkü kreatin ve su taşınmasın.
-            let t = WatchPayload.state(p, on: now)
-            p.dateKey = DayKey.key(for: now)
-            p.isTaken = false
-            p.streak = t.streak
-            p.waterTotal = 0
-        }
-        change(&p)
-        p.updatedAt = now
-        save(p)
     }
 
     // MARK: - Eylemler
 
     func log() {
-        let t = today
-        guard !t.isTaken else { return }
-        applyLocally(isTaken: true, streak: t.streak + 1, grams: t.grams, onboarded: t.onboarded)
+        guard !today.isTaken else { return }
+        enqueue(.log)
         WKInterfaceDevice.current().play(.success)
-        send(.log)
     }
 
     func undo() {
-        let t = today
-        guard t.isTaken else { return }
-        applyLocally(isTaken: false, streak: max(0, t.streak - 1), grams: t.grams, onboarded: t.onboarded)
+        guard today.isTaken else { return }
+        enqueue(.undo)
         WKInterfaceDevice.current().play(.click)
-        send(.undo)
     }
 
-    /// Ekran öne geldiğinde: gün değişmiş olabilir, görünümü tazele.
+    /// Ekran öne geldiğinde: gün değişmiş olabilir, görünümü tazele ve
+    /// telefondan güncel durumu iste (telefon uygulaması kapalıysa da uyanıyor).
     func refresh() {
-        objectWillChange.send()
-        if WCSession.isSupported() {
-            receive(WCSession.default.receivedApplicationContext, force: false)
-        }
-    }
-
-    private func applyLocally(isTaken: Bool, streak: Int, grams: Double?, onboarded: Bool) {
-        // Su alanları korunuyor (eskiden payload baştan yazılıyordu).
-        let fallbackGrams = payload?.grams ?? 0
-        mutateLocally { p in
-            p.isTaken = isTaken
-            p.streak = streak
-            p.grams = grams ?? fallbackGrams
-            p.onboarded = onboarded
-        }
-    }
-
-    private func send(_ action: WatchAction, ml: Int? = nil) {
+        dropStalePending()
+        recompute()
         guard WCSession.isSupported() else { return }
         let session = WCSession.default
-        let message = action.message(day: DayKey.key(for: Date()), ml: ml)
+        receive(session.receivedApplicationContext)
+        requestSync()
+    }
+
+    // MARK: - Bekleyen komutlar
+
+    private func enqueue(_ action: WatchAction, ml: Int? = nil) {
+        let item = Pending(id: UUID().uuidString, action: action.rawValue,
+                           day: DayKey.key(for: Date()), ml: ml, at: Date())
+        pending.append(item)
+        savePending()
+        recompute()
+        send(item)
+    }
+
+    /// Dünden kalan komutlar artık bugünü etkilemiyor.
+    private func dropStalePending() {
+        let today = DayKey.key(for: Date())
+        let before = pending.count
+        pending.removeAll { $0.day != today }
+        if pending.count != before { savePending() }
+    }
+
+    private func savePending() {
+        if let data = try? JSONEncoder().encode(pending) {
+            UserDefaults.standard.set(data, forKey: pendingKey)
+        }
+    }
+
+    /// base'i bugüne uyarla ve bekleyen komutları üstüne uygula.
+    private func recompute() {
+        let now = Date()
+        let todayKey = DayKey.key(for: now)
+        let todays = pending.filter { $0.day == todayKey }
+
+        guard base != nil || !todays.isEmpty else {
+            publish(nil)
+            return
+        }
+        var p = base ?? WatchPayload(dateKey: todayKey, isTaken: false, grams: 0,
+                                     streak: 0, onboarded: true, updatedAt: now)
+        if p.dateKey != todayKey {
+            // Yeni gün: dünkü kreatin ve su taşınmasın.
+            let t = WatchPayload.state(p, on: now)
+            p.dateKey = todayKey
+            p.isTaken = false
+            p.streak = t.streak
+            p.waterTotal = 0
+            p.lastWaterMl = nil
+        }
+
+        var adds: [Int] = []
+        var lastFromPhone = p.lastWaterMl
+        for item in todays {
+            switch WatchAction(rawValue: item.action) {
+            case .log?:
+                if !p.isTaken { p.isTaken = true; p.streak += 1 }
+            case .undo?:
+                if p.isTaken { p.isTaken = false; p.streak = max(0, p.streak - 1) }
+            case .addWater?:
+                let ml = item.ml ?? 0
+                p.waterTotal = (p.waterTotal ?? 0) + ml
+                adds.append(ml)
+            case .undoWater?:
+                // Telefon "bugünün en son kaydını" siliyor: önce saatten eklenen
+                // (henüz telefona ulaşmamış) su, yoksa telefondaki son kayıt.
+                if let ml = adds.popLast() {
+                    p.waterTotal = max(0, (p.waterTotal ?? 0) - ml)
+                } else if let ml = lastFromPhone {
+                    p.waterTotal = max(0, (p.waterTotal ?? 0) - ml)
+                    lastFromPhone = nil   // ondan öncekini bilmiyoruz; telefon düzeltecek
+                }
+            case nil:
+                break
+            }
+        }
+        publish(p)
+    }
+
+    private func publish(_ p: WatchPayload?) {
+        let apply = {
+            self.payload = p
+            p?.store()   // saat kadranı bunu okuyor
+            WidgetCenter.shared.reloadAllTimelines()
+        }
+        if Thread.isMainThread { apply() } else { DispatchQueue.main.async(execute: apply) }
+    }
+
+    // MARK: - Telefona gönder
+
+    private func send(_ item: Pending) {
+        guard WCSession.isSupported(), let action = WatchAction(rawValue: item.action) else { return }
+        let session = WCSession.default
+        let message = action.message(day: item.day, ml: item.ml, id: item.id)
 
         guard session.activationState == .activated else {
             session.transferUserInfo(message)
             return
         }
-
         if session.isReachable {
             session.sendMessage(message, replyHandler: { [weak self] reply in
-                // Cevap, komut uygulandıktan SONRA üretiliyor; doğrudan kabul et.
-                self?.receive(reply, force: true)
+                self?.receive(reply)
             }, errorHandler: { _ in
+                // Anlık mesaj ulaşmadı: kuyruğa al. Telefon kimlikten tanıyıp
+                // iki kez uygulamıyor.
                 session.transferUserInfo(message)
             })
         } else {
@@ -171,24 +236,38 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
         }
     }
 
-    // MARK: - Telefondan gelen durum
-
-    private func receive(_ dictionary: [String: Any], force: Bool) {
-        guard let incoming = WatchPayload(dictionary: dictionary) else { return }
-        DispatchQueue.main.async {
-            guard force || incoming.updatedAt >= self.lastLocalAction else { return }
-            self.save(incoming)
-        }
+    /// Telefondan güncel durumu iste. Ulaşılamıyorsa applicationContext bekleniyor.
+    private func requestSync() {
+        let session = WCSession.default
+        guard session.activationState == .activated, session.isReachable else { return }
+        session.sendMessage(WatchAction.syncMessage, replyHandler: { [weak self] reply in
+            self?.receive(reply)
+        }, errorHandler: nil)
     }
 
-    private func save(_ p: WatchPayload) {
-        let apply = {
-            self.payload = p
-            p.store()
-            // Saat kadranındaki göstergeyi de güncelle.
-            WidgetCenter.shared.reloadAllTimelines()
+    // MARK: - Telefondan gelen durum
+
+    private func receive(_ dictionary: [String: Any]) {
+        guard let incoming = WatchPayload(dictionary: dictionary) else { return }
+        DispatchQueue.main.async {
+            // Telefonun kendi sırası: daha eski bir durum yenisinin yerine geçmesin.
+            if let b = self.base, incoming.updatedAt < b.updatedAt { return }
+            self.base = incoming
+            if let data = try? JSONEncoder().encode(incoming) {
+                UserDefaults.standard.set(data, forKey: self.baseKey)
+            }
+            // Telefonun işlediği komutlar artık base'in içinde.
+            if let applied = incoming.appliedIds {
+                let set = Set(applied)
+                self.pending.removeAll { set.contains($0.id) }
+            } else {
+                // Eski telefon sürümü kimlik göndermiyor: durumdan önceki komutlar işlenmiş say.
+                self.pending.removeAll { $0.at <= incoming.updatedAt }
+            }
+            self.savePending()
+            self.dropStalePending()
+            self.recompute()
         }
-        if Thread.isMainThread { apply() } else { DispatchQueue.main.async(execute: apply) }
     }
 
     // MARK: - WCSessionDelegate
@@ -196,10 +275,17 @@ final class WatchModel: NSObject, ObservableObject, WCSessionDelegate {
     func session(_ session: WCSession,
                  activationDidCompleteWith activationState: WCSessionActivationState,
                  error: Error?) {
-        receive(session.receivedApplicationContext, force: false)
+        receive(session.receivedApplicationContext)
+        requestSync()
+        // Önceki açılışta gönderilemeyip bekleyenler varsa tekrar dene
+        // (telefon aynı kimliği iki kez uygulamıyor).
+        guard session.isReachable else { return }   // kuyruktakiler zaten yolda
+        DispatchQueue.main.async {
+            for item in self.pending { self.send(item) }
+        }
     }
 
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String: Any]) {
-        receive(applicationContext, force: false)
+        receive(applicationContext)
     }
 }
