@@ -19,6 +19,8 @@ struct DoseSettings: Codable, Equatable {
 
     /// 2.1 — Antrenman bitince, kreatin alınmadıysa hatırlat (OneScoop+).
     var workoutReminder: Bool = false
+    /// 2.1.1 — Gün bitmeden (22:00) kreatin girilmediyse "seriyi bozma" bildirimi.
+    var streakReminder: Bool = true
 
     // YENİ: stok takibi
     var trackSupply: Bool = false
@@ -37,7 +39,7 @@ struct DoseSettings: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case maintenanceDose, usesLoadingPhase, loadingDose, loadingDays, loadingPortions, startDate
         case reminderEnabled, reminderHour, reminderMinute
-        case repeatEnabled, repeatIntervalMinutes, repeatCount, workoutReminder
+        case repeatEnabled, repeatIntervalMinutes, repeatCount, workoutReminder, streakReminder
         case trackSupply, containerGrams, supplyRemaining
         case hasAskedForReview, hasCompletedOnboarding
     }
@@ -60,6 +62,7 @@ struct DoseSettings: Codable, Equatable {
         repeatIntervalMinutes = try c.decodeIfPresent(Int.self, forKey: .repeatIntervalMinutes) ?? d.repeatIntervalMinutes
         repeatCount = try c.decodeIfPresent(Int.self, forKey: .repeatCount) ?? d.repeatCount
         workoutReminder = try c.decodeIfPresent(Bool.self, forKey: .workoutReminder) ?? d.workoutReminder
+        streakReminder = try c.decodeIfPresent(Bool.self, forKey: .streakReminder) ?? d.streakReminder
         trackSupply = try c.decodeIfPresent(Bool.self, forKey: .trackSupply) ?? d.trackSupply
         containerGrams = try c.decodeIfPresent(Double.self, forKey: .containerGrams) ?? d.containerGrams
         supplyRemaining = try c.decodeIfPresent(Double.self, forKey: .supplyRemaining) ?? d.supplyRemaining

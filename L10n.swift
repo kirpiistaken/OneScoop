@@ -83,6 +83,7 @@ enum L {
     static var notifFirst: String { String(localized: "notif.first") }
     static var notifLogIt: String { String(localized: "notif.log_it") }
     static var notifRepeat: String { String(localized: "notif.repeat") }
+    static func notifStreak(_ a0: Int) -> String { String(localized: "notif.streak \(a0)") }
     static var notifSupplyLow: String { String(localized: "notif.supply_low") }
     static func notifWaterPace(_ a0: String) -> String { String(localized: "notif.water_pace \(a0)") }
     static var notifWaterSimple: String { String(localized: "notif.water_simple") }
@@ -196,6 +197,8 @@ enum L {
     static var settingsResetMsg: String { String(localized: "settings.reset_msg") }
     static var settingsResetTitle: String { String(localized: "settings.reset_title") }
     static var settingsStartedOn: String { String(localized: "settings.started_on") }
+    static var settingsStreakReminder: String { String(localized: "settings.streak_reminder") }
+    static var settingsStreakReminderDetail: String { String(localized: "settings.streak_reminder_detail") }
     static var settingsTest: String { String(localized: "settings.test") }
     static var settingsTestCancel: String { String(localized: "settings.test_cancel") }
     static var settingsTestFooter: String { String(localized: "settings.test_footer") }

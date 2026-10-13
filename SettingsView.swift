@@ -298,6 +298,22 @@ struct CreatineSettingsView: View {
                         }
                     }
                 }
+                // 2.1.1 — Seri kurtarıcı (ücretsiz)
+                Toggle(isOn: Binding(
+                    get: { store.settings.streakReminder },
+                    set: { new in
+                        store.update { $0.streakReminder = new }
+                        if new { askPermission() }
+                    }
+                )) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(L.settingsStreakReminder)
+                        Text(L.settingsStreakReminderDetail)
+                            .font(.caption)
+                            .foregroundStyle(CT.inkSoft)
+                    }
+                }
+
                 // 2.1 — Antrenman bitince hatırlat (OneScoop+, Apple Sağlık'tan)
                 if HealthSync.isAvailable {
                     Toggle(isOn: Binding(

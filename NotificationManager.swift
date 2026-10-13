@@ -5,7 +5,9 @@ enum NotificationManager {
 
     static let prefix = "ct.reminder."
     /// iOS en fazla 64 bekleyen bildirim tutuyor; ~16'sı su hatırlatmalarına.
-    static let maxPending = 47   // +1: kutu bitiyor bildirimi (2.1)
+    static let maxPending = 45   // +1 kutu bitiyor (2.1), +2 seri kurtarıcı (2.1.1)
+    /// 2.1.1 — Seri kurtarıcı bildirimin saati.
+    static let streakHour = 22
     static let maxHorizonDays = 30
 
     static let categoryID = "CT_REMINDER"
@@ -54,6 +56,8 @@ enum NotificationManager {
 
         // 2.1 — Kutu bitmeden 7 gün önce tek bildirim (hatırlatma kapalı olsa da).
         await scheduleSupplyAlert(center, settings)
+        // 2.1.1 — Seri kurtarıcı (günlük hatırlatmadan bağımsız ayar).
+        await scheduleStreakSaver(center, settings)
 
         guard settings.reminderEnabled, settings.hasCompletedOnboarding else { return }
 
@@ -134,6 +138,41 @@ enum NotificationManager {
             content: content,
             trigger: UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
         ))
+    }
+
+    /// 2.1.1 — Gün bitiyor ve seri tehlikede: 22:00'de tek bildirim.
+    /// Sadece bugün ve yarın için kuruluyor; seri ancak bir önceki gün
+    /// girildiyse ve en az 2 günse. Kayıt girilince reschedule bunu kaldırıyor.
+    private static func scheduleStreakSaver(_ center: UNUserNotificationCenter, _ s: DoseSettings) async {
+        guard s.hasCompletedOnboarding, s.streakReminder else { return }
+        let cal = DayKey.calendar
+        let log = Persistence.loadLog()
+        let now = Date()
+        for offset in 0...1 {
+            guard let day = cal.date(byAdding: .day, value: offset, to: now),
+                  let prev = cal.date(byAdding: .day, value: -1, to: day) else { continue }
+            let key = DayKey.key(for: day)
+            guard log[key] == nil, log[DayKey.key(for: prev)] != nil else { continue }
+            let streak = Stats.streak(log: log, from: prev)
+            guard streak >= 2 else { continue }
+
+            var comps = cal.dateComponents([.year, .month, .day], from: day)
+            comps.hour = streakHour
+            comps.minute = 0
+            guard let fire = cal.date(from: comps), fire > now else { continue }
+
+            let content = UNMutableNotificationContent()
+            content.title = "OneScoop"
+            content.body = L.notifStreak(streak)
+            content.sound = .default
+            content.interruptionLevel = .active
+            content.categoryIdentifier = categoryID
+            try? await center.add(UNNotificationRequest(
+                identifier: "\(prefix)streak.\(key)",
+                content: content,
+                trigger: UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+            ))
+        }
     }
 
     /// Antrenman bitti, kreatin alınmadı (HealthSync çağırıyor).

@@ -287,3 +287,20 @@ add("settings.test_paywall_free", "Paywall as free user", "Paywall'ı ücretsiz 
     "Paywall como usuario gratis", "Paywall als Gratisnutzer", "Paywall comme utilisateur gratuit",
     "Paywall come utente gratuito", "Paywall como usuário gratuito")
 add("plus.retry", "Try again", "Tekrar dene", "Reintentar", "Erneut versuchen", "Réessayer", "Riprova", "Tentar novamente")
+
+# ── 2.1.1 — Seri kurtarıcı ────────────────────────────────
+add("notif.streak %lld",
+    "Don’t lose your %lld-day streak! Log today’s creatine before midnight.",
+    "%lld günlük serini kaybetme! Gece yarısından önce bugünkü kreatinini işaretle.",
+    "¡No pierdas tu racha de %lld días! Registra la creatina de hoy antes de medianoche.",
+    "Verlier deine %lld-Tage-Serie nicht! Trag das heutige Kreatin vor Mitternacht ein.",
+    "Ne perdez pas votre série de %lld jours ! Enregistrez la créatine du jour avant minuit.",
+    "Non perdere la tua serie di %lld giorni! Registra la creatina di oggi prima di mezzanotte.",
+    "Não perca sua sequência de %lld dias! Registre a creatina de hoje antes da meia-noite.")
+add("settings.streak_reminder", "Streak saver", "Seri kurtarıcı", "Salvar racha", "Serienretter",
+    "Sauver la série", "Salva serie", "Salvar sequência")
+add("settings.streak_reminder_detail",
+    "At 10 PM if today isn’t logged yet", "Bugün girilmediyse saat 22:00'de",
+    "A las 22:00 si hoy aún no está registrado", "Um 22:00, wenn heute noch nichts eingetragen ist",
+    "À 22 h si aujourd’hui n’est pas encore enregistré", "Alle 22:00 se oggi non è ancora registrato",
+    "Às 22h se hoje ainda não foi registrado")
