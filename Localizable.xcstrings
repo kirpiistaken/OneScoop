@@ -4544,6 +4544,53 @@
         }
       }
     },
+    "notif.streak_last %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte Chance! Trag dein Kreatin in der nächsten Stunde ein, sonst ist deine %lld-Tage-Serie weg."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last chance! Log your creatine within the hour or your %lld-day streak resets."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "¡Última oportunidad! Registra la creatina en la próxima hora o tu racha de %lld días se reinicia."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dernière chance ! Enregistrez votre créatine dans l’heure, sinon votre série de %lld jours repart à zéro."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ultima possibilità! Registra la creatina entro un’ora o la tua serie di %lld giorni si azzera."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Última chance! Registre a creatina na próxima hora ou sua sequência de %lld dias zera."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Son şans! Bir saat içinde girmezsen %lld günlük serin sıfırlanacak."
+          }
+        }
+      }
+    },
     "notif.supply_low": {
       "extractionState": "manual",
       "localizations": {
@@ -10424,43 +10471,43 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Um 22:00, wenn heute noch nichts eingetragen ist"
+            "value": "Um 22:00 und 23:00, wenn heute noch nichts eingetragen ist"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "At 10 PM if today isn’t logged yet"
+            "value": "At 10 PM and 11 PM if today isn’t logged yet"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "A las 22:00 si hoy aún no está registrado"
+            "value": "A las 22:00 y 23:00 si hoy aún no está registrado"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "À 22 h si aujourd’hui n’est pas encore enregistré"
+            "value": "À 22 h et 23 h si aujourd’hui n’est pas encore enregistré"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Alle 22:00 se oggi non è ancora registrato"
+            "value": "Alle 22:00 e 23:00 se oggi non è ancora registrato"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Às 22h se hoje ainda não foi registrado"
+            "value": "Às 22h e 23h se hoje ainda não foi registrado"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bugün girilmediyse saat 22:00'de"
+            "value": "Bugün girilmediyse 22:00 ve 23:00'te"
           }
         }
       }

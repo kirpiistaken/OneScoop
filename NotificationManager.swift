@@ -5,9 +5,7 @@ enum NotificationManager {
 
     static let prefix = "ct.reminder."
     /// iOS en fazla 64 bekleyen bildirim tutuyor; ~16'sı su hatırlatmalarına.
-    static let maxPending = 45   // +1 kutu bitiyor (2.1), +2 seri kurtarıcı (2.1.1)
-    /// 2.1.1 — Seri kurtarıcı bildirimin saati.
-    static let streakHour = 22
+    static let maxPending = 43   // +1 kutu bitiyor (2.1), +4 seri kurtarıcı (2.1.1)
     static let maxHorizonDays = 30
 
     static let categoryID = "CT_REMINDER"
@@ -140,7 +138,7 @@ enum NotificationManager {
         ))
     }
 
-    /// 2.1.1 — Gün bitiyor ve seri tehlikede: 22:00'de tek bildirim.
+    /// 2.1.1 — Gün bitiyor ve seri tehlikede: 22:00'de hatırlatma, 23:00'te son şans.
     /// Sadece bugün ve yarın için kuruluyor; seri ancak bir önceki gün
     /// girildiyse ve en az 2 günse. Kayıt girilince reschedule bunu kaldırıyor.
     private static func scheduleStreakSaver(_ center: UNUserNotificationCenter, _ s: DoseSettings) async {
@@ -156,22 +154,25 @@ enum NotificationManager {
             let streak = Stats.streak(log: log, from: prev)
             guard streak >= 2 else { continue }
 
-            var comps = cal.dateComponents([.year, .month, .day], from: day)
-            comps.hour = streakHour
-            comps.minute = 0
-            guard let fire = cal.date(from: comps), fire > now else { continue }
+            // 22:00 hatırlatma, 23:00 son şans.
+            for (hour, last) in [(22, false), (23, true)] {
+                var comps = cal.dateComponents([.year, .month, .day], from: day)
+                comps.hour = hour
+                comps.minute = 0
+                guard let fire = cal.date(from: comps), fire > now else { continue }
 
-            let content = UNMutableNotificationContent()
-            content.title = "OneScoop"
-            content.body = L.notifStreak(streak)
-            content.sound = .default
-            content.interruptionLevel = .active
-            content.categoryIdentifier = categoryID
-            try? await center.add(UNNotificationRequest(
-                identifier: "\(prefix)streak.\(key)",
-                content: content,
-                trigger: UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
-            ))
+                let content = UNMutableNotificationContent()
+                content.title = "OneScoop"
+                content.body = last ? L.notifStreakLast(streak) : L.notifStreak(streak)
+                content.sound = .default
+                content.interruptionLevel = .active
+                content.categoryIdentifier = categoryID
+                try? await center.add(UNNotificationRequest(
+                    identifier: "\(prefix)streak.\(key).\(hour)",
+                    content: content,
+                    trigger: UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+                ))
+            }
         }
     }
 

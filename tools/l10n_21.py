@@ -300,7 +300,15 @@ add("notif.streak %lld",
 add("settings.streak_reminder", "Streak saver", "Seri kurtarıcı", "Salvar racha", "Serienretter",
     "Sauver la série", "Salva serie", "Salvar sequência")
 add("settings.streak_reminder_detail",
-    "At 10 PM if today isn’t logged yet", "Bugün girilmediyse saat 22:00'de",
-    "A las 22:00 si hoy aún no está registrado", "Um 22:00, wenn heute noch nichts eingetragen ist",
-    "À 22 h si aujourd’hui n’est pas encore enregistré", "Alle 22:00 se oggi non è ancora registrato",
-    "Às 22h se hoje ainda não foi registrado")
+    "At 10 PM and 11 PM if today isn’t logged yet", "Bugün girilmediyse 22:00 ve 23:00'te",
+    "A las 22:00 y 23:00 si hoy aún no está registrado", "Um 22:00 und 23:00, wenn heute noch nichts eingetragen ist",
+    "À 22 h et 23 h si aujourd’hui n’est pas encore enregistré", "Alle 22:00 e 23:00 se oggi non è ancora registrato",
+    "Às 22h e 23h se hoje ainda não foi registrado")
+add("notif.streak_last %lld",
+    "Last chance! Log your creatine within the hour or your %lld-day streak resets.",
+    "Son şans! Bir saat içinde girmezsen %lld günlük serin sıfırlanacak.",
+    "¡Última oportunidad! Registra la creatina en la próxima hora o tu racha de %lld días se reinicia.",
+    "Letzte Chance! Trag dein Kreatin in der nächsten Stunde ein, sonst ist deine %lld-Tage-Serie weg.",
+    "Dernière chance ! Enregistrez votre créatine dans l’heure, sinon votre série de %lld jours repart à zéro.",
+    "Ultima possibilità! Registra la creatina entro un’ora o la tua serie di %lld giorni si azzera.",
+    "Última chance! Registre a creatina na próxima hora ou sua sequência de %lld dias zera.")

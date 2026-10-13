@@ -84,6 +84,7 @@ enum L {
     static var notifLogIt: String { String(localized: "notif.log_it") }
     static var notifRepeat: String { String(localized: "notif.repeat") }
     static func notifStreak(_ a0: Int) -> String { String(localized: "notif.streak \(a0)") }
+    static func notifStreakLast(_ a0: Int) -> String { String(localized: "notif.streak_last \(a0)") }
     static var notifSupplyLow: String { String(localized: "notif.supply_low") }
     static func notifWaterPace(_ a0: String) -> String { String(localized: "notif.water_pace \(a0)") }
     static var notifWaterSimple: String { String(localized: "notif.water_simple") }
