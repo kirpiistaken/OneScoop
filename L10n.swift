@@ -60,6 +60,7 @@ enum L {
     static var historyWaterAverage: String { String(localized: "history.water_average") }
     static var historyWaterGoalDays: String { String(localized: "history.water_goal_days") }
     static var historyWaterHint: String { String(localized: "history.water_hint") }
+    static var holdHint: String { String(localized: "hold.hint") }
     static var iconClassic: String { String(localized: "icon.classic") }
     static var iconGold: String { String(localized: "icon.gold") }
     static var iconLight: String { String(localized: "icon.light") }

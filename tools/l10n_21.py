@@ -312,3 +312,8 @@ add("notif.streak_last %lld",
     "Dernière chance ! Enregistrez votre créatine dans l’heure, sinon votre série de %lld jours repart à zéro.",
     "Ultima possibilità! Registra la creatina entro un’ora o la tua serie di %lld giorni si azzera.",
     "Última chance! Registre a creatina na próxima hora ou sua sequência de %lld dias zera.")
+
+# ── 2.1.2 — Basılı tutarak kaydet ─────────────────────────
+add("hold.hint", "Hold to log", "Kaydetmek için basılı tut", "Mantén pulsado para registrar",
+    "Zum Eintragen gedrückt halten", "Maintenez pour enregistrer", "Tieni premuto per registrare",
+    "Toque e segure para registrar")

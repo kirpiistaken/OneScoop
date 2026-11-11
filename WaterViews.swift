@@ -114,8 +114,7 @@ struct WaterCard: View {
     }
 
     private func add(_ ml: Int) {
-        store.addWater(ml)
-        UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+        store.addWater(ml)   // titreşim HoldButton'da
         withAnimation(.easeInOut(duration: 1.2)) { wavePhase += 2 * .pi }
     }
 }
@@ -126,13 +125,20 @@ struct CupButton: View {
     var action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        HoldButton(duration: 0.35, action: action) { hold in
             VStack(spacing: 6) {
                 CupIcon(kind: cup.kind)
                     .fill(CT.accent)
                     .frame(width: 30, height: 28)
                     .frame(width: 58, height: 58)
                     .background(CT.accent.opacity(0.14), in: Circle())
+                    .overlay {
+                        Circle()
+                            .trim(from: 0, to: hold)
+                            .stroke(CT.accent, style: StrokeStyle(lineWidth: 3.5, lineCap: .round))
+                            .rotationEffect(.degrees(-90))
+                            .opacity(hold > 0 ? 1 : 0)
+                    }
                 Text(verbatim: "\(cup.ml) ml")
                     .font(.system(.caption, design: .rounded).weight(.semibold))
                     .foregroundStyle(CT.inkSoft)
@@ -140,7 +146,6 @@ struct CupButton: View {
                     .fixedSize()
             }
         }
-        .buttonStyle(PressableStyle())
         .accessibilityLabel(Text(verbatim: "\(cup.kind.title), \(cup.ml) ml"))
     }
 }

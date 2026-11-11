@@ -11,7 +11,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    MARKETING_VERSION: "2.1.1"
+    MARKETING_VERSION: "2.1.2"
     CURRENT_PROJECT_VERSION: "1"
     VERSIONING_SYSTEM: apple-generic
     CODE_SIGN_STYLE: Manual
@@ -44,6 +44,7 @@ targets:
       - path: Shortcuts.swift
       - path: SupplyView.swift
       - path: TodayView.swift
+      - path: HoldButton.swift
       - path: CloudSync.swift
       - path: PhoneWatchBridge.swift
       - path: WatchPayload.swift

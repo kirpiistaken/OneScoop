@@ -83,21 +83,22 @@ struct TodayView: View {
                     .contentTransition(.numericText())
             }
 
-            Button {
+            HoldButton(duration: 0.4) {
                 let completes = store.portionsToday + 1 >= store.portionsNeeded
                 withAnimation(.snappy) {
                     if completes { checkScale = 0.6 }
                     store.takePortion()
                 }
                 if completes {
-                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    // Klik HoldButton'dan; tamamlanınca arkasından başarı titreşimi.
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.14) {
+                        UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    }
                     withAnimation(.spring(response: 0.45, dampingFraction: 0.55).delay(0.05)) {
                         checkScale = 1
                     }
-                } else {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 }
-            } label: {
+            } label: { hold in
                 Text(L.todayYes)
                     .font(CT.display(38, .heavy))
                     .foregroundStyle(.white)
@@ -106,6 +107,15 @@ struct TodayView: View {
                     .padding(.horizontal, 20)
                     .frame(width: compact ? 164 : 200, height: compact ? 164 : 200)
                     .background(CT.accent, in: Circle())
+                    .overlay {
+                        // 2.1.2 — basılı tutma halkası
+                        Circle()
+                            .trim(from: 0, to: hold)
+                            .stroke(.white.opacity(0.9), style: StrokeStyle(lineWidth: 5, lineCap: .round))
+                            .rotationEffect(.degrees(-90))
+                            .padding(5)
+                            .opacity(hold > 0 ? 1 : 0)
+                    }
                     .shadow(color: CT.accent.opacity(0.35), radius: 24, y: 10)
                     .overlay {
                         // 2.1 — Bölünmüş doz: porsiyon ilerlemesi
@@ -119,7 +129,6 @@ struct TodayView: View {
                         }
                     }
             }
-            .buttonStyle(PressableStyle())
             .accessibilityLabel(L.todayYesA11y)
 
             if store.portionsNeeded > 1 && store.portionsToday > 0 {
